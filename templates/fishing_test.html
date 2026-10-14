@@ -1,0 +1,107 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Тест рівня рибалки — FishWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/test.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="test-section">
+    <div class="test-shell">
+
+        <div class="test-heading">
+            <h1>Дізнайся свій рівень риболовлі</h1>
+            <p>Відповідай на 4 короткі запитання.</p>
+        </div>
+
+        {% if completed %}
+
+            <div class="test-card test-result">
+                <h2>Твій рекомендований рівень</h2>
+
+                <div class="test-result-level">
+                    {{ level_name }}
+                </div>
+
+                <a class="btn btn-primary"
+                   href="{% url 'register' %}?fishing_level={{ level }}">
+                    Повернутися до реєстрації →
+                </a>
+            </div>
+
+        {% else %}
+
+            <form method="post" class="test-card" id="test-card">
+                {% csrf_token %}
+
+                {% if error %}
+                    <p class="field-error">{{ error }}</p>
+                {% endif %}
+
+                <div class="test-top">
+                    <span id="question-count"></span>
+                    <span id="progress-label"></span>
+                </div>
+
+                <div class="test-progress">
+                    <div class="test-progress-fill" id="progress-fill"></div>
+                </div>
+
+                {% for question in questions %}
+
+                    <div class="question-slide"
+                         {% if not forloop.first %}hidden{% endif %}>
+
+                        <h2 class="test-question">
+                            {{ question.question }}
+                        </h2>
+
+                        <div class="test-options">
+                            {% for answer in question.answers %}
+
+                                <label class="test-option">
+                                    <input
+                                        type="radio"
+                                        name="q{{ question.id }}"
+                                        value="{{ answer.id }}"
+                                    >
+                                    {{ answer.text }}
+                                </label>
+
+                            {% endfor %}
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+                <p id="answer-error" class="answer-error" role="alert"></p>
+
+                <div class="test-actions">
+                    <button type="button"
+                            class="test-back"
+                            id="back-button">
+                        Назад
+                    </button>
+
+                    <button type="button"
+                            class="test-next"
+                            id="next-button">
+                        Далі →
+                    </button>
+                </div>
+
+            </form>
+
+        {% endif %}
+
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/fishing_test.js' %}"></script>
+{% endblock %}

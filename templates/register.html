@@ -1,0 +1,134 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Реєстрація — FishWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-heading">
+        <h1>Приєднуйся до FishWise</h1>
+        <p>Створи акаунт та обери свій рівень риболовлі</p>
+    </div>
+
+    <div class="auth-container">
+        <div class="auth-card">
+
+            <div class="auth-tabs">
+                <a href="{% url 'register' %}" class="auth-tab active">Реєстрація</a>
+                <a href="{% url 'login' %}" class="auth-tab">Увійти</a>
+            </div>
+
+            <form method="post" class="auth-form" id="level-selection" novalidate>
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="username">ІМ'Я КОРИСТУВАЧА</label>
+                    <input type="text" id="username" name="username"
+                           value="{{ username }}"
+                           class="{% if errors.username %}input-error{% endif %}">
+
+                    {% if errors.username %}
+                        <span class="field-error">{{ errors.username }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="email">EMAIL АДРЕСА</label>
+                    <input type="email" id="email" name="email"
+                           value="{{ email }}"
+                           class="{% if errors.email %}input-error{% endif %}">
+
+                    {% if errors.email %}
+                        <span class="field-error">{{ errors.email }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="password">ПАРОЛЬ</label>
+                        <input type="password" id="password" name="password"
+                               class="{% if errors.password %}input-error{% endif %}">
+
+                        {% if errors.password %}
+                            <span class="field-error">{{ errors.password }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm_password">ПІДТВЕРДЖЕННЯ</label>
+                        <input type="password" id="confirm_password" name="confirm_password"
+                               class="{% if errors.confirm_password %}input-error{% endif %}">
+
+                        {% if errors.confirm_password %}
+                            <span class="field-error">{{ errors.confirm_password }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <button type="submit" class="auth-submit">
+                    Зареєструватися →
+                </button>
+            </form>
+        </div>
+
+        <div class="level-card">
+            <h2>Обери свій рівень риболовлі</h2>
+            <p class="level-description">
+                Вибери рівень, який найбільше відповідає твоєму досвіду.
+            </p>
+
+            <div class="level-options {% if errors.fishing_level %}level-options-error{% endif %}">
+                <label class="level-option">
+                    <input type="radio" name="fishing_level" value="beginner"
+                           form="level-selection"
+                           {% if fishing_level == 'beginner' %}checked{% endif %}>
+                    <span class="level-number">1</span>
+                    <span class="level-text">
+                        <strong>Початківець</strong>
+                        <small>Тільки починаю та хочу навчитися основ</small>
+                    </span>
+                </label>
+
+                <label class="level-option">
+                    <input type="radio" name="fishing_level" value="intermediate"
+                           form="level-selection"
+                           {% if fishing_level == 'intermediate' %}checked{% endif %}>
+                    <span class="level-number">2</span>
+                    <span class="level-text">
+                        <strong>Середній рівень</strong>
+                        <small>Маю досвід і хочу вдосконалити техніку</small>
+                    </span>
+                </label>
+
+                <label class="level-option">
+                    <input type="radio" name="fishing_level" value="advanced"
+                           form="level-selection"
+                           {% if fishing_level == 'advanced' %}checked{% endif %}>
+                    <span class="level-number">3</span>
+                    <span class="level-text">
+                        <strong>Досвідчений рибалка</strong>
+                        <small>Аналізую улови та веду облік</small>
+                    </span>
+                </label>
+            </div>
+
+            {% if errors.fishing_level %}
+                <span class="field-error">{{ errors.fishing_level }}</span>
+            {% endif %}
+
+            <div class="level-test">
+                <div>
+                    <strong>Не знаєш свого рівня?</strong>
+                    <p>Пройди короткий тест із 4 питань</p>
+                </div>
+                <a href="{% url 'fishing_test' %}" class="test-button">Пройти тест</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

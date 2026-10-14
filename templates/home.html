@@ -1,151 +1,81 @@
+
+{% extends 'base.html' %}
 {% load static %}
 
-<!doctype html>
-<html lang="uk">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+{% block title %}FishWise — Твій помічник у риболовлі{% endblock %}
 
-    <title>FishWise — твій помічник у риболовлі</title>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
+{% block content %}
 
-    <link rel="stylesheet" href="{% static 'style.css' %}" />
-  </head>
+<section class="hero container" id="home">
+    <div class="hero-content">
+        <span class="hero-eyebrow">Твій цифровий помічник</span>
+        <h1>Відкрий світ рибальських пригод</h1>
 
-  <body>
-    <header class="header">
-      <div class="container navbar">
-        <a href="{% url 'home' %}" class="logo"> Fish<span>Wise</span> </a>
+        <p>
+            Знаходь цікаві водойми, отримуй корисні поради та зберігай
+            свої рибальські досягнення разом із FishWise.
+        </p>
 
-        <nav class="nav-links">
-          <a href="#home">Головна</a>
-          <a href="#features">Можливості</a>
-        </nav>
-
-        <div class="nav-actions">
-          <a href="#" class="login-link">Увійти</a>
-          <a href="#" class="btn btn-primary">Реєстрація</a>
-        </div>
-      </div>
-    </header>
-
-    <main>
-
-      <section class="hero container" id="home">
-        <div class="hero-content">
-          <div class="eyebrow">ТВОЯ РИБОЛОВЛЯ — НАШЕ НАТХНЕННЯ</div>
-
-          <h1>
-            Відкрий світ
-            <span>рибальських</span>
-            пригод
-          </h1>
-
-          <p>
-            Досліджуй нові водойми, підбирай снасті, отримуй корисні поради та
-            зберігай найкращі моменти своїх риболовель.
-          </p>
-
-          <div class="hero-buttons">
-            <a href="#" class="btn btn-primary btn-large">
-              Розпочати подорож
-            </a>
-
-            <a href="#features" class="btn btn-outline btn-large">
-              Дізнатися більше
-            </a>
-          </div>
-
-          <div class="hero-bottom">
-            <div>
-              <strong>Для кожного рибалки</strong>
-              <span> Від першого закиду до справжньої майстерності </span>
-            </div>
-          </div>
+        <div class="hero-buttons">
+            <a href="{% url 'register' %}" class="btn btn-primary">Почати зараз →</a>
+            <a href="#features" class="btn btn-outline">Дізнатися більше</a>
         </div>
 
-        <div class="hero-image-wrapper">
-          <img
-            src="{% static 'images/fishing_home.jpg' %}"
-            alt="Риболовля на озері"
-            class="hero-image"
-          />
+        <div class="hero-bottom">
+            <strong>Для кожного рибалки</strong>
+            <span>Від першого закиду до справжньої майстерності</span>
         </div>
-      </section>
+    </div>
 
+    <div class="hero-image-wrapper">
+        <img class="hero-image"
+             src="{% static 'images/photo/fishing_home.jpg' %}"
+             alt="Риболовля на озері">
+    </div>
+</section>
 
-      <section class="features-section" id="features">
-        <div class="container">
-          <div class="section-heading">
-            <div>
-              <span class="section-label"> МОЖЛИВОСТІ FISHWISE </span>
+<section class="features-section" id="features">
+    <div class="container">
+        <div class="section-heading">
+            <h2>Можливості FishWise</h2>
+            <p>Усе необхідне для зручної риболовлі в одному місці.</p>
+        </div>
 
-              <h2>
-                Усе для твоєї
-                <span>рибальської пригоди</span>
-              </h2>
-            </div>
-
-            <p>
-              Від пошуку ідеального місця до аналізу власних результатів — усе в
-              одному місці.
-            </p>
-          </div>
-
-          <div class="features-grid">
-
+        <div class="features-grid">
             <article class="feature-card">
-              <span class="feature-number"> 01 / ДОСЛІДЖУЙ </span>
-
-              <h3>Карта водойм</h3>
-
-              <p>
-                Знаходь озера, річки та ставки. Дізнавайся, яка риба там
-                водиться, і відкривай нові місця для риболовлі.
-              </p>
+                <div class="feature-icon">
+                    <img src="{% static 'images/icons/map.png' %}" alt="">
+                </div>
+                <h3>Карта водойм</h3>
+                <p>Знаходь водойми та відкривай нові місця для риболовлі.</p>
             </article>
 
-
             <article class="feature-card">
-              <span class="feature-number"> 02 / НАВЧАЙСЯ </span>
-
-              <h3>Поради та снасті</h3>
-
-              <p>
-                Отримуй рекомендації щодо приманок, оснащення та технік ловлі
-                відповідно до свого рівня досвіду.
-              </p>
+                <div class="feature-icon">
+                    <img src="{% static 'images/icons/convenience.png' %}" alt="">
+                </div>
+                <h3>Поради та снасті</h3>
+                <p>Дізнавайся більше про техніки та рибальські снасті.</p>
             </article>
 
-    
             <article class="feature-card">
-              <span class="feature-number"> 03 / ЗБЕРІГАЙ </span>
-
-              <h3>Журнал уловів</h3>
-
-              <p>
-                Записуй свої риболовлі, зберігай фотографії уловів та переглядай
-                власну історію й результати.
-              </p>
+                <div class="feature-icon">
+                    <img src="{% static 'images/icons/dieting.png' %}" alt="">
+                </div>
+                <h3>Журнал уловів</h3>
+                <p>Записуй результати риболовлі та аналізуй досягнення.</p>
             </article>
-          </div>
         </div>
-      </section>
-    </main>
+    </div>
+</section>
 
+<footer class="site-footer">
+    © FishWise. Твій помічник у світі риболовлі.
+</footer>
 
-    <footer class="footer">
-      <div class="container footer-inner">
-        <div class="footer-brand">FishWise</div>
+{% endblock %}
 
-        <p>© 2026 FishWise. Створено для тих, хто любить риболовлю.</p>
-      </div>
-    </footer>
-  </body>
-</html>

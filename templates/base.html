@@ -1,0 +1,42 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}FishWise{% endblock %}</title>
+
+    <link rel="icon" href="{% static 'images/icons/fish.png' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<header class="header">
+    <div class="container navbar">
+        <a class="logo" href="{% url 'home' %}">
+            <img class="logo-icon" src="{% static 'images/icons/fish.png' %}" alt="">
+            Fish<span>Wise</span>
+        </a>
+
+        <nav class="nav-links">
+            <a href="{% url 'home' %}">Головна</a>
+            <a href="{% url 'home' %}#features">Можливості</a>
+        </nav>
+
+        <div class="nav-actions">
+            <a class="login-link" href="{% url 'login' %}">Увійти</a>
+            <a class="btn btn-primary" href="{% url 'register' %}">Реєстрація</a>
+        </div>
+    </div>
+</header>
+
+<main>
+    {% block content %}{% endblock %}
+</main>
+
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>
