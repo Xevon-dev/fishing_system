@@ -1,7 +1,18 @@
 import json
 import re
 
+from django.contrib.auth.hashers import make_password
 from django.shortcuts import render, redirect
+from django.utils import timezone
+
+from .models import Levels, Users
+
+
+LEVEL_NAME_MAP = {
+    "beginner": "Початківець",
+    "intermediate": "Середній",
+    "advanced": "Досвідчений",
+}
 
 
 
@@ -109,6 +120,8 @@ def register_view(request):
             errors["email"] = "Введіть електронну пошту"
         elif not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
             errors["email"] = "Некоректна електронна пошта"
+        elif Users.objects.filter(email=email).exists():
+            errors["email"] = "Така пошта вже зареєстрована"
 
         if not password:
             errors["password"] = "Введіть пароль"
@@ -124,7 +137,19 @@ def register_view(request):
             errors["fishing_level"] = "Оберіть рівень риболовлі"
 
         if not errors:
-            return redirect("login")
+            level_name = LEVEL_NAME_MAP[fishing_level]
+            level_obj, _ = Levels.objects.get_or_create(name=level_name)
+
+            user = Users.objects.create(
+                username=username,
+                email=email,
+                password_hash=make_password(password),
+                level=level_obj,
+                created_at=timezone.now(),
+            )
+            # Одразу входимо: запам'ятовуємо користувача в сесії
+            request.session["user_id"] = user.user_id
+            return redirect("profile")
 
     return render(request, "register.html", {
         "errors": errors,
@@ -158,3 +183,48 @@ def login_view(request):
         "errors": errors,
         "email": email
     })
+
+
+def profile_view(request):
+    from journal.models import Catches, FishingTrips, Tips
+
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return redirect("login")
+
+    try:
+        user = Users.objects.select_related("level").get(pk=user_id)
+    except Users.DoesNotExist:
+        request.session.pop("user_id", None)
+        return redirect("login")
+
+    trips = (
+        FishingTrips.objects
+        .filter(user_id=user.user_id)
+        .select_related("water_body")
+        .order_by("-start_time")[:10]
+    )
+    catches = (
+        Catches.objects
+        .filter(trip__user_id=user.user_id)
+        .select_related("fish", "trip")
+        .order_by("-catch_id")[:10]
+    )
+    tips = (
+        Tips.objects
+        .filter(author_id=user.user_id)
+        .select_related("fish")
+        .order_by("-tip_id")[:10]
+    )
+
+    return render(request, "profile.html", {
+        "profile_user": user,
+        "trips": trips,
+        "catches": catches,
+        "tips": tips,
+    })
+
+
+def logout_view(request):
+    request.session.pop("user_id", None)
+    return redirect("home")

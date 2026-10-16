@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Профіль — FishWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-heading">
+        <h1>Вітаю, {{ profile_user.username }}!</h1>
+        <p>Це твій профіль FishWise</p>
+    </div>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <h2>Мої дані</h2>
+            <p><strong>Ім'я:</strong> {{ profile_user.username }}</p>
+            <p><strong>Email:</strong> {{ profile_user.email }}</p>
+            <p><strong>Рівень:</strong> {{ profile_user.level.name|default:"Не обрано" }}</p>
+            <p><strong>Дата реєстрації:</strong> {{ profile_user.created_at|date:"d.m.Y H:i"|default:"—" }}</p>
+
+            <p style="margin-top: 16px;">
+                <a href="{% url 'logout' %}">Вийти</a>
+            </p>
+        </div>
+
+        <div class="level-card">
+            <h2>Мої сесії</h2>
+            {% if trips %}
+                {% for trip in trips %}
+                    <div class="login-feature">
+                        <strong>{{ trip.water_body.name }} — {{ trip.start_time|date:"d.m.Y H:i" }}</strong>
+                        <p>{{ trip.note|default:"Без нотатки"|truncatechars:80 }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="level-description">Сесій поки немає.</p>
+            {% endif %}
+
+            <h2 style="margin-top: 16px;">Мої улови</h2>
+            {% if catches %}
+                {% for catch in catches %}
+                    <div class="login-feature">
+                        <strong>{{ catch.fish.name }} — {{ catch.weight_kg|default:"—" }} кг</strong>
+                        <p>Кількість: {{ catch.quantity|default:"1" }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="level-description">Уловів поки немає.</p>
+            {% endif %}
+
+            <h2 style="margin-top: 16px;">Мої поради</h2>
+            {% if tips %}
+                {% for tip in tips %}
+                    <div class="login-feature">
+                        <strong>{{ tip.fish.name|default:"Загальна порада" }}</strong>
+                        <p>{{ tip.content|truncatechars:100 }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="level-description">Порад поки немає.</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
