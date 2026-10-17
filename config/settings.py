@@ -131,6 +131,8 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
+GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY", "")
+
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 

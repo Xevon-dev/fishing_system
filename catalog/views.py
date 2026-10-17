@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render
 
 from .models import FishSpecies, FishingMethods, Tackle, WaterBodies
@@ -9,7 +10,10 @@ def home(request):
 
 def water_bodies_view(request):
     water_bodies = WaterBodies.objects.all().order_by("name")
-    return render(request, "water_bodies.html", {"water_bodies": water_bodies})
+    return render(request, "water_bodies.html", {
+        "water_bodies": water_bodies,
+        "google_maps_api_key": settings.GOOGLE_MAPS_API_KEY,
+    })
 
 
 def fish_advice_view(request):

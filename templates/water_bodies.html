@@ -17,16 +17,19 @@
     align-items: start;
 }
 
-.map-box {
-    min-height: 420px;
-    background: #e2e8f0;
-    border: 1px dashed #94a3b8;
+#map {
+    height: 480px;
     border-radius: 12px;
+    background: #e2e8f0;
+}
+
+.map-fallback {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #64748b;
     text-align: center;
+    color: #b42318;
+    padding: 20px;
 }
 
 .info-box {
@@ -48,20 +51,25 @@
 <section class="map-section">
     <div class="map-heading">
         <h1>Карта водойм</h1>
-        <p>Натисни на водойму, щоб побачити її дані</p>
+        <p>Натисни на карту, щоб обрати водойму</p>
     </div>
 
     <div class="map-layout">
         <!-- ЛІВО: Google Maps -->
-        <div class="map-box">
-            Тут буде Google Maps.<br>Клік на водойму — показ даних праворуч.
-        </div>
+        {% if google_maps_api_key %}
+            <div id="map"></div>
+        {% else %}
+            <div id="map" class="map-fallback">
+                Ключ Google Maps не знайдено.<br>
+                Додай GOOGLE_MAPS_API_KEY у файл .env
+            </div>
+        {% endif %}
 
         <!-- ПРАВО: два блоки -->
         <div>
             <div class="info-box">
                 <h2>Про водойму</h2>
-                <p>Тут з'являться дані про водойму: які риби є та глибина.</p>
+                <p id="water-info">Натисни на водойму на карті, щоб побачити дані.</p>
             </div>
 
             <div class="info-box">
@@ -71,4 +79,13 @@
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+{% if google_maps_api_key %}
+<script src="{% static 'js/map.js' %}"></script>
+<script async
+    src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap">
+</script>
+{% endif %}
 {% endblock %}
