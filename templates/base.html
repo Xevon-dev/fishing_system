@@ -1,4 +1,3 @@
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="uk">
@@ -21,13 +20,34 @@
         </a>
 
         <nav class="nav-links">
-            <a href="{% url 'home' %}">Головна</a>
-            <a href="{% url 'home' %}#features">Можливості</a>
+            {% if current_user %}
+                <a href="{% url 'water_bodies' %}">Карта водойм</a>
+                <a href="{% url 'tips_list' %}">Поради рибалок</a>
+                {% if current_user.level.name == "Початківець" %}
+                    <a href="{% url 'fish_advice' %}">Поради за рибою</a>
+                    <a href="{% url 'tackle' %}">Підбір снастей</a>
+                {% elif current_user.level.name == "Середній" %}
+                    <a href="{% url 'tackle' %}">Підбір снастей</a>
+                    <a href="{% url 'methods' %}">Техніки лову</a>
+                {% elif current_user.level.name == "Досвідчений" %}
+                    <a href="{% url 'journal' %}">Журнал</a>
+                    <a href="{% url 'stats' %}">Статистика</a>
+                    <a href="{% url 'add_tip' %}">Додати пораду</a>
+                {% endif %}
+            {% else %}
+                <a href="{% url 'home' %}">Головна</a>
+                <a href="{% url 'home' %}#features">Можливості</a>
+            {% endif %}
         </nav>
 
         <div class="nav-actions">
-            <a class="login-link" href="{% url 'login' %}">Увійти</a>
-            <a class="btn btn-primary" href="{% url 'register' %}">Реєстрація</a>
+            {% if current_user %}
+                <a class="login-link" href="{% url 'profile' %}">Профіль</a>
+                <a class="btn btn-primary" href="{% url 'logout' %}">Вийти</a>
+            {% else %}
+                <a class="login-link" href="{% url 'login' %}">Увійти</a>
+                <a class="btn btn-primary" href="{% url 'register' %}">Реєстрація</a>
+            {% endif %}
         </div>
     </div>
 </header>

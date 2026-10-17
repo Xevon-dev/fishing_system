@@ -1,7 +1,7 @@
 import json
 import re
 
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import check_password, make_password
 from django.shortcuts import render, redirect
 from django.utils import timezone
 
@@ -147,7 +147,7 @@ def register_view(request):
                 level=level_obj,
                 created_at=timezone.now(),
             )
-            # Одразу входимо: запам'ятовуємо користувача в сесії
+
             request.session["user_id"] = user.user_id
             return redirect("profile")
 
@@ -177,7 +177,16 @@ def login_view(request):
             errors["password"] = "Введіть пароль"
 
         if not errors:
-            return redirect("home")
+            try:
+                user = Users.objects.get(email=email)
+            except Users.DoesNotExist:
+                errors["email"] = "Користувача з такою поштою немає"
+            else:
+                if not check_password(password, user.password_hash):
+                    errors["password"] = "Невірний пароль"
+                else:
+                    request.session["user_id"] = user.user_id
+                    return redirect("profile")
 
     return render(request, "login.html", {
         "errors": errors,

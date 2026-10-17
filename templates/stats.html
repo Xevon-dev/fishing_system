@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Статистика — FishWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-heading">
+        <h1>Статистика риболовлі</h1>
+        <p>Підсумки твоїх сесій та уловів</p>
+    </div>
+
+    <div class="auth-card">
+        <p><strong>Сесій:</strong> {{ total_trips }}</p>
+        <p><strong>Уловів:</strong> {{ total_catches }}</p>
+        <p><strong>Загальна вага:</strong> {{ total_weight }} кг</p>
+
+        <h2 style="margin-top:16px;">Найчастіша риба</h2>
+        {% if top_fish %}
+            {% for row in top_fish %}
+                <div class="login-feature">
+                    <strong>{{ row.fish__name|default:"Без назви" }}</strong>
+                    <p>Разів: {{ row.total }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="level-description">Даних поки немає.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

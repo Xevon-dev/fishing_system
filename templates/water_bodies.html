@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Карта водойм — FishWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+<style>
+.map-section { max-width: 1200px; margin: 0 auto; padding: 24px; }
+.map-heading h1 { margin: 0 0 4px; }
+.map-heading p { color: #64748b; margin: 0 0 16px; }
+
+.map-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+    align-items: start;
+}
+
+.map-box {
+    min-height: 420px;
+    background: #e2e8f0;
+    border: 1px dashed #94a3b8;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    text-align: center;
+}
+
+.info-box {
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+.info-box:last-child { margin-bottom: 0; }
+.info-box h2 { margin: 0 0 8px; }
+
+@media (max-width: 800px) {
+    .map-layout { grid-template-columns: 1fr; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="map-section">
+    <div class="map-heading">
+        <h1>Карта водойм</h1>
+        <p>Натисни на водойму, щоб побачити її дані</p>
+    </div>
+
+    <div class="map-layout">
+        <!-- ЛІВО: Google Maps -->
+        <div class="map-box">
+            Тут буде Google Maps.<br>Клік на водойму — показ даних праворуч.
+        </div>
+
+        <!-- ПРАВО: два блоки -->
+        <div>
+            <div class="info-box">
+                <h2>Про водойму</h2>
+                <p>Тут з'являться дані про водойму: які риби є та глибина.</p>
+            </div>
+
+            <div class="info-box">
+                <h2>Прогноз кльову</h2>
+                <p>Тут буде погодне API з рекомендаціями щодо кльову.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Поради рибалок — FishWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-heading">
+        <h1>Цитати та поради рибалок</h1>
+        <p>Досвід спільноти FishWise</p>
+    </div>
+
+    <div class="auth-card">
+        {% if tips %}
+            {% for tip in tips %}
+                <div class="login-feature">
+                    <strong>{{ tip.fish.name|default:"Загальна порада" }}</strong>
+                    <p>{{ tip.content }}</p>
+                    <p>
+                        Автор: {{ tip.author.username }}
+                        {% if tip.created_at %}
+                            · {{ tip.created_at|date:"d.m.Y" }}
+                        {% endif %}
+                    </p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="level-description">Порад поки немає.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

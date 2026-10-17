@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Поради за видами риб — FishWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-heading">
+        <h1>Поради за видами риб</h1>
+        <p>Коротко про кожну рибу та як її ловити</p>
+    </div>
+
+    <div class="auth-card">
+        {% if fish_list %}
+            {% for fish in fish_list %}
+                <div class="login-feature">
+                    <strong>{{ fish.name }}</strong>
+                    {% if fish.description %}
+                        <p>{{ fish.description }}</p>
+                    {% endif %}
+                    {% if fish.advice %}
+                        <p><em>Порада: {{ fish.advice }}</em></p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="level-description">Даних про риб поки немає.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

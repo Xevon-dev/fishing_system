@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Додати пораду — FishWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+<style>
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 14px;
+    background: #f8fafb;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    color: var(--navy);
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+}
+.form-group select:focus,
+.form-group textarea:focus {
+    background: #fff;
+    border-color: var(--blue);
+}
+.form-group select.input-error,
+.form-group textarea.input-error { border: 2px solid #e53935; background: #fff6f6; }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-heading">
+        <h1>Додати власну пораду</h1>
+        <p>Поділись досвідом з іншими рибалками</p>
+    </div>
+
+    <div class="auth-card">
+        {% if not_allowed %}
+            <p class="level-description" style="color: #64748b;">
+                Додавати поради можуть лише досвідчені рибалки.
+            </p>
+        {% else %}
+            <form method="post" class="auth-form" novalidate>
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="fish">РИБА (необов'язково)</label>
+                    <select id="fish" name="fish">
+                        <option value="">Загальна порада</option>
+                        {% for fish in fish_list %}
+                            <option value="{{ fish.fish_id }}"
+                                    {% if fish_id == fish.fish_id|stringformat:"s" %}selected{% endif %}>
+                                {{ fish.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="content">ТЕКСТ ПОРАДИ</label>
+                    <textarea id="content" name="content" rows="5"
+                              class="{% if errors.content %}input-error{% endif %}">{{ content }}</textarea>
+                    {% if errors.content %}
+                        <span class="field-error">{{ errors.content }}</span>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="auth-submit">
+                    Опублікувати →
+                </button>
+            </form>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
