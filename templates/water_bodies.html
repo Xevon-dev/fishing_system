@@ -10,6 +10,22 @@
 .map-heading h1 { margin: 0 0 4px; }
 .map-heading p { color: #64748b; margin: 0 0 16px; }
 
+.map-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.map-status { color: #64748b; font-size: 14px; }
+.map-hint { color: #94a3b8; font-size: 13px; margin: 0 0 16px; }
+
+#water-region {
+    padding: 12px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: #fff;
+    font: inherit;
+    font-weight: 700;
+    color: inherit;
+    cursor: pointer;
+}
+#water-region:focus { outline: 2px solid #0d9488; outline-offset: 1px; }
+
 .map-layout {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -41,6 +57,12 @@
 .info-box:last-child { margin-bottom: 0; }
 .info-box h2 { margin: 0 0 8px; }
 
+.water-title { display: block; font-size: 18px; margin-bottom: 4px; }
+.water-meta { color: #64748b; font-size: 14px; margin-bottom: 8px; }
+.water-fish { margin-top: 6px; }
+.water-desc { margin: 8px 0 0; }
+#water-info a { display: inline-block; margin-top: 8px; }
+
 @media (max-width: 800px) {
     .map-layout { grid-template-columns: 1fr; }
 }
@@ -53,6 +75,45 @@
         <h1>Карта водойм</h1>
         <p>Натисни на карту, щоб обрати водойму</p>
     </div>
+
+    {% if google_maps_api_key %}
+        <div class="map-controls">
+            <select id="water-region" class="form-select" aria-label="Область">
+                <option value="lviv">Львівська область</option>
+                <option value="vinnytsia">Вінницька область</option>
+                <option value="volyn">Волинська область</option>
+                <option value="dnipro">Дніпропетровська область</option>
+                <option value="donetsk">Донецька область</option>
+                <option value="zhytomyr">Житомирська область</option>
+                <option value="zakarpattia">Закарпатська область</option>
+                <option value="zaporizhzhia">Запорізька область</option>
+                <option value="ifrankivka">Івано-Франківська область</option>
+                <option value="kyiv">Київська область</option>
+                <option value="kyivcity">Київ (місто)</option>
+                <option value="kirovohrad">Кіровоградська область</option>
+                <option value="luhansk">Луганська область</option>
+                <option value="mykolaiv">Миколаївська область</option>
+                <option value="odesa">Одеська область</option>
+                <option value="poltava">Полтавська область</option>
+                <option value="rivne">Рівненська область</option>
+                <option value="sumy">Сумська область</option>
+                <option value="ternopil">Тернопільська область</option>
+                <option value="kharkiv">Харківська область</option>
+                <option value="kherson">Херсонська область</option>
+                <option value="khmelnytskyi">Хмельницька область</option>
+                <option value="cherkasy">Черкаська область</option>
+                <option value="chernivtsi">Чернівецька область</option>
+                <option value="chernihiv">Чернігівська область</option>
+                <option value="crimea">Автономна Республіка Крим</option>
+            </select>
+            <button id="water-layer-btn" class="btn btn-primary" type="button"
+                    data-geojson-url="{% url 'water_bodies_geojson' region='__REGION__' %}">
+                Показати водойми
+            </button>
+            <span id="water-layer-status" class="map-status"></span>
+        </div>
+        <p class="map-hint">Дані є не для всіх областей. Якщо область ще не зібрана — напише «ще не зібрані».</p>
+    {% endif %}
 
     <div class="map-layout">
         <!-- ЛІВО: Google Maps -->
@@ -69,7 +130,7 @@
         <div>
             <div class="info-box">
                 <h2>Про водойму</h2>
-                <p id="water-info">Натисни на водойму на карті, щоб побачити дані.</p>
+                <div id="water-info">Натисни на водойму на карті, щоб побачити дані.</div>
             </div>
 
             <div class="info-box">
@@ -83,7 +144,7 @@
 
 {% block extra_js %}
 {% if google_maps_api_key %}
-<script src="{% static 'js/map.js' %}"></script>
+<script src="{% static 'js/map.js' %}?v={% now 'U' %}"></script>
 <script async
     src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap">
 </script>
