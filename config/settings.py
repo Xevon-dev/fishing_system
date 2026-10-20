@@ -133,6 +133,8 @@ STATICFILES_DIRS = [
 
 GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY", "")
 
+WEATHER_API = os.getenv("WEATHER_API", "")
+
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 

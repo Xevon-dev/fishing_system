@@ -1,0 +1,12 @@
+<div class="weather-top">
+  <div>
+    <div class="weather-condition">{{ condition }}</div>
+    <div class="weather-temp">{{ temp }}°C</div>
+  </div>
+  <img src="{{ icon }}" width="64" height="64" alt="{{ condition }}">
+</div>
+
+<div class="weather-row">Вітер — {{ wind }} км/год</div>
+<div class="weather-row">Опади — {{ precip }} мм</div>
+<div class="weather-row">Вологість — {{ humidity }}%</div>
+<div class="weather-row">Тиск — {{ pressure }} мм рт.ст.</div>

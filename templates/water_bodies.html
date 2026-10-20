@@ -63,6 +63,16 @@
 .water-desc { margin: 8px 0 0; }
 #water-info a { display: inline-block; margin-top: 8px; }
 
+.weather-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+.weather-condition { color: #64748b; font-size: 15px; }
+.weather-temp { font-size: 26px; font-weight: 700; }
+.weather-row { font-size: 14px; color: #475569; margin-bottom: 3px; }
+
 @media (max-width: 800px) {
     .map-layout { grid-template-columns: 1fr; }
 }
@@ -131,6 +141,13 @@
             <div class="info-box">
                 <h2>Про водойму</h2>
                 <div id="water-info">Натисни на водойму на карті, щоб побачити дані.</div>
+            </div>
+
+            <div class="info-box">
+                <h2>Погода на водоймі</h2>
+                <div id="weather-info" data-weather-url="{% url 'weather' %}">
+                    <p>Натисни на водойму на карті — і тут з'явиться погода в цій точці.</p>
+                </div>
             </div>
 
             <div class="info-box">

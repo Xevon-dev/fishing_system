@@ -9,6 +9,7 @@ function initMap() {
   const button = document.querySelector("#water-layer-btn");
   const status = document.querySelector("#water-layer-status");
   const info = document.querySelector("#water-info");
+  const weatherBox = document.querySelector("#weather-info");
 
   // область з адресного рядка (?region=lviv) — щоб посилання можна було переслати
   const fromUrl = new URLSearchParams(location.search).get("region");
@@ -28,19 +29,36 @@ function initMap() {
 
   map.data.addListener("click", (event) => {
     waterClickTime = Date.now();
-    showWater(info, event.feature);
+    const feature = event.feature;
+
+    showWater(info, {
+      name: feature.getProperty("name"),
+      type: feature.getProperty("type"),
+      area_km2: feature.getProperty("area_km2"),
+      depth: feature.getProperty("depth"),
+      fish: feature.getProperty("fish"),
+      description: feature.getProperty("description"),
+      wikipedia: feature.getProperty("wikipedia"),
+      source: feature.getProperty("source"),
+    });
+
+    loadWeather(weatherBox, event.latLng);
   });
 
 
   map.addListener("click", (event) => {
+    // якщо це був клік по водоймі — її дані вже показано, погоду теж
     if (Date.now() - waterClickTime < 300) {
       return;
     }
+
     info.textContent =
       "Координати кліку: " +
       event.latLng.lat().toFixed(5) +
       ", " +
       event.latLng.lng().toFixed(5);
+
+    loadWeather(weatherBox, event.latLng);
   });
 
 
@@ -98,8 +116,8 @@ function boundsOf(geojson) {
 }
 
 
-function showWater(box, feature) {
-  const get = (key) => feature.getProperty(key) || "";
+function showWater(box, props) {
+  const get = (key) => props[key] || "";
 
   box.replaceChildren();
 
@@ -143,5 +161,26 @@ function showWater(box, feature) {
     link.rel = "noopener";
     link.textContent = label;
     box.append(link);
+  }
+}
+
+
+async function loadWeather(box, latLng) {
+  const url = box.dataset.weatherUrl + "?lat=" + latLng.lat() + "&lon=" + latLng.lng();
+
+  box.textContent = "Дізнаюся погоду…";
+
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      const data = await response.json();
+      box.textContent = data.error || "Не вдалося отримати погоду.";
+      return;
+    }
+
+    box.innerHTML = await response.text();
+  } catch (error) {
+    box.textContent = "Не вдалося отримати погоду.";
   }
 }

@@ -1,3 +1,4 @@
+import requests
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -71,4 +72,30 @@ def water_bodies_geojson(request, region):
     return JsonResponse({
         "type": "FeatureCollection",
         "features": features,
+    })
+
+
+@require_GET
+def weather_view(request):
+    
+    lat = request.GET.get("lat")
+    lon = request.GET.get("lon")
+
+    forecast = requests.get(
+        f"https://api.weatherapi.com/v1/forecast.json?key={settings.WEATHER_API}&q={lat},{lon}&days=3&lang=uk"
+    ).json()
+
+    if "error" in forecast:
+        return JsonResponse({"error": forecast["error"]["message"]}, status=502)
+
+    current = forecast["current"]
+
+    return render(request, "weather_card.html", {
+        "condition": current["condition"]["text"],
+        "icon": "https:" + current["condition"]["icon"],
+        "temp": current["temp_c"],
+        "wind": round(current["wind_kph"]),
+        "precip": current["precip_mm"],
+        "humidity": current["humidity"],
+        "pressure": round(current["pressure_mb"] * 0.750062),
     })
