@@ -346,30 +346,6 @@
 }
 
 /* Сесія у профілі — клікабельна, веде на редагування */
-.profile-link {
-  display: block;
-  padding: 10px 12px;
-  margin: 0 -12px 6px;
-  border-radius: 10px;
-  color: inherit;
-  text-decoration: none;
-  transition: background 0.2s;
-}
-.profile-link:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-.profile-link p {
-  margin: 4px 0 0;
-  font-size: 13px;
-  color: #b9d7e4;
-}
-.profile-link small {
-  display: inline-block;
-  margin-top: 6px;
-  font-size: 11px;
-  font-weight: 700;
-  color: #00b8b2;
-}
 .level-card a:not(.btn) {
   color: #6fd7ea;
 }
@@ -413,4 +389,197 @@
   margin: 0;
   font-size: 12px;
   color: var(--muted);
+}
+
+/* Сторінка профілю — накопичувальні картки, як у великих системах */
+.profile-page {
+  min-height: calc(100vh - 94px);
+  background: #f4f9fb;
+  padding: 48px 20px 70px;
+}
+.profile-heading {
+  width: min(760px, 100%);
+  margin: 0 auto 26px;
+}
+.profile-heading h1 {
+  margin: 0 0 6px;
+  font-size: 30px;
+  letter-spacing: -0.03em;
+}
+.profile-heading p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+.profile-layout {
+  width: min(760px, 100%);
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.settings-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 26px 28px;
+  box-shadow: 0 12px 32px rgba(7, 59, 83, 0.06);
+}
+.settings-card h2 {
+  margin: 0 0 16px;
+  font-size: 19px;
+  color: var(--navy);
+}
+.settings-card.is-danger {
+  border-color: #f4b4b4;
+  background: #fff8f7;
+}
+.settings-card.is-danger h2 {
+  color: #b42318;
+}
+
+/* Аватар і рівень */
+.profile-head {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.avatar-circle {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #087e9b, #00b8b2);
+  color: #fff;
+  font-size: 26px;
+  font-weight: 800;
+}
+.profile-head strong {
+  display: block;
+  font-size: 19px;
+  color: var(--navy);
+}
+.level-badge {
+  display: inline-block;
+  margin-top: 7px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: #e6f6fb;
+  color: #087e9b;
+  font-size: 11px;
+  font-weight: 800;
+}
+.level-badge.is-empty {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+/* Поля профілю */
+.profile-fields {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px 22px;
+  margin: 20px 0 0;
+}
+.profile-fields span {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.profile-fields strong {
+  font-size: 14px;
+  color: var(--navy);
+  overflow-wrap: anywhere;
+}
+
+/* Кнопки в картці профілю */
+.profile-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+.profile-actions .btn {
+  padding: 11px 18px;
+  font-size: 13px;
+}
+
+/* Сесія або порада у профілі */
+.profile-item {
+  display: block;
+  padding: 13px 15px;
+  margin-bottom: 9px;
+  border-radius: 13px;
+  background: #f8fafb;
+  border: 1px solid var(--border);
+  color: inherit;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
+}
+.profile-item:hover {
+  background: #eef8fb;
+  border-color: #00b8b2;
+}
+.profile-item strong {
+  display: block;
+  font-size: 15px;
+  color: var(--navy);
+}
+.profile-item p {
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #5f8190;
+}
+.profile-item small {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #087e9b;
+}
+.profile-item .profile-item-catch {
+  margin-top: 6px;
+  font-weight: 700;
+  color: #0f766e;
+}
+.profile-item .profile-item-bait {
+  margin-top: 2px;
+  font-size: 12px;
+  color: #7b8b96;
+}
+.profile-empty {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+.profile-hint {
+  margin: -6px 0 18px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.profile-more {
+  margin: 14px 0 0;
+  font-size: 13px;
+  font-weight: 700;
+}
+.profile-more a {
+  color: #087e9b;
+}
+.profile-more a:hover {
+  color: #0b91b2;
+}
+
+@media (max-width: 560px) {
+  .profile-fields {
+    grid-template-columns: 1fr;
+  }
+  .settings-card {
+    padding: 20px;
+  }
 }

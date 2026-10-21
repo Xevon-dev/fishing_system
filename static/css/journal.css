@@ -39,6 +39,12 @@
   color: #475569;
   margin: 0 0 8px;
 }
+.trip-catch {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f766e;
+  margin: 0 0 8px;
+}
 .trip-actions {
   display: flex;
   flex-wrap: wrap;

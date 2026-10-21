@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Журнал уловів — FishWise{% endblock %}
+{% block title %}Риболовні сесії — FishWise{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/auth.css' %}?v={% now 'U' %}">
@@ -11,8 +11,8 @@
 {% block content %}
 <section class="auth-section">
     <div class="auth-heading">
-        <h1>Журнал уловів</h1>
-        <p>Твої риболовні сесії та улови</p>
+        <h1>Риболовні сесії</h1>
+        <p>Твої виходи на риболовлю, улови та снасті</p>
         <p class="mt-16">
             <a class="btn btn-primary" href="{% url 'add_trip' %}">+ Додати сесію</a>
         </p>
@@ -39,8 +39,12 @@
                         </p>
                     {% endif %}
 
+                    {% if trip.fish_note %}
+                        <p class="trip-catch">Зловив: {{ trip.fish_note }}</p>
+                    {% endif %}
+
                     {% if trip.bait_note %}
-                        <p class="trip-bait">Насадка / прикормка: {{ trip.bait_note }}</p>
+                        <p class="trip-bait">На що ловив: {{ trip.bait_note }}</p>
                     {% endif %}
 
                     {% if trip.note %}
@@ -54,8 +58,6 @@
                             · кількість: {{ catch.quantity|default:"1" }}
                             {% if catch.tackle %} · {{ catch.tackle.name }}{% endif %}
                         </div>
-                    {% empty %}
-                        <p class="level-description">У цій сесії уловів ще немає.</p>
                     {% endfor %}
 
                     <div class="trip-actions">
@@ -81,6 +83,4 @@
 </section>
 {% endblock %}
 
-{% block extra_js %}
-<script src="{% static 'js/journal.js' %}?v={% now 'U' %}"></script>
-{% endblock %}
+{% block extra_js %}{% endblock %}

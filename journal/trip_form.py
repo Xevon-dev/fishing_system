@@ -14,6 +14,7 @@ FIELDS = (
     "method",
     "method_note",
     "bait_note",
+    "fish_note",
     "start_time",
     "hours_spent",
     "note",
@@ -28,6 +29,7 @@ def form_defaults(trip=None):
             "method": str(trip.method_id or ""),
             "method_note": trip.method_note or "",
             "bait_note": trip.bait_note or "",
+            "fish_note": trip.fish_note or "",
             "start_time": timezone.localtime(trip.start_time).strftime("%Y-%m-%dT%H:%M"),
             "hours_spent": str(float(trip.hours_spent)) if trip.hours_spent else "",
             "note": trip.note or "",
@@ -39,6 +41,7 @@ def form_defaults(trip=None):
         "method": "",
         "method_note": "",
         "bait_note": "",
+        "fish_note": "",
         "start_time": timezone.localtime().strftime("%Y-%m-%dT%H:%M"),
         "hours_spent": "",
         "note": "",
@@ -111,6 +114,7 @@ def parse_form(post, trip=None):
         "method_id": method_id,
         "method_note": form["method_note"] or None,
         "bait_note": form["bait_note"] or None,
+        "fish_note": form["fish_note"] or None,
         "note": form["note"] or None,
     }
 

@@ -122,10 +122,19 @@
                        placeholder="Наприклад: карпова оснастка на кукурудзу">
             </div>
 
-            <div class="form-group">
-                <label for="trip-bait">НАСАДКА / ПРИКОРМКА</label>
-                <textarea id="trip-bait" name="bait_note" rows="3"
-                          placeholder="Що було на гачку і чим загодовував">{{ form.bait_note }}</textarea>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="trip-fish">ЩО ЗЛОВИВ (НАЗВА РИБИ)</label>
+                    <input type="text" id="trip-fish" name="fish_note"
+                           maxlength="255" value="{{ form.fish_note }}"
+                           placeholder="Наприклад: карась, 1.2 кг">
+                </div>
+
+                <div class="form-group">
+                    <label for="trip-bait">НА ЧОГО ЛОВИВ</label>
+                    <textarea id="trip-bait" name="bait_note" rows="3"
+                              placeholder="Прикормка і насадка на гачку">{{ form.bait_note }}</textarea>
+                </div>
             </div>
 
             <div class="form-row">
@@ -157,7 +166,7 @@
             </div>
 
             <p class="form-hint">
-                Улов можна буде додати після збереження сесії.
+                Впиши, що зловив і на що ловив — потім буде легше порівнювати результати.
             </p>
 
             <button type="submit" class="auth-submit">
@@ -166,7 +175,7 @@
         </form>
 
         <p class="mt-16">
-            <a class="btn btn-outline" href="{% url 'journal' %}">← Назад до журналу</a>
+            <a class="btn btn-outline" href="{% url 'journal' %}">← Назад до сесій</a>
         </p>
     </div>
 </section>

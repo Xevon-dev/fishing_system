@@ -1,10 +1,13 @@
+"""Сторінка профілю рибака."""
+
 from django.shortcuts import redirect, render
 
-from journal.models import Catches, FishingTrips, Tips
+from journal.models import FishingTrips, Tips
 from .session import current_user
 
 
 def is_expert(user):
+    """Поради може додавати лише досвідчений рибак."""
     return bool(user.level and user.level.name == "Досвідчений")
 
 
@@ -28,14 +31,8 @@ def profile_view(request):
         "trips": (
             FishingTrips.objects
             .filter(user_id=user.user_id)
-            .select_related("water_body")
+            .select_related("water_body", "type", "method")
             .order_by("-start_time")[:10]
-        ),
-        "catches": (
-            Catches.objects
-            .filter(trip__user_id=user.user_id)
-            .select_related("fish", "trip")
-            .order_by("-catch_id")[:10]
         ),
         "tips": tips,
     })

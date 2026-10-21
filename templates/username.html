@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Зміна імені — FishWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}?v={% now 'U' %}">
+{% endblock %}
+
+{% block content %}
+<section class="profile-page">
+    <div class="profile-heading">
+        <h1>Зміна імені</h1>
+        <p>Налаштування облікового запису</p>
+    </div>
+
+    <div class="profile-layout">
+        <div class="settings-card">
+            <h2>Ім'я рибака</h2>
+            <p class="profile-hint">
+                Можна написати повністю — «Прізвище Ім'я» або просто «Ім'я».
+            </p>
+
+            <form method="post" class="auth-form" novalidate>
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="username">ІМ'Я</label>
+                    <input type="text" id="username" name="username" maxlength="150"
+                           value="{{ username }}"
+                           class="{% if errors.username %}input-error{% endif %}">
+                    {% if errors.username %}
+                        <span class="field-error">{{ errors.username }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="profile-actions">
+                    <button type="submit" class="btn btn-primary">Зберегти ім'я</button>
+                    <a class="btn btn-outline" href="{% url 'profile' %}">← Назад до профілю</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

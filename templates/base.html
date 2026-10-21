@@ -22,7 +22,7 @@
         <nav class="nav-links">
             {% if current_user %}
                 <a href="{% url 'water_bodies' %}">Карта водойм</a>
-                <a href="{% url 'journal' %}">Журнал</a>
+                <a href="{% url 'journal' %}">Риболовні сесії</a>
                 <a href="{% url 'tips_list' %}">Поради рибалок</a>
                 {% if current_user.level.name == "Початківець" %}
                     <a href="{% url 'fish_advice' %}">Поради за рибою</a>
@@ -43,7 +43,9 @@
         <div class="nav-actions">
             {% if current_user %}
                 <a class="login-link" href="{% url 'profile' %}">Профіль</a>
-                <a class="btn btn-primary" href="{% url 'logout' %}">Вийти</a>
+                <a class="btn btn-primary"
+                   href="{% url 'logout' %}"
+                   data-confirm="Вийти з акаунту?">Вийти</a>
             {% else %}
                 <a class="login-link" href="{% url 'login' %}">Увійти</a>
                 <a class="btn btn-primary" href="{% url 'register' %}">Реєстрація</a>
@@ -57,6 +59,7 @@
 </main>
 
 {% block extra_js %}{% endblock %}
+<script src="{% static 'js/confirm.js' %}?v={% now 'U' %}"></script>
 
 </body>
 </html>
