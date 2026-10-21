@@ -1,10 +1,11 @@
-import requests
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
-
+from .advice import get_advice
 from .models import FishSpecies, FishingMethods, Tackle, WaterBodies
+from .weather import get_forecast
+from datetime import datetime
 
 
 def home(request):
@@ -34,7 +35,6 @@ def methods_view(request):
 
 @require_GET
 def water_bodies_geojson(request, region):
-   
     water_bodies = WaterBodies.objects.filter(region_slug=region).values(
         "name", "type", "area_km2", "depth", "fish_list",
         "description", "wikipedia", "source", "geometry",
@@ -47,21 +47,12 @@ def water_bodies_geojson(request, region):
             continue
 
         properties = {
-            "name": water_body["name"],
-            "type": water_body["type"],
-            "area_km2": float(water_body["area_km2"] or 0),
+            key: value
+            for key, value in water_body.items()
+            if key != "geometry" and value is not None
         }
-
-        if water_body["depth"]:
-            properties["depth"] = water_body["depth"]
-        if water_body["fish_list"]:
-            properties["fish"] = water_body["fish_list"]
-        if water_body["description"]:
-            properties["description"] = water_body["description"]
-        if water_body["wikipedia"]:
-            properties["wikipedia"] = water_body["wikipedia"]
-        if water_body["source"]:
-            properties["source"] = water_body["source"]
+        properties["area_km2"] = float(water_body["area_km2"] or 0)
+        properties["fish"] = properties.pop("fish_list", "")
 
         features.append({
             "type": "Feature",
@@ -77,16 +68,12 @@ def water_bodies_geojson(request, region):
 
 @require_GET
 def weather_view(request):
-    
     lat = request.GET.get("lat")
     lon = request.GET.get("lon")
-
-    forecast = requests.get(
-        f"https://api.weatherapi.com/v1/forecast.json?key={settings.WEATHER_API}&q={lat},{lon}&days=3&lang=uk"
-    ).json()
-
-    if "error" in forecast:
-        return JsonResponse({"error": forecast["error"]["message"]}, status=502)
+    try:
+        forecast = get_forecast(lat, lon)
+    except Exception as error:
+        return JsonResponse({"error": str(error)}, status=502)
 
     current = forecast["current"]
 
@@ -98,4 +85,29 @@ def weather_view(request):
         "precip": current["precip_mm"],
         "humidity": current["humidity"],
         "pressure": round(current["pressure_mb"] * 0.750062),
+    })
+
+
+@require_GET
+def advice_view(request):
+    water = {
+        "lat": request.GET.get("lat"),
+        "lon": request.GET.get("lon"),
+        "name": request.GET.get("name", ""),
+        "type": request.GET.get("type", ""),
+        "area": request.GET.get("area", ""),
+        "depth": request.GET.get("depth", ""),
+        "fish": request.GET.get("fish", ""),
+    }
+
+    try:
+        paragraphs = get_advice(water)
+    except Exception as error:
+        return JsonResponse(
+            {"error": f"Не вдалося отримати рекомендацію: {error}"}, status=502
+        )
+
+    return render(request, "advice_card.html", {
+        "title": "Рекомендація",
+        "paragraphs": paragraphs,
     })

@@ -22,7 +22,7 @@
             <p><strong>Рівень:</strong> {{ profile_user.level.name|default:"Не обрано" }}</p>
             <p><strong>Дата реєстрації:</strong> {{ profile_user.created_at|date:"d.m.Y H:i"|default:"—" }}</p>
 
-            <p style="margin-top:16px;"><a href="{% url 'logout' %}">Вийти</a></p>
+            <p class="mt-16"><a href="{% url 'logout' %}">Вийти</a></p>
         </div>
 
         <div class="level-card">
@@ -38,7 +38,7 @@
                 <p class="level-description">Сесій поки немає.</p>
             {% endif %}
 
-            <h2 style="margin-top:16px;">Мої улови</h2>
+            <h2 class="mt-16">Мої улови</h2>
             {% if catches %}
                 {% for catch in catches %}
                     <div class="login-feature">
@@ -50,7 +50,7 @@
                 <p class="level-description">Уловів поки немає.</p>
             {% endif %}
 
-            <h2 style="margin-top:16px;">Мої поради</h2>
+            <h2 class="mt-16">Мої поради</h2>
             {% if tips %}
                 {% for tip in tips %}
                     <div class="login-feature">

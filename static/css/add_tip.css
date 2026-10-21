@@ -1,0 +1,25 @@
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 14px;
+  background: #f8fafb;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  color: var(--navy);
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+}
+.form-group select:focus,
+.form-group textarea:focus {
+  background: #fff;
+  border-color: var(--blue);
+}
+.form-group select.input-error,
+.form-group textarea.input-error {
+  border: 2px solid #e53935;
+  background: #fff6f6;
+}
+.level-hint {
+  color: #64748b;
+}

@@ -1,0 +1,124 @@
+.map-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+.map-heading h1 {
+  margin: 0 0 4px;
+}
+.map-heading p {
+  color: #64748b;
+  margin: 0 0 16px;
+}
+.map-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.map-status {
+  color: #64748b;
+  font-size: 14px;
+}
+.map-hint {
+  color: #94a3b8;
+  font-size: 13px;
+  margin: 0 0 16px;
+}
+#water-region {
+  padding: 12px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fff;
+  font: inherit;
+  font-weight: 700;
+  color: inherit;
+  cursor: pointer;
+}
+#water-region:focus {
+  outline: 2px solid #0d9488;
+  outline-offset: 1px;
+}
+.map-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+#map {
+  height: 480px;
+  border-radius: 12px;
+  background: #e2e8f0;
+}
+.map-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #b42318;
+  padding: 20px;
+}
+.info-box {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.info-box:last-child {
+  margin-bottom: 0;
+}
+.info-box h2 {
+  margin: 0 0 8px;
+}
+.water-title {
+  display: block;
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+.water-meta {
+  color: #64748b;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+.water-fish {
+  margin-top: 6px;
+}
+.water-desc {
+  margin: 8px 0 0;
+}
+#water-info a {
+  display: inline-block;
+  margin-top: 8px;
+}
+.weather-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.weather-condition {
+  color: #64748b;
+  font-size: 15px;
+}
+.weather-temp {
+  font-size: 26px;
+  font-weight: 700;
+}
+.weather-row {
+  font-size: 14px;
+  color: #475569;
+  margin-bottom: 3px;
+}
+.advice-text {
+  font-size: 14px;
+  color: #334155;
+  line-height: 1.5;
+  margin: 0 0 8px;
+  white-space: pre-line;
+}
+@media (max-width: 800px) {
+  .map-layout {
+    grid-template-columns: 1fr;
+  }
+}

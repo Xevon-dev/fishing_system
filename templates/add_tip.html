@@ -5,27 +5,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/auth.css' %}">
-<style>
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    padding: 12px 14px;
-    background: #f8fafb;
-    border: 1px solid var(--border);
-    border-radius: 11px;
-    color: var(--navy);
-    font-family: inherit;
-    font-size: 14px;
-    outline: none;
-}
-.form-group select:focus,
-.form-group textarea:focus {
-    background: #fff;
-    border-color: var(--blue);
-}
-.form-group select.input-error,
-.form-group textarea.input-error { border: 2px solid #e53935; background: #fff6f6; }
-</style>
+<link rel="stylesheet" href="{% static 'css/add_tip.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -37,7 +17,7 @@
 
     <div class="auth-card">
         {% if not_allowed %}
-            <p class="level-description" style="color: #64748b;">
+            <p class="level-description level-hint">
                 Додавати поради можуть лише досвідчені рибалки.
             </p>
         {% else %}
