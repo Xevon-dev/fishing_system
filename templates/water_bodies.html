@@ -42,7 +42,9 @@
   <div class="map-layout">
   
     {% if google_maps_api_key %}
-    <div id="map"></div>
+    <div id="map"
+         data-focus-id="{{ focus_water.water_body_id|default:'' }}"
+         data-focus-region="{{ focus_water.region_slug|default:'' }}"></div>
     {% else %}
     <div id="map" class="map-fallback">
       Ключ Google Maps не знайдено.<br />

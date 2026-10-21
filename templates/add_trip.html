@@ -49,7 +49,13 @@
                     Обери область, натисни «Показати водойми» і клікни по водоймі.
                 </p>
 
-                <div id="trip-map"></div>
+                <div id="trip-map"
+                     {% if selected_water %}
+                     data-lat="{{ selected_water.latitude }}"
+                     data-lon="{{ selected_water.longitude }}"
+                     data-water-id="{{ selected_water.water_body_id }}"
+                     data-water-url="{% url 'water_body_geojson' water_body_id=selected_water.water_body_id %}"
+                     {% endif %}></div>
 
                 <input type="hidden" id="trip-water-id" name="water_body_id"
                        value="{{ form.water_body_id }}">
@@ -60,6 +66,15 @@
                     {% else %}
                         Водойму ще не обрано
                     {% endif %}
+                </p>
+
+                <p class="trip-water-actions">
+                    <button id="trip-show-on-map"
+                            class="btn btn-outline btn-sm"
+                            type="button"
+                            {% if not selected_water %}hidden{% endif %}>
+                        🗺 Де моя водойма?
+                    </button>
                 </p>
 
                 {% if errors.water_body_id %}

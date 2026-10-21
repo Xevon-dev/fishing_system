@@ -19,6 +19,15 @@ function createWaterMap(selectorOrElement) {
 }
 
 /**
+ * Межі однієї водойми на карті — щоб наблизити до неї.
+ */
+function featureBounds(feature) {
+  const bounds = new google.maps.LatLngBounds();
+  feature.getGeometry().forEachLatLng((latLng) => bounds.extend(latLng));
+  return bounds;
+}
+
+/**
  * Вантажить водойми обраної області на карту.
  * Повертає geojson або null, якщо нічого не завантажено.
  */

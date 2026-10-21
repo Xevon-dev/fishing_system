@@ -62,6 +62,10 @@
                         <a class="btn btn-outline btn-sm" href="{% url 'edit_trip' trip.trip_id %}">
                             Редагувати
                         </a>
+                        <a class="btn btn-outline btn-sm"
+                           href="{% url 'water_bodies' %}?water={{ trip.water_body_id }}">
+                            🗺 Де водойма?
+                        </a>
                         <form method="post" action="{% url 'delete_trip' trip.trip_id %}"
                               data-confirm="Видалити цю сесію разом з уловами?">
                             {% csrf_token %}
