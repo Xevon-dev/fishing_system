@@ -22,15 +22,3 @@ class Users(models.Model):
     class Meta:
         managed = False
         db_table = 'users'
-
-
-class LevelTests(models.Model):
-    test_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey('Users', models.DO_NOTHING)
-    score = models.IntegerField(blank=True, null=True)
-    suggested_level = models.ForeignKey('Levels', models.DO_NOTHING, blank=True, null=True)
-    taken_at = models.DateTimeField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'level_tests'

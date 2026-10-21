@@ -4,7 +4,6 @@ from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
 
 from journal.models import Catches, FishingTrips, Tips
-from .models import LevelTests
 from .session import current_user, logout_user
 
 
@@ -18,7 +17,6 @@ def delete_account_view(request):
     Catches.objects.filter(trip__user_id=user.user_id).delete()
     trips.delete()
     Tips.objects.filter(author_id=user.user_id).delete()
-    LevelTests.objects.filter(user_id=user.user_id).delete()
 
     user.delete()
     logout_user(request)

@@ -36,17 +36,6 @@ class FishSpecies(models.Model):
         db_table = 'fish_species'
 
 
-class WaterBodyFish(models.Model):
-    water_body_fish_id = models.AutoField(primary_key=True)
-    water_body = models.ForeignKey('WaterBodies', models.DO_NOTHING)
-    fish = models.ForeignKey('FishSpecies', models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'water_body_fish'
-        unique_together = (('water_body', 'fish'),)
-
-
 class FishingTypes(models.Model):
     type_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
@@ -78,14 +67,3 @@ class Tackle(models.Model):
     class Meta:
         managed = False
         db_table = 'tackle'
-
-
-class TackleRecommendations(models.Model):
-    rec_id = models.AutoField(primary_key=True)
-    fish = models.ForeignKey('FishSpecies', models.DO_NOTHING)
-    tackle = models.ForeignKey('Tackle', models.DO_NOTHING)
-    method = models.ForeignKey('FishingMethods', models.DO_NOTHING)
-
-    class Meta:
-        managed = False
-        db_table = 'tackle_recommendations'
