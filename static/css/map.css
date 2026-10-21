@@ -133,6 +133,21 @@
   margin: 0 0 8px;
   white-space: pre-line;
 }
+.advice-button {
+  padding: 10px 18px;
+  border: 0;
+  border-radius: 10px;
+  background: #087e9b;
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.advice-button:hover {
+  background: #0b91b2;
+}
 @media (max-width: 800px) {
   .map-layout {
     grid-template-columns: 1fr;

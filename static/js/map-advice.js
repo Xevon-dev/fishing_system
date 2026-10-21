@@ -1,3 +1,23 @@
+/**
+ * Порада від ШІ генерується лише на вимогу — щоб не витрачати запити даремно.
+ */
+function prepareAdvice(box, latLng, water) {
+  box.replaceChildren();
+
+  const hint = document.createElement("p");
+  hint.className = "advice-text";
+  hint.textContent =
+    "Порада від ШІ генерується за запитом і займає 5–10 секунд.";
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "advice-button";
+  button.textContent = "✨ Дізнатися пораду";
+  button.addEventListener("click", () => loadAdvice(box, latLng, water));
+
+  box.append(hint, button);
+}
+
 async function loadAdvice(box, latLng, water) {
   const params = new URLSearchParams({
     lat: latLng.lat(),

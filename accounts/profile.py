@@ -1,9 +1,11 @@
-"""Сторінка профілю рибака."""
-
 from django.shortcuts import redirect, render
 
 from journal.models import Catches, FishingTrips, Tips
 from .session import current_user
+
+
+def is_expert(user):
+    return bool(user.level and user.level.name == "Досвідчений")
 
 
 def profile_view(request):
@@ -11,8 +13,18 @@ def profile_view(request):
     if not user:
         return redirect("login")
 
+    tips = []
+    if is_expert(user):
+        tips = (
+            Tips.objects
+            .filter(author_id=user.user_id)
+            .select_related("fish")
+            .order_by("-tip_id")[:10]
+        )
+
     return render(request, "profile.html", {
         "profile_user": user,
+        "is_expert": is_expert(user),
         "trips": (
             FishingTrips.objects
             .filter(user_id=user.user_id)
@@ -25,10 +37,5 @@ def profile_view(request):
             .select_related("fish", "trip")
             .order_by("-catch_id")[:10]
         ),
-        "tips": (
-            Tips.objects
-            .filter(author_id=user.user_id)
-            .select_related("fish")
-            .order_by("-tip_id")[:10]
-        ),
+        "tips": tips,
     })

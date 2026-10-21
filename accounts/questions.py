@@ -1,5 +1,3 @@
-"""Запитання тесту на рівень рибалки."""
-
 import json
 from pathlib import Path
 
@@ -14,7 +12,6 @@ def load_questions():
 
 
 def public_questions(questions):
-    """Ті самі питання, але без правильних балів — для шаблону."""
     return [
         {
             "id": question["id"],

@@ -39,7 +39,7 @@ function initMap() {
     };
 
     loadWeather(weatherBox, position);
-    loadAdvice(adviceBox, position, lastWater);
+    prepareAdvice(adviceBox, position, lastWater);
   }
 
   function findWater(waterId) {
@@ -107,7 +107,7 @@ function initMap() {
 
     lastWater = null;
     loadWeather(weatherBox, event.latLng);
-    loadAdvice(adviceBox, event.latLng, lastWater);
+    prepareAdvice(adviceBox, event.latLng, lastWater);
   });
 
   button.addEventListener("click", async () => {

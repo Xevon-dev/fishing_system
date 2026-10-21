@@ -30,6 +30,10 @@
         {% else %}
             <p class="level-description">Даних поки немає.</p>
         {% endif %}
+
+        <p class="mt-16">
+            <a class="btn btn-outline" href="{% url 'profile' %}">← До профілю</a>
+        </p>
     </div>
 </section>
 {% endblock %}

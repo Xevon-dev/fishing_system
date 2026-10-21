@@ -23,7 +23,6 @@
             {% if current_user %}
                 <a href="{% url 'water_bodies' %}">Карта водойм</a>
                 <a href="{% url 'journal' %}">Журнал</a>
-                <a href="{% url 'stats' %}">Статистика</a>
                 <a href="{% url 'tips_list' %}">Поради рибалок</a>
                 {% if current_user.level.name == "Початківець" %}
                     <a href="{% url 'fish_advice' %}">Поради за рибою</a>

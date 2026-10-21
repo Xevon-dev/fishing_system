@@ -22,6 +22,10 @@
             <p><strong>Рівень:</strong> {{ profile_user.level.name|default:"Не обрано" }}</p>
             <p><strong>Дата реєстрації:</strong> {{ profile_user.created_at|date:"d.m.Y H:i"|default:"—" }}</p>
 
+            <p class="mt-16">
+                <a class="btn btn-primary" href="{% url 'stats' %}">📊 Моя статистика</a>
+            </p>
+
             <p class="mt-16"><a href="{% url 'logout' %}">Вийти</a></p>
         </div>
 
@@ -29,13 +33,17 @@
             <h2>Мої сесії</h2>
             {% if trips %}
                 {% for trip in trips %}
-                    <div class="login-feature">
+                    <a class="profile-link" href="{% url 'edit_trip' trip.trip_id %}">
                         <strong>{{ trip.water_body.name }} — {{ trip.start_time|date:"d.m.Y H:i" }}</strong>
                         <p>{{ trip.note|default:"Без нотатки"|truncatechars:80 }}</p>
-                    </div>
+                        <small>Редагувати сесію →</small>
+                    </a>
                 {% endfor %}
+
+                <p class="mt-16"><a href="{% url 'journal' %}">Усі сесії →</a></p>
             {% else %}
                 <p class="level-description">Сесій поки немає.</p>
+                <p class="mt-16"><a href="{% url 'add_trip' %}">+ Додати першу сесію</a></p>
             {% endif %}
 
             <h2 class="mt-16">Мої улови</h2>
@@ -50,16 +58,19 @@
                 <p class="level-description">Уловів поки немає.</p>
             {% endif %}
 
-            <h2 class="mt-16">Мої поради</h2>
-            {% if tips %}
-                {% for tip in tips %}
-                    <div class="login-feature">
-                        <strong>{{ tip.fish.name|default:"Загальна порада" }}</strong>
-                        <p>{{ tip.content|truncatechars:100 }}</p>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <p class="level-description">Порад поки немає.</p>
+            {% if is_expert %}
+                <h2 class="mt-16">Мої поради</h2>
+                {% if tips %}
+                    {% for tip in tips %}
+                        <div class="login-feature">
+                            <strong>{{ tip.fish.name|default:"Загальна порада" }}</strong>
+                            <p>{{ tip.content|truncatechars:100 }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="level-description">Порад поки немає.</p>
+                    <p class="mt-16"><a href="{% url 'add_tip' %}">+ Додати пораду</a></p>
+                {% endif %}
             {% endif %}
         </div>
     </div>
