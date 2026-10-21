@@ -1,9 +1,30 @@
 from django.shortcuts import redirect, render
 from django.utils import timezone
 
-from catalog.models import FishSpecies
 from .common import current_user
 from .models import Tips
+from .tip_check import check_tip
+
+
+def validate_tip(title, content):
+    errors = {}
+
+    if not title:
+        errors["title"] = "Введіть назву поради"
+    elif len(title) < 10:
+        errors["title"] = "Мінімум 10 символів"
+    elif len(title) > 200:
+        errors["title"] = "Максимум 200 символів"
+
+    if not content:
+        errors["content"] = "Введіть текст поради"
+
+    if not errors:
+        ok, reason = check_tip(title, content)
+        if not ok:
+            errors["content"] = reason
+
+    return errors
 
 
 def tips_list_view(request):
@@ -19,27 +40,19 @@ def add_tip_view(request):
     if not user.level or user.level.name != "Досвідчений":
         return render(request, "add_tip.html", {"not_allowed": True})
 
-    errors = {}
+    title = ""
     content = ""
-    fish_id = ""
+    errors = {}
 
     if request.method == "POST":
+        title = request.POST.get("title", "").strip()
         content = request.POST.get("content", "").strip()
-        fish_id = request.POST.get("fish", "")
-
-        if not content:
-            errors["content"] = "Введіть текст поради"
-        elif len(content) < 10:
-            errors["content"] = "Мінімум 10 символів"
+        errors = validate_tip(title, content)
 
         if not errors:
-            fish_obj = None
-            if fish_id:
-                fish_obj = FishSpecies.objects.filter(pk=fish_id).first()
-
             Tips.objects.create(
                 author=user,
-                fish=fish_obj,
+                title=title,
                 content=content,
                 created_at=timezone.now(),
             )
@@ -47,7 +60,38 @@ def add_tip_view(request):
 
     return render(request, "add_tip.html", {
         "errors": errors,
+        "title": title,
         "content": content,
-        "fish_id": fish_id,
-        "fish_list": FishSpecies.objects.all().order_by("name"),
+    })
+
+
+def edit_tip_view(request, tip_id):
+    user = current_user(request)
+    if not user:
+        return redirect("login")
+
+    tip = Tips.objects.filter(pk=tip_id).first()
+    if not tip or tip.author_id != user.user_id:
+        return redirect("tips_list")
+
+    title = tip.title
+    content = tip.content
+    errors = {}
+
+    if request.method == "POST":
+        title = request.POST.get("title", "").strip()
+        content = request.POST.get("content", "").strip()
+        errors = validate_tip(title, content)
+
+        if not errors:
+            tip.title = title
+            tip.content = content
+            tip.save(update_fields=["title", "content"])
+            return redirect("tips_list")
+
+    return render(request, "add_tip.html", {
+        "tip": tip,
+        "errors": errors,
+        "title": title,
+        "content": content,
     })

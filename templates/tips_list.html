@@ -17,16 +17,23 @@
     <div class="auth-card">
         {% if tips %}
             {% for tip in tips %}
-                <div class="login-feature">
-                    <strong>{{ tip.fish.name|default:"Загальна порада" }}</strong>
+                <article class="tip-card">
+                    <h3>{{ tip.title|default:"Порада рибалки" }}</h3>
                     <p>{{ tip.content }}</p>
-                    <p>
+                    <p class="tip-meta">
+                        {% if tip.fish %}
+                            {{ tip.fish.name }} ·
+                        {% endif %}
                         Автор: {{ tip.author.username }}
                         {% if tip.created_at %}
                             · {{ tip.created_at|date:"d.m.Y" }}
                         {% endif %}
                     </p>
-                </div>
+                    {% if current_user and tip.author_id == current_user.user_id %}
+                        <a class="tip-edit-link"
+                           href="{% url 'edit_tip' tip.tip_id %}">✏️ Редагувати</a>
+                    {% endif %}
+                </article>
             {% endfor %}
         {% else %}
             <p class="level-description">Порад поки немає.</p>

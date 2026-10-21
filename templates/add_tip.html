@@ -11,8 +11,14 @@
 {% block content %}
 <section class="auth-section">
     <div class="auth-heading">
-        <h1>Додати власну пораду</h1>
-        <p>Поділись досвідом з іншими рибалками</p>
+        <h1>{% if tip %}Редагувати пораду{% else %}Додати власну пораду{% endif %}</h1>
+        <p>
+            {% if tip %}
+                Зміни назву або текст — ШІ перевірить пораду ще раз
+            {% else %}
+                Поділись досвідом з іншими рибалками
+            {% endif %}
+        </p>
     </div>
 
     <div class="auth-card">
@@ -25,16 +31,13 @@
                 {% csrf_token %}
 
                 <div class="form-group">
-                    <label for="fish">РИБА (необов'язково)</label>
-                    <select id="fish" name="fish">
-                        <option value="">Загальна порада</option>
-                        {% for fish in fish_list %}
-                            <option value="{{ fish.fish_id }}"
-                                    {% if fish_id == fish.fish_id|stringformat:"s" %}selected{% endif %}>
-                                {{ fish.name }}
-                            </option>
-                        {% endfor %}
-                    </select>
+                    <label for="title">НАЗВА ПОРАДИ</label>
+                    <input type="text" id="title" name="title" maxlength="200"
+                           value="{{ title }}"
+                           class="{% if errors.title %}input-error{% endif %}">
+                    {% if errors.title %}
+                        <span class="field-error">{{ errors.title }}</span>
+                    {% endif %}
                 </div>
 
                 <div class="form-group">
@@ -46,11 +49,20 @@
                     {% endif %}
                 </div>
 
+                <p class="level-hint">
+                    Пораду перевіряє ШІ — щоб у списку не було набору символів.
+                    Перевірка займає кілька секунд.
+                </p>
+
                 <button type="submit" class="auth-submit">
-                    Опублікувати →
+                    {% if tip %}Зберегти зміни →{% else %}Опублікувати →{% endif %}
                 </button>
             </form>
         {% endif %}
     </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/add_tip.js' %}?v={% now 'U' %}"></script>
 {% endblock %}

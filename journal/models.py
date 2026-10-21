@@ -66,6 +66,7 @@ class Catches(models.Model):
 class Tips(models.Model):
     tip_id = models.AutoField(primary_key=True)
     author = models.ForeignKey('accounts.Users', models.DO_NOTHING)
+    title = models.CharField(max_length=200)
     fish = models.ForeignKey(
         'catalog.FishSpecies',
         models.DO_NOTHING,

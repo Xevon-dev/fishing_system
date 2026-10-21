@@ -373,3 +373,44 @@
 .level-card a:not(.btn) {
   color: #6fd7ea;
 }
+
+/* Посилання «Редагувати» під власною порадою */
+.tip-edit-link {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #087e9b;
+}
+.tip-edit-link:hover {
+  color: #0b91b2;
+}
+
+/* Окрема картка для кожної поради */
+.tip-card {
+  background: #f8fafb;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px 20px;
+  margin-bottom: 14px;
+}
+.tip-card:last-child {
+  margin-bottom: 0;
+}
+.tip-card h3 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  line-height: 1.35;
+  color: var(--navy);
+}
+.tip-card p {
+  margin: 0 0 8px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #334155;
+}
+.tip-card .tip-meta {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}

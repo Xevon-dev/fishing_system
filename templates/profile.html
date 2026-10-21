@@ -63,7 +63,7 @@
                 {% if tips %}
                     {% for tip in tips %}
                         <div class="login-feature">
-                            <strong>{{ tip.fish.name|default:"Загальна порада" }}</strong>
+                            <strong>{{ tip.title|default:"Порада рибалки" }}</strong>
                             <p>{{ tip.content|truncatechars:100 }}</p>
                         </div>
                     {% endfor %}

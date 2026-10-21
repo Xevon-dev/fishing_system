@@ -24,7 +24,7 @@ def journal_view(request):
     return render(request, "journal.html", {"trips": trips})
 
 
-def _trip_form(request, trip=None):
+def trip_form_view(request, trip=None):
     user = current_user(request)
     if not user:
         return redirect("login")
@@ -64,7 +64,7 @@ def _trip_form(request, trip=None):
 
 
 def add_trip_view(request):
-    return _trip_form(request)
+    return trip_form_view(request)
 
 
 def edit_trip_view(request, trip_id):
@@ -76,7 +76,7 @@ def edit_trip_view(request, trip_id):
     if not trip:
         return redirect("journal")
 
-    return _trip_form(request, trip)
+    return trip_form_view(request, trip)
 
 
 @require_POST

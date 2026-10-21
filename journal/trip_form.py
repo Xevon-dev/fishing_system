@@ -45,7 +45,7 @@ def form_defaults(trip=None):
     }
 
 
-def _parse_start(value, errors):
+def parse_start(value, errors):
     if not value:
         errors["start_time"] = "Вкажи дату й час початку"
         return None
@@ -57,7 +57,7 @@ def _parse_start(value, errors):
         return None
 
 
-def _parse_hours(value, errors):
+def parse_hours(value, errors):
     if not value:
         return None
 
@@ -97,8 +97,8 @@ def parse_form(post, trip=None):
     if method_id and not FishingMethods.objects.filter(pk=method_id).exists():
         method_id = None
 
-    start = _parse_start(form["start_time"], errors)
-    hours = _parse_hours(form["hours_spent"], errors)
+    start = parse_start(form["start_time"], errors)
+    hours = parse_hours(form["hours_spent"], errors)
 
     end = start + timedelta(hours=float(hours)) if start and hours else None
 

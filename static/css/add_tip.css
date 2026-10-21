@@ -1,3 +1,7 @@
 .level-hint {
   color: #64748b;
 }
+.auth-submit:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}

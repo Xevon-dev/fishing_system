@@ -50,7 +50,7 @@ WATER_FIELDS = (
 )
 
 
-def _geojson_feature(water_body):
+def build_geojson_feature(water_body):
     """Один запис водойми у форматі GeoJSON Feature."""
     if not water_body["geometry"]:
         return None
@@ -76,7 +76,7 @@ def water_bodies_geojson(request, region):
 
     features = []
     for water_body in water_bodies:
-        feature = _geojson_feature(water_body)
+        feature = build_geojson_feature(water_body)
         if feature:
             features.append(feature)
 
@@ -94,7 +94,7 @@ def water_body_geojson(request, water_body_id):
         .values(*WATER_FIELDS)
         .first()
     )
-    feature = _geojson_feature(water_body) if water_body else None
+    feature = build_geojson_feature(water_body) if water_body else None
 
     return JsonResponse({
         "type": "FeatureCollection",

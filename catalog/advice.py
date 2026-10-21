@@ -1,6 +1,4 @@
-import requests
-from django.conf import settings
-
+from .openrouter import query_openrouter
 from .weather import get_forecast
 
 
@@ -133,29 +131,6 @@ def build_prompt(weather, water, score):
 {ADVICE_RULES}
 {ADVICE_FORMAT}
 """.strip()
-
-
-def query_openrouter(prompt):
-
-    url = "https://openrouter.ai/api/v1/chat/completions"
-
-    headers = {
-        "Authorization": f"Bearer {settings.OPENROUTER_API}",
-        "Content-Type": "application/json",
-    }
-
-    data = {
-        "model": settings.OPENROUTER_MODEL,
-        "messages": [{"role": "user", "content": prompt}],
-    }
-
-    response = requests.post(url, headers=headers, json=data, timeout=120)
-
-    if response.status_code == 200:
-        result = response.json()
-        return result["choices"][0]["message"]["content"]
-
-    return f"Помилка: {response.status_code}, {response.text}"
 
 
 def get_advice(water):

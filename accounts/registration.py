@@ -1,5 +1,3 @@
-"""Реєстрація нового рибака."""
-
 import re
 
 from django.contrib.auth.hashers import make_password
@@ -13,8 +11,7 @@ from .session import login_user
 EMAIL_RE = re.compile(r"[^@\s]+@[^@\s]+\.[^@\s]+")
 USERNAME_RE = re.compile(r"[\w]+")
 
-
-def _username_error(username):
+def username_error(username):
     if not username:
         return "Введіть ім'я користувача"
     if len(username) < 3:
@@ -26,7 +23,7 @@ def _username_error(username):
     return None
 
 
-def _email_error(email):
+def email_error(email):
     if not email:
         return "Введіть електронну пошту"
     if not EMAIL_RE.fullmatch(email):
@@ -36,7 +33,7 @@ def _email_error(email):
     return None
 
 
-def _password_errors(password, confirm_password):
+def password_errors(password, confirm_password):
     errors = {}
 
     if not password:
@@ -68,13 +65,13 @@ def register_view(request):
         confirm_password = request.POST.get("confirm_password", "")
 
         for field, message in (
-            ("username", _username_error(form["username"])),
-            ("email", _email_error(form["email"])),
+            ("username", username_error(form["username"])),
+            ("email", email_error(form["email"])),
         ):
             if message:
                 errors[field] = message
 
-        errors.update(_password_errors(password, confirm_password))
+        errors.update(password_errors(password, confirm_password))
 
         if form["fishing_level"] not in LEVEL_NAMES:
             errors["fishing_level"] = "Оберіть рівень риболовлі"
