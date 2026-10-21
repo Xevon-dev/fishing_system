@@ -7,7 +7,7 @@
     <title>{% block title %}FishWise{% endblock %}</title>
 
     <link rel="icon" href="{% static 'images/icons/fish.png' %}">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v={% now 'U' %}">
     {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -22,16 +22,17 @@
         <nav class="nav-links">
             {% if current_user %}
                 <a href="{% url 'water_bodies' %}">Карта водойм</a>
+                <a href="{% url 'journal' %}">Журнал</a>
+                <a href="{% url 'stats' %}">Статистика</a>
                 <a href="{% url 'tips_list' %}">Поради рибалок</a>
                 {% if current_user.level.name == "Початківець" %}
                     <a href="{% url 'fish_advice' %}">Поради за рибою</a>
                     <a href="{% url 'tackle' %}">Підбір снастей</a>
+                    <a href="{% url 'methods' %}">Техніки лову</a>
                 {% elif current_user.level.name == "Середній" %}
                     <a href="{% url 'tackle' %}">Підбір снастей</a>
                     <a href="{% url 'methods' %}">Техніки лову</a>
                 {% elif current_user.level.name == "Досвідчений" %}
-                    <a href="{% url 'journal' %}">Журнал</a>
-                    <a href="{% url 'stats' %}">Статистика</a>
                     <a href="{% url 'add_tip' %}">Додати пораду</a>
                 {% endif %}
             {% else %}

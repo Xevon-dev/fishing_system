@@ -18,15 +18,17 @@ ADVICE_RULES = """
 ADVICE_FORMAT = """
 Напиши відповідь українською, у такому ж форматі, як у старих рекомендаціях:
 
-1. Абзац про час доби з емодзі: 🌅 ранок, ☀️ день, 🌇 вечір, 🌙 ніч.
-2. "Погодні умови: ..." — температура, відчуття, вітер, опади, вологість, тиск, хмарність.
+1. Абзац про сьогоднішній день і час доби з емодзі: 🌅 ранок, ☀️ день, 🌇 вечір, 🌙 ніч.
+2. "Погодні умови: ..." — температура, вітер, опади, вологість, тиск, хмарність.
    Якщо якась величина поза нормою — поясни чому це погано або добре для риби.
 3. Вердикт: ✅ Варто йти - ... або ⚠️ Можна спробувати - ... або ❌ Іти не варто - ...
-   Порадь по снасті, приманці, часу ловлі — 2-4 речення.
-4. ℹ️ Зверніть увагу: ці рекомендації базуються на загальних закономірностях поведінки риби...
-   і враховуй особливості цієї водойми.
+   Порадь по снасті, приманці й найкращому часу ловлі — 2-4 речення.
+4. ℹ️ Зверніть увагу: ці рекомендації базуються на загальних закономірностях поведінки риби
+   та враховують особливості цієї водойми. Але власний досвід завжди важливіший —
+   уважно стеж за змінами погоди і будь готовий швидко завершити рибалку,
+   якщо умови погіршаться.
 
-Без води, звертайся на "ти".
+Пиши саме про сьогодні, без води, звертайся на "ти".
 """
 
 def time_of_day(hour):
@@ -41,28 +43,18 @@ def time_of_day(hour):
     return "ніч"
 
 
-def current_hour(weather):
-    localtime = weather["location"]["localtime"]
-    hours = weather["forecast"]["forecastday"][0]["hour"]
-
-    for hour in hours:
-        if hour["time"][:13] == localtime[:13]:
-            return hour
-
-    return hours[0]
-
-
 def score_conditions(weather):
-    hour = current_hour(weather)
-    localtime = weather["location"]["localtime"]
+    today = weather["forecast"]["forecastday"][0]
+    day = today["day"]
+    noon = today["hour"][12]
+    time = time_of_day(int(weather["location"]["localtime"][11:13]))
 
-    temp = round(hour["temp_c"])
-    wind = round(hour["wind_kph"])
-    precip = hour["precip_mm"]
-    pressure = round(hour["pressure_mb"] * 0.750062)
-    cloud = hour["cloud"]
-    chance_of_rain = hour["chance_of_rain"]
-    time = time_of_day(int(localtime[11:13]))
+    temp = round(day["avgtemp_c"])
+    wind = round(day["maxwind_kph"])
+    precip = day["totalprecip_mm"]
+    pressure = round(noon["pressure_mb"] * 0.750062)
+    cloud = noon["cloud"]
+    chance_of_rain = day["daily_chance_of_rain"]
 
     score = 0
     if time in ("ранок", "вечір"):
@@ -99,15 +91,17 @@ def score_conditions(weather):
         "score": score,
         "time": time,
         "verdict": verdict,
+        "date": today["date"],
         "temp": temp,
-        "feels_like": round(weather["current"]["feelslike_c"]),
+        "min_temp": round(day["mintemp_c"]),
+        "max_temp": round(day["maxtemp_c"]),
         "wind": wind,
         "precip": precip,
-        "humidity": hour["humidity"],
+        "humidity": round(day["avghumidity"]),
         "pressure": pressure,
         "cloud": cloud,
         "chance_of_rain": chance_of_rain,
-        "condition": hour["condition"]["text"],
+        "condition": day["condition"]["text"],
     }
 
 
@@ -122,18 +116,18 @@ def build_prompt(weather, water, score):
         water_text += f", види риби: {water['fish']}"
 
     return f"""
-Ти досвідчений рибальчий гід України. Напиши рекомендацію для рибалки.
+Ти досвідчений рибальчий гід України. Напиши рекомендацію для рибалки на сьогодні.
 
 Водойма: {water_text}
 
-Погода зараз ({weather['location']['localtime'][11:16]}):
-{score['condition']}, {score['temp']} °C (відчувається як {score['feels_like']} °C),
-вітер {score['wind']} км/год, опади {score['precip']} мм,
+Погода на сьогодні ({score['date']}), зараз {weather['location']['localtime'][11:16]}:
+{score['condition']}, середня температура {score['temp']} °C (від {score['min_temp']} до {score['max_temp']} °C),
+вітер до {score['wind']} км/год, опади {score['precip']} мм,
 ймовірність дощу {score['chance_of_rain']}%, вологість {score['humidity']}%,
 тиск {score['pressure']} мм рт.ст., хмарність {score['cloud']}%.
 
-Час доби: {score['time']}
-Оцінка умов: {score['score']} з 9 — {score['verdict']}
+Час доби зараз: {score['time']}
+Оцінка умов на сьогодні: {score['score']} з 9 — {score['verdict']}
 
 Критерії оцінки:
 {ADVICE_RULES}

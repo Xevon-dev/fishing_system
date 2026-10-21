@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if trip %}Редагувати сесію{% else %}Додати сесію{% endif %} — FishWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}?v={% now 'U' %}">
+<link rel="stylesheet" href="{% static 'css/journal.css' %}?v={% now 'U' %}">
+{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-heading">
+        <h1>{% if trip %}Редагувати сесію{% else %}Додати сесію{% endif %}</h1>
+        <p>{% if trip %}Зміни свої записи про риболовлю{% else %}Запиши свою риболовлю, щоб вести журнал{% endif %}</p>
+    </div>
+
+    <div class="auth-card">
+        {% if not google_maps_api_key %}
+            <p class="auth-message error">
+                Ключ Google Maps не знайдено. Додай GOOGLE_MAPS_API_KEY у файл .env
+            </p>
+        {% endif %}
+
+        <form method="post" class="auth-form" novalidate>
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label>ВОДОЙМА</label>
+
+                <div class="trip-map-controls">
+                    <select id="trip-region" aria-label="Область">
+                        <option value="">— обери область —</option>
+                        {% for region in regions %}
+                            <option value="{{ region.region_slug }}">{{ region.region }}</option>
+                        {% endfor %}
+                    </select>
+                    <button
+                        id="trip-layer-btn"
+                        class="btn btn-primary"
+                        type="button"
+                        data-geojson-url="{% url 'water_bodies_geojson' region='__REGION__' %}"
+                    >
+                        Показати водойми
+                    </button>
+                </div>
+
+                <p id="trip-layer-status" class="form-hint">
+                    Обери область, натисни «Показати водойми» і клікни по водоймі.
+                </p>
+
+                <div id="trip-map"></div>
+
+                <input type="hidden" id="trip-water-id" name="water_body_id"
+                       value="{{ form.water_body_id }}">
+
+                <p id="trip-water-name" class="trip-water-name{% if selected_water %} is-set{% endif %}">
+                    {% if selected_water %}
+                        Обрано: {{ selected_water.name }}{% if selected_water.type %} · {{ selected_water.type }}{% endif %}
+                    {% else %}
+                        Водойму ще не обрано
+                    {% endif %}
+                </p>
+
+                {% if errors.water_body_id %}
+                    <span class="field-error">{{ errors.water_body_id }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="trip-type">ТИП РИБОЛОВЛІ</label>
+                    <select id="trip-type" name="type"
+                            class="{% if errors.type %}input-error{% endif %}">
+                        <option value="">— обери тип —</option>
+                        {% for type in types %}
+                            <option value="{{ type.type_id }}"
+                                    {% if form.type == type.type_id|stringformat:"s" %}selected{% endif %}>
+                                {{ type.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    {% if errors.type %}
+                        <span class="field-error">{{ errors.type }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="trip-method">ТЕХНІКА</label>
+                    <select id="trip-method" name="method">
+                        <option value="">— не вказано —</option>
+                        {% for method in methods %}
+                            <option value="{{ method.method_id }}"
+                                    data-type="{{ method.type_id }}"
+                                    {% if form.method == method.method_id|stringformat:"s" %}selected{% endif %}>
+                                {{ method.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="trip-method-note">СВОЯ ТЕХНІКА (якщо немає у списку)</label>
+                <input type="text" id="trip-method-note" name="method_note"
+                       maxlength="255" value="{{ form.method_note }}"
+                       placeholder="Наприклад: карпова оснастка на кукурудзу">
+            </div>
+
+            <div class="form-group">
+                <label for="trip-bait">НАСАДКА / ПРИКОРМКА</label>
+                <textarea id="trip-bait" name="bait_note" rows="3"
+                          placeholder="Що було на гачку і чим загодовував">{{ form.bait_note }}</textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="trip-start">ДАТА Й ЧАС ПОЧАТКУ</label>
+                    <input type="datetime-local" id="trip-start" name="start_time"
+                           value="{{ form.start_time }}"
+                           class="{% if errors.start_time %}input-error{% endif %}">
+                    {% if errors.start_time %}
+                        <span class="field-error">{{ errors.start_time }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="trip-hours">ТРИВАЛІСТЬ, ГОД</label>
+                    <input type="number" id="trip-hours" name="hours_spent"
+                           min="0" max="72" step="0.5" value="{{ form.hours_spent }}"
+                           class="{% if errors.hours_spent %}input-error{% endif %}">
+                    {% if errors.hours_spent %}
+                        <span class="field-error">{{ errors.hours_spent }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="trip-note">НОТАТКА</label>
+                <textarea id="trip-note" name="note" rows="3"
+                          placeholder="Як пройшла риболовля, що працювало">{{ form.note }}</textarea>
+            </div>
+
+            <p class="form-hint">
+                Улов можна буде додати після збереження сесії.
+            </p>
+
+            <button type="submit" class="auth-submit">
+                {% if trip %}Зберегти зміни →{% else %}Зберегти сесію →{% endif %}
+            </button>
+        </form>
+
+        <p class="mt-16">
+            <a class="btn btn-outline" href="{% url 'journal' %}">← Назад до журналу</a>
+        </p>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+{% if google_maps_api_key %}
+<script src="{% static 'js/map-core.js' %}?v={% now 'U' %}"></script>
+<script src="{% static 'js/map-water.js' %}?v={% now 'U' %}"></script>
+<script src="{% static 'js/journal-map.js' %}?v={% now 'U' %}"></script>
+<script src="{% static 'js/journal-form.js' %}?v={% now 'U' %}"></script>
+<script
+  async
+  src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initJournalMap"
+></script>
+{% else %}
+<script src="{% static 'js/journal-form.js' %}?v={% now 'U' %}"></script>
+{% endif %}
+{% endblock %}

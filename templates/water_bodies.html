@@ -4,8 +4,8 @@
 {% block title %}Карта водойм — FishWise{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/auth.css' %}">
-<link rel="stylesheet" href="{% static 'css/map.css' %}">
+<link rel="stylesheet" href="{% static 'css/auth.css' %}?v={% now 'U' %}">
+<link rel="stylesheet" href="{% static 'css/map.css' %}?v={% now 'U' %}">
 {% endblock %}
 
 {% block content %}
@@ -18,32 +18,10 @@
   {% if google_maps_api_key %}
   <div class="map-controls">
     <select id="water-region" class="form-select" aria-label="Область">
-      <option value="lviv">Львівська область</option>
-      <option value="vinnytsia">Вінницька область</option>
-      <option value="volyn">Волинська область</option>
-      <option value="dnipro">Дніпропетровська область</option>
-      <option value="donetsk">Донецька область</option>
-      <option value="zhytomyr">Житомирська область</option>
-      <option value="zakarpattia">Закарпатська область</option>
-      <option value="zaporizhzhia">Запорізька область</option>
-      <option value="ifrankivka">Івано-Франківська область</option>
-      <option value="kyiv">Київська область</option>
-      <option value="kyivcity">Київ (місто)</option>
-      <option value="kirovohrad">Кіровоградська область</option>
-      <option value="luhansk">Луганська область</option>
-      <option value="mykolaiv">Миколаївська область</option>
-      <option value="odesa">Одеська область</option>
-      <option value="poltava">Полтавська область</option>
-      <option value="rivne">Рівненська область</option>
-      <option value="sumy">Сумська область</option>
-      <option value="ternopil">Тернопільська область</option>
-      <option value="kharkiv">Харківська область</option>
-      <option value="kherson">Херсонська область</option>
-      <option value="khmelnytskyi">Хмельницька область</option>
-      <option value="cherkasy">Черкаська область</option>
-      <option value="chernivtsi">Чернівецька область</option>
-      <option value="chernihiv">Чернігівська область</option>
-      <option value="crimea">Автономна Республіка Крим</option>
+      <option value="">— обери область —</option>
+      {% for region in regions %}
+        <option value="{{ region.region_slug }}">{{ region.region }}</option>
+      {% endfor %}
     </select>
     <button
       id="water-layer-btn"
@@ -103,6 +81,7 @@
 
 {% block extra_js %}
 {% if google_maps_api_key %}
+<script src="{% static 'js/map-core.js' %}?v={% now 'U' %}"></script>
 <script src="{% static 'js/map-water.js' %}?v={% now 'U' %}"></script>
 <script src="{% static 'js/map-weather.js' %}?v={% now 'U' %}"></script>
 <script src="{% static 'js/map-advice.js' %}?v={% now 'U' %}"></script>

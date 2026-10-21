@@ -1,12 +1,18 @@
-<div class="weather-top">
-  <div>
-    <div class="weather-condition">{{ condition }}</div>
-    <div class="weather-temp">{{ temp }}°C</div>
-  </div>
-  <img src="{{ icon }}" width="64" height="64" alt="{{ condition }}">
-</div>
+{% for day in days %}
+    <div class="weather-day">
+        <div class="weather-day-label">{{ day.label }}</div>
 
-<div class="weather-row">Вітер — {{ wind }} км/год</div>
-<div class="weather-row">Опади — {{ precip }} мм</div>
-<div class="weather-row">Вологість — {{ humidity }}%</div>
-<div class="weather-row">Тиск — {{ pressure }} мм рт.ст.</div>
+        <div class="weather-top">
+            <div>
+                <div class="weather-condition">{{ day.condition }}</div>
+                <div class="weather-temp">{{ day.temp }}°C</div>
+            </div>
+            <img src="{{ day.icon }}" width="64" height="64" alt="{{ day.condition }}">
+        </div>
+
+        <div class="weather-row">💨 Вітер — {{ day.wind }} км/год</div>
+        <div class="weather-row">🌧 Опади — {{ day.precip }} мм</div>
+        <div class="weather-row">💧 Вологість — {{ day.humidity }}%</div>
+        <div class="weather-row">🔵 Тиск — {{ day.pressure }} мм рт.ст.</div>
+    </div>
+{% endfor %}

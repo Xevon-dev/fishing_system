@@ -4,7 +4,7 @@
 {% block title %}Техніки лову — FishWise{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+<link rel="stylesheet" href="{% static 'css/auth.css' %}?v={% now 'U' %}">
 {% endblock %}
 
 {% block content %}
@@ -16,16 +16,18 @@
 
     <div class="auth-card">
         {% if methods %}
-            {% for method in methods %}
-                <div class="login-feature">
-                    <strong>{{ method.name }}</strong>
-                    {% if method.min_level %}
-                        <p>Мінімальний рівень: {{ method.min_level.name }}</p>
-                    {% endif %}
-                    {% if method.description %}
-                        <p>{{ method.description }}</p>
-                    {% endif %}
-                </div>
+            {% regroup methods by type.name as groups %}
+            {% for group in groups %}
+                <h2 class="mt-16">{{ group.grouper }}</h2>
+
+                {% for method in group.list %}
+                    <div class="login-feature">
+                        <strong>{{ method.name }}</strong>
+                        {% if method.description %}
+                            <p>{{ method.description }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
             {% endfor %}
         {% else %}
             <p class="level-description">Методів поки немає.</p>

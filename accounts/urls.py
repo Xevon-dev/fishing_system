@@ -1,11 +1,11 @@
-
 from django.urls import path
-from . import views
+
+from . import fishing_test, login, profile, registration
 
 urlpatterns = [
-    path("register/", views.register_view, name="register"),
-    path("login/", views.login_view, name="login"),
-    path("logout/", views.logout_view, name="logout"),
-    path("profile/", views.profile_view, name="profile"),
-    path("fishing-test/", views.fishing_test_view, name="fishing_test"),
+    path("register/", registration.register_view, name="register"),
+    path("login/", login.login_view, name="login"),
+    path("logout/", login.logout_view, name="logout"),
+    path("profile/", profile.profile_view, name="profile"),
+    path("fishing-test/", fishing_test.fishing_test_view, name="fishing_test"),
 ]

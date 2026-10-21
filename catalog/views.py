@@ -4,8 +4,8 @@ from django.shortcuts import render
 from django.views.decorators.http import require_GET
 from .advice import get_advice
 from .models import FishSpecies, FishingMethods, Tackle, WaterBodies
+from .regions import region_choices
 from .weather import get_forecast
-from datetime import datetime
 
 
 def home(request):
@@ -15,6 +15,7 @@ def home(request):
 def water_bodies_view(request):
     return render(request, "water_bodies.html", {
         "google_maps_api_key": settings.GOOGLE_MAPS_API_KEY,
+        "regions": region_choices(),
     })
 
 
@@ -29,14 +30,18 @@ def tackle_view(request):
 
 
 def methods_view(request):
-    methods = FishingMethods.objects.select_related("min_level").order_by("name")
+    methods = (
+        FishingMethods.objects
+        .select_related("type")
+        .order_by("type_id", "method_id")
+    )
     return render(request, "methods.html", {"methods": methods})
 
 
 @require_GET
 def water_bodies_geojson(request, region):
     water_bodies = WaterBodies.objects.filter(region_slug=region).values(
-        "name", "type", "area_km2", "depth", "fish_list",
+        "water_body_id", "name", "type", "area_km2", "depth", "fish_list",
         "description", "wikipedia", "source", "geometry",
     )
 
@@ -65,6 +70,7 @@ def water_bodies_geojson(request, region):
         "features": features,
     })
 
+DAYS_UA = ("Сьогодні", "Завтра", "Післязавтра")
 
 @require_GET
 def weather_view(request):
@@ -75,17 +81,24 @@ def weather_view(request):
     except Exception as error:
         return JsonResponse({"error": str(error)}, status=502)
 
-    current = forecast["current"]
+    days = []
 
-    return render(request, "weather_card.html", {
-        "condition": current["condition"]["text"],
-        "icon": "https:" + current["condition"]["icon"],
-        "temp": current["temp_c"],
-        "wind": round(current["wind_kph"]),
-        "precip": current["precip_mm"],
-        "humidity": current["humidity"],
-        "pressure": round(current["pressure_mb"] * 0.750062),
-    })
+    for index, day_data in enumerate(forecast["forecast"]["forecastday"]):
+        day = day_data["day"]
+        hours = day_data["hour"]
+
+        days.append({
+            "label": DAYS_UA[index],
+            "condition": day["condition"]["text"],
+            "icon": "https:" + day["condition"]["icon"],
+            "temp": round(day["avgtemp_c"]),
+            "wind": round(day["maxwind_kph"]),
+            "precip": day["totalprecip_mm"],
+            "humidity": round(day["avghumidity"]),
+            "pressure": round(hours[12]["pressure_mb"] * 0.750062),
+        })
+
+    return render(request, "weather_card.html", {"days": days})
 
 
 @require_GET

@@ -4,8 +4,8 @@
 {% block title %}Журнал уловів — FishWise{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/auth.css' %}">
-<link rel="stylesheet" href="{% static 'css/journal.css' %}">
+<link rel="stylesheet" href="{% static 'css/auth.css' %}?v={% now 'U' %}">
+<link rel="stylesheet" href="{% static 'css/journal.css' %}?v={% now 'U' %}">
 {% endblock %}
 
 {% block content %}
@@ -13,6 +13,9 @@
     <div class="auth-heading">
         <h1>Журнал уловів</h1>
         <p>Твої риболовні сесії та улови</p>
+        <p class="mt-16">
+            <a class="btn btn-primary" href="{% url 'add_trip' %}">+ Додати сесію</a>
+        </p>
     </div>
 
     <div class="auth-card">
@@ -23,8 +26,26 @@
                     <p class="trip-meta">
                         {{ trip.start_time|date:"d.m.Y H:i" }}
                         {% if trip.hours_spent %} · {{ trip.hours_spent }} год{% endif %}
-                        {% if trip.note %} · {{ trip.note|truncatechars:80 }}{% endif %}
                     </p>
+
+                    {% if trip.type or trip.method or trip.method_note %}
+                        <p class="trip-tags">
+                            {% if trip.type %}<span class="trip-tag">{{ trip.type.name }}</span>{% endif %}
+                            {% if trip.method %}
+                                <span class="trip-tag">{{ trip.method.name }}</span>
+                            {% elif trip.method_note %}
+                                <span class="trip-tag">{{ trip.method_note }}</span>
+                            {% endif %}
+                        </p>
+                    {% endif %}
+
+                    {% if trip.bait_note %}
+                        <p class="trip-bait">Насадка / прикормка: {{ trip.bait_note }}</p>
+                    {% endif %}
+
+                    {% if trip.note %}
+                        <p class="trip-bait">{{ trip.note|truncatechars:120 }}</p>
+                    {% endif %}
 
                     {% for catch in trip.catches_set.all %}
                         <div class="catch-row">
@@ -36,6 +57,17 @@
                     {% empty %}
                         <p class="level-description">У цій сесії уловів ще немає.</p>
                     {% endfor %}
+
+                    <div class="trip-actions">
+                        <a class="btn btn-outline btn-sm" href="{% url 'edit_trip' trip.trip_id %}">
+                            Редагувати
+                        </a>
+                        <form method="post" action="{% url 'delete_trip' trip.trip_id %}"
+                              data-confirm="Видалити цю сесію разом з уловами?">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">Видалити</button>
+                        </form>
+                    </div>
                 </div>
             {% endfor %}
         {% else %}
@@ -43,4 +75,8 @@
         {% endif %}
     </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/journal.js' %}?v={% now 'U' %}"></script>
 {% endblock %}

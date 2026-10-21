@@ -4,8 +4,8 @@
 {% block title %}Додати пораду — FishWise{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/auth.css' %}">
-<link rel="stylesheet" href="{% static 'css/add_tip.css' %}">
+<link rel="stylesheet" href="{% static 'css/auth.css' %}?v={% now 'U' %}">
+<link rel="stylesheet" href="{% static 'css/add_tip.css' %}?v={% now 'U' %}">
 {% endblock %}
 
 {% block content %}

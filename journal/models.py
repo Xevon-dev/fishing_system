@@ -15,6 +15,20 @@ class FishingTrips(models.Model):
         null=True
     )
     note = models.TextField(blank=True, null=True)
+    type = models.ForeignKey(
+        'catalog.FishingTypes',
+        models.DO_NOTHING,
+        blank=True,
+        null=True,
+    )
+    method = models.ForeignKey(
+        'catalog.FishingMethods',
+        models.DO_NOTHING,
+        blank=True,
+        null=True,
+    )
+    method_note = models.CharField(max_length=255, blank=True, null=True)
+    bait_note = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False

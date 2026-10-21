@@ -1,13 +1,5 @@
-﻿/**
- * Карта водойм: ініціалізація, вибір області, кліки по карті.
- * Картки винесені окремо: map-water.js, map-weather.js, map-advice.js
- */
-function initMap() {
-  const map = new google.maps.Map(document.querySelector("#map"), {
-    center: { lat: 48.3794, lng: 31.1656 }, // центр України
-    zoom: 6,
-    mapId: "DEMO_MAP_ID",
-  });
+﻿function initMap() {
+  const map = createWaterMap(document.querySelector("#map"));
 
   const region = document.querySelector("#water-region");
   const button = document.querySelector("#water-layer-btn");
@@ -23,13 +15,6 @@ function initMap() {
 
   let waterClickTime = 0;
   let lastWater = null;
-
-  map.data.setStyle({
-    fillColor: "#3b82f6",
-    fillOpacity: 0.45,
-    strokeColor: "#1d4ed8",
-    strokeWeight: 1,
-  });
 
   map.data.addListener("click", (event) => {
     waterClickTime = Date.now();
@@ -75,34 +60,10 @@ function initMap() {
   });
 
   button.addEventListener("click", async () => {
-    const name = region.selectedOptions[0].textContent;
-    const url = button.dataset.geojsonUrl.replace("__REGION__", region.value);
+    const geojson = await loadRegionLayer(map, region, button, status);
 
-    history.replaceState(null, "", "/map/?region=" + region.value);
-
-    button.disabled = true;
-    status.textContent = "Завантажую водойми…";
-
-    try {
-      const response = await fetch(url);
-
-      if (!response.ok) {
-        status.textContent = "Дані для «" + name + "» ще не зібрані.";
-        return;
-      }
-
-      const geojson = await response.json();
-
-      map.data.forEach((feature) => map.data.remove(feature));
-      map.data.addGeoJson(geojson);
-      map.fitBounds(boundsOf(geojson));
-
-      status.textContent =
-        "Водойм на карті: " + geojson.features.length + " (" + name + ")";
-    } catch (error) {
-      status.textContent = "Не вдалося завантажити водойми.";
-    } finally {
-      button.disabled = false;
+    if (geojson) {
+      history.replaceState(null, "", "/map/?region=" + region.value);
     }
   });
 }

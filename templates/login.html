@@ -5,7 +5,7 @@
 {% block title %}Вхід — FishWise{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+<link rel="stylesheet" href="{% static 'css/auth.css' %}?v={% now 'U' %}">
 {% endblock %}
 
 {% block content %}

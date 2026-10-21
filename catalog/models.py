@@ -47,11 +47,22 @@ class WaterBodyFish(models.Model):
         unique_together = (('water_body', 'fish'),)
 
 
+class FishingTypes(models.Model):
+    type_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'fishing_types'
+
+
 class FishingMethods(models.Model):
     method_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
     min_level = models.ForeignKey('accounts.Levels', models.DO_NOTHING, blank=True, null=True)
+    type = models.ForeignKey('FishingTypes', models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
         managed = False
