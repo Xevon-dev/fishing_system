@@ -21,7 +21,6 @@ class WaterBodies(models.Model):
     geometry = models.JSONField(blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'water_bodies'
 
 
@@ -32,7 +31,6 @@ class FishSpecies(models.Model):
     advice = models.TextField(blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'fish_species'
 
 
@@ -42,7 +40,6 @@ class FishingTypes(models.Model):
     description = models.TextField(blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'fishing_types'
 
 
@@ -54,7 +51,6 @@ class FishingMethods(models.Model):
     type = models.ForeignKey('FishingTypes', models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'fishing_methods'
 
 
@@ -65,5 +61,4 @@ class Tackle(models.Model):
     description = models.TextField(blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'tackle'

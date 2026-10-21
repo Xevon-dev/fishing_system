@@ -32,7 +32,6 @@ class FishingTrips(models.Model):
     fish_note = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'fishing_trips'
 
 
@@ -60,7 +59,6 @@ class Catches(models.Model):
     )
 
     class Meta:
-        managed = False
         db_table = 'catches'
 
 
@@ -78,5 +76,4 @@ class Tips(models.Model):
     created_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'tips'

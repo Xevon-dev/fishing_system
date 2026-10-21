@@ -7,7 +7,6 @@ class Levels(models.Model):
     name = models.CharField(max_length=45)
 
     class Meta:
-        managed = False
         db_table = 'levels'
 
 
@@ -20,5 +19,4 @@ class Users(models.Model):
     created_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'users'
