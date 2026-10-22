@@ -41,6 +41,9 @@
                     <div class="tackle-grid">
                         {% for item in group.sets %}
                             <a class="tackle-card tackle-card--set" href="{{ item.url }}" target="_blank" rel="noopener">
+                                {% if item.image %}
+                                    <img class="tackle-card__image" src="{{ item.image }}" alt="{{ item.name }}" loading="lazy">
+                                {% endif %}
                                 <span class="tackle-card__kind">комплект</span>
                                 <strong>{{ item.name }}</strong>
                                 <span class="tackle-card__price">{{ item.price }} грн</span>
@@ -55,6 +58,9 @@
                     <div class="tackle-grid">
                         {% for item in kind.items %}
                             <a class="tackle-card" href="{{ item.url }}" target="_blank" rel="noopener">
+                                {% if item.image %}
+                                    <img class="tackle-card__image" src="{{ item.image }}" alt="{{ item.name }}" loading="lazy">
+                                {% endif %}
                                 <span class="tackle-card__kind">{{ item.kind }}</span>
                                 <strong>{{ item.name }}</strong>
                                 <span class="tackle-card__price">{{ item.price }} грн</span>
@@ -69,4 +75,5 @@
         {% endfor %}
     {% endif %}
 </section>
+<script src="{% static 'js/tackle.js' %}?v={% now 'U' %}"></script>
 {% endblock %}

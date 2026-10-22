@@ -1,12 +1,34 @@
 from django.shortcuts import get_object_or_404, redirect, render
+from django.db.models import Q
 
 from accounts.session import current_user
 
 from ..models import FishSpecies, FishingTypes, Tackle, TackleSets
 
 TACKLE_TIERS = ("дешеві", "середні", "дорогі")
-TACKLE_KINDS = ("вудлище", "котушка", "приманка", "годівниця", "поплавок")
+TACKLE_KINDS = (
+    "вудлище",
+    "котушка",
+    "приманка",
+    "боблер",
+    "силікон",
+    "годівниця",
+    "прикормка",
+    "насадка",
+    "бойл",
+    "пелета",
+    "монтаж",
+    "оснащення",
+    "поплавок",
+)
 TACKLE_LIMIT = 6
+UNIVERSAL_KINDS = ("вудлище", "котушка")
+
+TACKLE_ALIASES = {
+    "Донна": "Фідерна",
+    "З човна": "Спінінгова",
+    "Нахлист": "Спінінгова",
+}
 
 
 def tackle_view(request, fish_id=None):
@@ -18,9 +40,18 @@ def tackle_view(request, fish_id=None):
     if not user.is_beginner:
         return redirect("methods")
 
+    types_with_tackle = set(
+        Tackle.objects.filter(type__isnull=False).values_list("type__name", flat=True)
+    )
+    shown_types = set(types_with_tackle)
+
+    for alias, target in TACKLE_ALIASES.items():
+        if target in types_with_tackle:
+            shown_types.add(alias)
+
     fish_list = (
         FishSpecies.objects
-        .filter(fishingtypes__tackle__isnull=False)
+        .filter(fishingtypes__name__in=shown_types)
         .distinct()
         .order_by("name")
     )
@@ -34,40 +65,71 @@ def tackle_view(request, fish_id=None):
 
     if fish_id:
         fish = get_object_or_404(FishSpecies, pk=fish_id)
-        types = FishingTypes.objects.filter(fish=fish)
+        types = list(FishingTypes.objects.filter(fish=fish))
+
+        wanted = {fishing_type.name for fishing_type in types}
+
+        for fishing_type in types:
+            if fishing_type.name in TACKLE_ALIASES:
+                wanted.add(TACKLE_ALIASES[fishing_type.name])
 
         items = list(
             Tackle.objects
-            .filter(type__in=types, tier=tier)
+            .filter(type__name__in=wanted, tier=tier)
+            .filter(
+                Q(fish=fish)
+                | (Q(fish__isnull=True) & Q(kind__in=UNIVERSAL_KINDS))
+            )
+            .distinct()
             .order_by("price")
         )
 
         sets = list(
             TackleSets.objects
-            .filter(type__in=types, tier=tier)
+            .filter(type__name__in=wanted, tier=tier)
+            .filter(Q(fish__isnull=True) | Q(fish=fish))
+            .distinct()
             .order_by("price")
         )
 
-        for fishing_type in types:
-            type_items = [item for item in items if item.type_id == fishing_type.type_id]
+        items_by_type = {}
+        for item in items:
+            items_by_type.setdefault(item.type.name, []).append(item)
 
-            if not type_items:
+        sets_by_type = {}
+        for item in sets:
+            sets_by_type.setdefault(item.type.name, []).append(item)
+
+        seen = set()
+
+        for fishing_type in types:
+            name = fishing_type.name
+            source = name if items_by_type.get(name) else TACKLE_ALIASES.get(name, "")
+
+            type_items = items_by_type.get(source, [])
+            type_sets = sets_by_type.get(source, [])
+
+            fresh_items = [item for item in type_items if item.url not in seen]
+            fresh_sets = [item for item in type_sets if item.url not in seen]
+
+            for item in fresh_items + fresh_sets:
+                seen.add(item.url)
+
+            if not fresh_items and not fresh_sets:
                 continue
 
             kinds = []
 
             for kind in TACKLE_KINDS:
-                kind_items = [item for item in type_items if item.kind == kind][:TACKLE_LIMIT]
+                kind_items = [item for item in fresh_items if item.kind == kind][:TACKLE_LIMIT]
 
                 if kind_items:
                     kinds.append({"kind": kind, "items": kind_items})
 
             groups.append({
-                "type": fishing_type.name,
+                "type": name,
                 "kinds": kinds,
-                "sets": [
-                    item for item in sets if item.type_id == fishing_type.type_id
-                ][:TACKLE_LIMIT],
+                "sets": fresh_sets[:TACKLE_LIMIT],
             })
 
     return render(request, "tackle.html", {

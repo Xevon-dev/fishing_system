@@ -35,6 +35,9 @@ class FishSpecies(models.Model):
     class Meta:
         db_table = 'fish_species'
 
+    def __str__(self):
+        return self.name
+
 
 class FishingTypes(models.Model):
     type_id = models.AutoField(primary_key=True)
@@ -49,6 +52,9 @@ class FishingTypes(models.Model):
 
     class Meta:
         db_table = 'fishing_types'
+
+    def __str__(self):
+        return self.name
 
     @property
     def video_id(self):
@@ -67,6 +73,9 @@ class FishingMethods(models.Model):
     class Meta:
         db_table = 'fishing_methods'
 
+    def __str__(self):
+        return self.name
+
     @property
     def video_id(self):
         match = re.search(r'(?:v=|youtu\.be/|embed/|shorts/)([\w-]{11})', self.video_url)
@@ -81,11 +90,16 @@ class Tackle(models.Model):
     price = models.IntegerField(default=0)
     tier = models.CharField(max_length=20, blank=True)
     url = models.URLField(max_length=300, blank=True)
+    image = models.URLField(max_length=300, blank=True)
     shop = models.CharField(max_length=50, blank=True, default='Flagman')
     type = models.ForeignKey('FishingTypes', models.DO_NOTHING, blank=True, null=True)
+    fish = models.ManyToManyField('FishSpecies', db_table='tackle_fish', blank=True)
 
     class Meta:
         db_table = 'tackle'
+
+    def __str__(self):
+        return self.name
 
 
 class TackleSets(models.Model):
@@ -94,8 +108,13 @@ class TackleSets(models.Model):
     price = models.IntegerField(default=0)
     tier = models.CharField(max_length=20, blank=True)
     url = models.URLField(max_length=300, blank=True)
+    image = models.URLField(max_length=300, blank=True)
     shop = models.CharField(max_length=50, blank=True, default='Flagman')
     type = models.ForeignKey('FishingTypes', models.DO_NOTHING, blank=True, null=True)
+    fish = models.ManyToManyField('FishSpecies', db_table='tackle_sets_fish', blank=True)
 
     class Meta:
         db_table = 'tackle_sets'
+
+    def __str__(self):
+        return self.name

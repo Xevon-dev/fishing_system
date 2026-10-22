@@ -54,15 +54,31 @@ class FishingMethodsAdmin(admin.ModelAdmin):
 
 @admin.register(Tackle)
 class TackleAdmin(admin.ModelAdmin):
-    list_display = ("tackle_id", "name", "kind", "type", "tier", "price", "shop")
+    list_display = ("tackle_id", "name", "kind", "type", "tier", "price", "shop", "link")
     list_filter = ("kind", "tier", "type", "shop")
     list_select_related = ("type",)
     search_fields = ("name",)
 
+    @admin.display(description="магазин")
+    def link(self, obj):
+        if not obj.url:
+            return "—"
+        return format_html(
+            '<a href="{}" target="_blank" rel="noopener">відкрити</a>', obj.url
+        )
+
 
 @admin.register(TackleSets)
 class TackleSetsAdmin(admin.ModelAdmin):
-    list_display = ("set_id", "name", "type", "tier", "price", "shop")
+    list_display = ("set_id", "name", "type", "tier", "price", "shop", "link")
     list_filter = ("tier", "type", "shop")
     list_select_related = ("type",)
     search_fields = ("name",)
+
+    @admin.display(description="магазин")
+    def link(self, obj):
+        if not obj.url:
+            return "—"
+        return format_html(
+            '<a href="{}" target="_blank" rel="noopener">відкрити</a>', obj.url
+        )
