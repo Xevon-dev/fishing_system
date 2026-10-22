@@ -21,6 +21,10 @@ class Users(models.Model):
     class Meta:
         db_table = 'users'
 
+    @property
+    def is_beginner(self):
+        return bool(self.level and self.level.name == 'Початківець')
+
 
 class TestQuestions(models.Model):
     question_id = models.AutoField(primary_key=True)

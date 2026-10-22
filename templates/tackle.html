@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Підбір снастей — FishWise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}?v={% now 'U' %}">
+<link rel="stylesheet" href="{% static 'css/tackle.css' %}?v={% now 'U' %}">
+{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-heading">
+        <h1>Підбір снастей</h1>
+        <p>Обери рибу — покажемо снасті, з яких зручно почати</p>
+    </div>
+
+    <div class="fish-chips">
+        {% for item in fish_list %}
+            <a class="fish-chip{% if fish and fish.fish_id == item.fish_id %} is-active{% endif %}"
+               href="{% url 'tackle_fish' item.fish_id %}">{{ item.name }}</a>
+        {% endfor %}
+    </div>
+
+    {% if fish %}
+        <h2 class="tackle-fish-title">Снасті для: {{ fish.name }}</h2>
+
+        <div class="tier-tabs">
+            {% for value in tiers %}
+                <a class="tier-tab{% if value == tier %} is-active{% endif %}"
+                   href="{% url 'tackle_fish' fish.fish_id %}?tier={{ value|urlencode }}">{{ value|capfirst }}</a>
+            {% endfor %}
+        </div>
+
+        {% for group in groups %}
+            <section class="tackle-group">
+                <h3 class="tackle-type">{{ group.type }}</h3>
+
+                {% if group.sets %}
+                    <h4 class="tackle-subtitle">Готові комплекти</h4>
+                    <div class="tackle-grid">
+                        {% for item in group.sets %}
+                            <a class="tackle-card tackle-card--set" href="{{ item.url }}" target="_blank" rel="noopener">
+                                <span class="tackle-card__kind">комплект</span>
+                                <strong>{{ item.name }}</strong>
+                                <span class="tackle-card__price">{{ item.price }} грн</span>
+                                <span class="tackle-card__shop">{{ item.shop }}</span>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% for kind in group.kinds %}
+                    <h4 class="tackle-subtitle">{{ kind.kind|capfirst }}</h4>
+                    <div class="tackle-grid">
+                        {% for item in kind.items %}
+                            <a class="tackle-card" href="{{ item.url }}" target="_blank" rel="noopener">
+                                <span class="tackle-card__kind">{{ item.kind }}</span>
+                                <strong>{{ item.name }}</strong>
+                                <span class="tackle-card__price">{{ item.price }} грн</span>
+                                <span class="tackle-card__shop">{{ item.shop }}</span>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </section>
+        {% empty %}
+            <p class="level-description">Для цієї риби снастей поки немає.</p>
+        {% endfor %}
+    {% endif %}
+</section>
+{% endblock %}

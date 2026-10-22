@@ -6,6 +6,7 @@ from .models import (
     FishingMethods,
     FishingTypes,
     Tackle,
+    TackleSets,
     WaterBodies,
 )
 
@@ -53,6 +54,15 @@ class FishingMethodsAdmin(admin.ModelAdmin):
 
 @admin.register(Tackle)
 class TackleAdmin(admin.ModelAdmin):
-    list_display = ("tackle_id", "name", "kind")
-    list_filter = ("kind",)
+    list_display = ("tackle_id", "name", "kind", "type", "tier", "price", "shop")
+    list_filter = ("kind", "tier", "type", "shop")
+    list_select_related = ("type",)
+    search_fields = ("name",)
+
+
+@admin.register(TackleSets)
+class TackleSetsAdmin(admin.ModelAdmin):
+    list_display = ("set_id", "name", "type", "tier", "price", "shop")
+    list_filter = ("tier", "type", "shop")
+    list_select_related = ("type",)
     search_fields = ("name",)

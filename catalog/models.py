@@ -75,9 +75,27 @@ class FishingMethods(models.Model):
 
 class Tackle(models.Model):
     tackle_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=200)
     kind = models.CharField(max_length=45, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
+    price = models.IntegerField(default=0)
+    tier = models.CharField(max_length=20, blank=True)
+    url = models.URLField(max_length=300, blank=True)
+    shop = models.CharField(max_length=50, blank=True, default='Flagman')
+    type = models.ForeignKey('FishingTypes', models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
         db_table = 'tackle'
+
+
+class TackleSets(models.Model):
+    set_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=200)
+    price = models.IntegerField(default=0)
+    tier = models.CharField(max_length=20, blank=True)
+    url = models.URLField(max_length=300, blank=True)
+    shop = models.CharField(max_length=50, blank=True, default='Flagman')
+    type = models.ForeignKey('FishingTypes', models.DO_NOTHING, blank=True, null=True)
+
+    class Meta:
+        db_table = 'tackle_sets'
