@@ -1,9 +1,9 @@
 from django.shortcuts import redirect, render
 from django.utils import timezone
 
-from .common import current_user
-from .models import Tips
-from .tip_check import check_tip
+from ..common import current_user
+from ..models import Tips
+from ..tip_check import check_tip
 
 
 def validate_tip(title, content):

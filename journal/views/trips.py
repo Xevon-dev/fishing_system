@@ -4,8 +4,8 @@ from django.views.decorators.http import require_POST
 
 from catalog.models import FishingMethods, FishingTypes, WaterBodies
 from catalog.regions import region_choices
-from .common import as_int, current_user
-from .models import Catches, FishingTrips
+from ..common import as_int, current_user
+from ..models import Catches, FishingTrips
 from .trip_form import form_defaults, parse_form
 
 

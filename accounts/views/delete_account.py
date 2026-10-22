@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
 
 from journal.models import Catches, FishingTrips, Tips
-from .session import current_user, logout_user
+from ..session import current_user, logout_user
 
 
 @require_POST

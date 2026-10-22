@@ -1,5 +1,3 @@
-"""Підбір снастей для початківців: вибір риби, фільтр ціни, готові комплекти."""
-
 from django.shortcuts import get_object_or_404, redirect, render
 
 from accounts.session import current_user

@@ -1,8 +1,8 @@
 from django.db.models import Count, Sum
 from django.shortcuts import redirect, render
 
-from .common import current_user
-from .models import Catches, FishingTrips
+from ..common import current_user
+from ..models import Catches, FishingTrips
 
 
 def stats_view(request):

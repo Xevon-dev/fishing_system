@@ -1,12 +1,10 @@
-"""Вхід і вихід із системи."""
-
 import re
 
 from django.contrib.auth.hashers import check_password
 from django.shortcuts import redirect, render
 
-from .models import Users
-from .session import login_user, logout_user
+from ..models import Users
+from ..session import login_user, logout_user
 
 EMAIL_RE = re.compile(r"[^@\s]+@[^@\s]+\.[^@\s]+")
 

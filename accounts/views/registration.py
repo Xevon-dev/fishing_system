@@ -2,10 +2,10 @@ from django.contrib.auth.hashers import make_password
 from django.shortcuts import redirect, render
 from django.utils import timezone
 
-from .levels import LEVEL_NAMES
-from .models import Levels, Users
-from .session import login_user
-from .validators import email_error, password_errors, username_error
+from ..levels import LEVEL_NAMES
+from ..models import Levels, Users
+from ..session import login_user
+from ..validators import email_error, password_errors, username_error
 
 
 def register_view(request):

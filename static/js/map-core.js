@@ -18,19 +18,7 @@ function createWaterMap(selectorOrElement) {
   return map;
 }
 
-/**
- * Межі однієї водойми на карті — щоб наблизити до неї.
- */
-function featureBounds(feature) {
-  const bounds = new google.maps.LatLngBounds();
-  feature.getGeometry().forEachLatLng((latLng) => bounds.extend(latLng));
-  return bounds;
-}
 
-/**
- * Вантажить водойми обраної області на карту.
- * Повертає geojson або null, якщо нічого не завантажено.
- */
 async function loadRegionLayer(map, region, button, status) {
   if (!region.value) {
     status.textContent = "Обери область зі списку.";
@@ -57,14 +45,7 @@ async function loadRegionLayer(map, region, button, status) {
     map.data.addGeoJson(geojson);
     map.fitBounds(boundsOf(geojson));
 
-    status.textContent =
-      "Водойм на карті: " +
-      geojson.features.length +
-      " (" +
-      name +
-      ").";
-
-    return geojson;
+    return { geojson, name };
   } catch (error) {
     status.textContent = "Не вдалося завантажити водойми.";
     return null;

@@ -3,7 +3,7 @@
 from django.contrib.auth.hashers import check_password, make_password
 from django.shortcuts import redirect, render
 
-from .session import current_user
+from ..session import current_user
 
 
 def password_view(request):

@@ -1,13 +1,10 @@
-"""Сторінка профілю рибака."""
-
 from django.shortcuts import redirect, render
 
 from journal.models import FishingTrips, Tips
-from .session import current_user
+from ..session import current_user
 
 
 def is_expert(user):
-    """Поради може додавати лише досвідчений рибак."""
     return bool(user.level and user.level.name == "Досвідчений")
 
 

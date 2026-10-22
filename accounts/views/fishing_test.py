@@ -1,13 +1,10 @@
-"""Тест на рівень рибалки."""
-
 from django.shortcuts import render
 
-from .levels import LEVEL_NAMES, level_from_score
-from .questions import load_questions, public_questions
+from ..levels import LEVEL_NAMES, level_from_score
+from ..questions import load_questions, public_questions
 
 
 def count_score(questions, post):
-    """Рахує бали за відповіді. Повертає (бали, помилка)."""
     score = 0
 
     for question in questions:

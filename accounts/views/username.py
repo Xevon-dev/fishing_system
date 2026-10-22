@@ -2,8 +2,8 @@
 
 from django.shortcuts import redirect, render
 
-from .session import current_user
-from .validators import username_error
+from ..session import current_user
+from ..validators import username_error
 
 
 def username_view(request):

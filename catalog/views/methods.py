@@ -1,5 +1,3 @@
-"""Техніки лову: типи ловлі, їхні риби та способи."""
-
 from django.db.models import Prefetch
 from django.shortcuts import render
 

@@ -6,7 +6,7 @@ from decimal import Decimal, InvalidOperation
 from django.utils import timezone
 
 from catalog.models import FishingMethods, FishingTypes, WaterBodies
-from .common import as_int
+from ..common import as_int
 
 FIELDS = (
     "water_body_id",
