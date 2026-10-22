@@ -1,9 +1,10 @@
 from django.conf import settings
+from django.db.models import Prefetch
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
 from .advice import get_advice
-from .models import FishSpecies, FishingMethods, WaterBodies
+from .models import FishSpecies, FishingMethods, FishingTypes, WaterBodies
 from .regions import region_choices
 from .weather import get_forecast
 
@@ -31,12 +32,26 @@ def fish_advice_view(request):
 
 
 def methods_view(request):
-    methods = (
-        FishingMethods.objects
-        .select_related("type")
-        .order_by("type_id", "method_id")
+    groups = []
+    types = (
+        FishingTypes.objects
+        .prefetch_related(Prefetch("fish", queryset=FishSpecies.objects.order_by("name")))
+        .order_by("type_id")
     )
-    return render(request, "methods.html", {"methods": methods})
+
+    for fishing_type in types:
+        methods = (
+            FishingMethods.objects
+            .filter(type=fishing_type)
+            .order_by("method_id")
+        )
+        groups.append({
+            "type": fishing_type,
+            "fish": [fish.name for fish in fishing_type.fish.all()],
+            "methods": list(methods),
+        })
+
+    return render(request, "methods.html", {"groups": groups})
 
 
 WATER_FIELDS = (
@@ -46,7 +61,6 @@ WATER_FIELDS = (
 
 
 def build_geojson_feature(water_body):
-    """Один запис водойми у форматі GeoJSON Feature."""
     if not water_body["geometry"]:
         return None
 

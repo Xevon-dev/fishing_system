@@ -38,6 +38,11 @@ class FishingTypes(models.Model):
     type_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
+    fish = models.ManyToManyField(
+        'FishSpecies',
+        db_table='fishing_types_fish',
+        blank=True,
+    )
 
     class Meta:
         db_table = 'fishing_types'

@@ -1,14 +1,22 @@
-import json
-from pathlib import Path
-
-from django.conf import settings
-
-QUESTIONS_FILE = Path(settings.BASE_DIR) / "accounts" / "data" / "questions.json"
+from .models import TestQuestions
 
 
 def load_questions():
-    with open(QUESTIONS_FILE, encoding="utf-8") as file:
-        return json.load(file)["questions"]
+    return [
+        {
+            "id": question.question_id,
+            "question": question.text,
+            "answers": [
+                {
+                    "id": answer.answer_id,
+                    "text": answer.text,
+                    "points": answer.points,
+                }
+                for answer in question.answers.all()
+            ],
+        }
+        for question in TestQuestions.objects.prefetch_related("answers")
+    ]
 
 
 def public_questions(questions):

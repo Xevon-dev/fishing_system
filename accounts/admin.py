@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Levels, Users
+from .models import Levels, TestAnswers, TestQuestions, Users
 
 
 @admin.register(Levels)
@@ -16,3 +16,15 @@ class UsersAdmin(admin.ModelAdmin):
     list_filter = ("level",)
     search_fields = ("username", "email")
     exclude = ("password_hash",)
+
+
+class TestAnswersInline(admin.TabularInline):
+    model = TestAnswers
+    extra = 1
+    fields = ("position", "text", "points")
+
+
+@admin.register(TestQuestions)
+class TestQuestionsAdmin(admin.ModelAdmin):
+    list_display = ("question_id", "text", "position")
+    inlines = (TestAnswersInline,)

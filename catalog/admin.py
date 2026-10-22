@@ -28,6 +28,7 @@ class FishSpeciesAdmin(admin.ModelAdmin):
 class FishingTypesAdmin(admin.ModelAdmin):
     list_display = ("type_id", "name")
     search_fields = ("name",)
+    filter_horizontal = ("fish",)
 
 
 @admin.register(FishingMethods)

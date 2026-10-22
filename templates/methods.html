@@ -5,33 +5,49 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/auth.css' %}?v={% now 'U' %}">
+<link rel="stylesheet" href="{% static 'css/methods.css' %}?v={% now 'U' %}">
 {% endblock %}
 
 {% block content %}
 <section class="auth-section">
     <div class="auth-heading">
         <h1>Способи та техніки лову</h1>
-        <p>Методи риболовлі для різних умов</p>
+        <p>Обери тип ловлі — побачиш техніки, якими ловлять цю рибу</p>
     </div>
 
-    <div class="auth-card">
-        {% if methods %}
-            {% regroup methods by type.name as groups %}
-            {% for group in groups %}
-                <h2 class="mt-16">{{ group.grouper }}</h2>
+    <div class="method-cards">
+        {% for group in groups %}
+            <div class="method-card">
+                <button class="method-card__head" type="button">
+                    <span class="method-card__count">методів: {{ group.methods|length }}</span>
+                    <h2>{{ group.type.name }}</h2>
+                    <p class="method-card__text">{{ group.type.description }}</p>
+                    {% if group.fish %}
+                        <p class="method-card__fish">
+                            <strong>Риба:</strong> {{ group.fish|join:", " }}
+                        </p>
+                    {% endif %}
+                    <span class="method-card__more">Показати техніки</span>
+                </button>
 
-                {% for method in group.list %}
-                    <div class="login-feature">
-                        <strong>{{ method.name }}</strong>
-                        {% if method.description %}
-                            <p>{{ method.description }}</p>
-                        {% endif %}
-                    </div>
-                {% endfor %}
-            {% endfor %}
-        {% else %}
-            <p class="level-description">Методів поки немає.</p>
-        {% endif %}
+                <div class="method-card__body" id="methods-{{ group.type.type_id }}">
+                    {% for method in group.methods %}
+                        <div class="method-item">
+                            <strong>{{ method.name }}</strong>
+                            {% if method.description %}
+                                <p>{{ method.description }}</p>
+                            {% endif %}
+                        </div>
+                    {% empty %}
+                        <p class="level-description">Технік поки немає.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
     </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/methods.js' %}?v={% now 'U' %}"></script>
 {% endblock %}

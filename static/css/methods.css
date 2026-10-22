@@ -1,0 +1,131 @@
+/* Техніки лову: картки типів + акордеон */
+
+.method-cards {
+  width: min(880px, 100%);
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.method-card {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 10px 28px rgba(7, 59, 83, 0.05);
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.method-card:hover {
+  border-color: #00b8b2;
+  box-shadow: 0 14px 32px rgba(7, 59, 83, 0.1);
+}
+
+/* шапка картки */
+.method-card__head {
+  display: block;
+  width: 100%;
+  padding: 20px 22px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  position: relative;
+}
+
+.method-card__head h2 {
+  margin: 6px 0 8px;
+  font-size: 19px;
+  color: var(--navy);
+}
+
+.method-card__count {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: #eef7f9;
+  color: #087e9b;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.method-card__text {
+  margin: 0 0 10px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #475569;
+}
+
+.method-card__fish {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #0f766e;
+}
+
+.method-card__more {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #087e9b;
+}
+
+.method-card__more::after {
+  content: " ▾";
+}
+
+/* розгорнутий список */
+.method-card__body {
+  display: none;
+  padding: 4px 22px 20px;
+}
+
+.method-item {
+  padding: 14px 16px;
+  border-radius: 13px;
+  background: #f8fafb;
+  border: 1px solid var(--border);
+}
+
+.method-item + .method-item {
+  margin-top: 10px;
+}
+
+.method-item strong {
+  display: block;
+  font-size: 15px;
+  color: var(--navy);
+}
+
+.method-item p {
+  margin: 8px 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #475569;
+}
+
+/* відкрита картка */
+.method-card.is-open {
+  border-color: #00b8b2;
+}
+
+.method-card.is-open .method-card__body {
+  display: block;
+}
+
+.method-card.is-open .method-card__more::after {
+  content: " ▲";
+}
+
+@media (max-width: 560px) {
+  .method-card__head {
+    padding: 18px;
+  }
+  .method-card__body {
+    padding: 0 18px 18px;
+  }
+}

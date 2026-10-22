@@ -20,3 +20,29 @@ class Users(models.Model):
 
     class Meta:
         db_table = 'users'
+
+
+class TestQuestions(models.Model):
+    question_id = models.AutoField(primary_key=True)
+    text = models.CharField(max_length=255)
+    position = models.IntegerField(default=0)
+
+    class Meta:
+        db_table = 'test_questions'
+        ordering = ('position', 'question_id')
+
+
+class TestAnswers(models.Model):
+    answer_id = models.AutoField(primary_key=True)
+    question = models.ForeignKey(
+        'TestQuestions',
+        models.CASCADE,
+        related_name='answers',
+    )
+    text = models.CharField(max_length=255)
+    points = models.IntegerField(default=1)
+    position = models.IntegerField(default=0)
+
+    class Meta:
+        db_table = 'test_answers'
+        ordering = ('position', 'answer_id')
