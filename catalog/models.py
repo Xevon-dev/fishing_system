@@ -31,6 +31,9 @@ class FishSpecies(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
     advice = models.TextField(blank=True, null=True)
+    image = models.ImageField(upload_to="fish/", blank=True)
+    wikipedia = models.URLField(max_length=500, blank=True)
+    image_source = models.URLField(max_length=500, blank=True)
 
     class Meta:
         db_table = 'fish_species'

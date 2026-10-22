@@ -25,7 +25,7 @@
                 <a href="{% url 'journal' %}">Риболовні сесії</a>
                 <a href="{% url 'tips_list' %}">Поради рибалок</a>
                 {% if current_user.level.name == "Початківець" %}
-                    <a href="{% url 'fish_advice' %}">Поради за рибою</a>
+                    <a href="{% url 'fish_advice' %}">Енциклопедія рибака</a>
                     <a href="{% url 'methods' %}">Техніки лову</a>
                     <a href="{% url 'tackle' %}">Підбір снастей</a>
                 {% elif current_user.level.name == "Середній" %}

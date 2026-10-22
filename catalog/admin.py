@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.text import Truncator
 from django.utils.html import format_html
 
 from .models import (
@@ -22,8 +23,32 @@ class WaterBodiesAdmin(admin.ModelAdmin):
 
 @admin.register(FishSpecies)
 class FishSpeciesAdmin(admin.ModelAdmin):
-    list_display = ("fish_id", "name")
-    search_fields = ("name",)
+    list_display = (
+        "fish_id",
+        "name",
+        "description_preview",
+        "advice_preview",
+        "wikipedia_link",
+    )
+    search_fields = ("name", "description", "advice")
+    fields = ("name", "description", "advice", "image", "wikipedia", "image_source")
+
+    @admin.display(description="опис")
+    def description_preview(self, obj):
+        return Truncator(obj.description or "—").chars(70)
+
+    @admin.display(description="порада")
+    def advice_preview(self, obj):
+        return Truncator(obj.advice or "—").chars(60)
+
+    @admin.display(description="Вікіпедія")
+    def wikipedia_link(self, obj):
+        if not obj.wikipedia:
+            return "—"
+        return format_html(
+            '<a href="{}" target="_blank" rel="noopener noreferrer">відкрити</a>',
+            obj.wikipedia,
+        )
 
 
 @admin.register(FishingTypes)
