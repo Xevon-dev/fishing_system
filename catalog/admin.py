@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.html import format_html
 
 from .models import (
     FishSpecies,
@@ -26,16 +27,28 @@ class FishSpeciesAdmin(admin.ModelAdmin):
 
 @admin.register(FishingTypes)
 class FishingTypesAdmin(admin.ModelAdmin):
-    list_display = ("type_id", "name")
+    list_display = ("type_id", "name", "video")
     search_fields = ("name",)
     filter_horizontal = ("fish",)
+
+    @admin.display(description="відео")
+    def video(self, obj):
+        if not obj.video_url:
+            return "—"
+        return format_html('<a href="{}" target="_blank">дивитись</a>', obj.video_url)
 
 
 @admin.register(FishingMethods)
 class FishingMethodsAdmin(admin.ModelAdmin):
-    list_display = ("method_id", "name", "type", "min_level")
+    list_display = ("method_id", "name", "type", "min_level", "video")
     list_select_related = ("type", "min_level")
     search_fields = ("name",)
+
+    @admin.display(description="відео")
+    def video(self, obj):
+        if not obj.video_url:
+            return "—"
+        return format_html('<a href="{}" target="_blank">дивитись</a>', obj.video_url)
 
 
 @admin.register(Tackle)

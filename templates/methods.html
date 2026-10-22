@@ -18,6 +18,13 @@
     <div class="method-cards">
         {% for group in groups %}
             <div class="method-card">
+                {% if group.type.video_id %}
+                    <div class="method-card__video" data-video="{{ group.type.video_id }}">
+                        <img src="https://i.ytimg.com/vi/{{ group.type.video_id }}/maxresdefault.jpg"
+                             alt="{{ group.type.name }}"
+                             loading="lazy">
+                    </div>
+                {% endif %}
                 <button class="method-card__head" type="button">
                     <span class="method-card__count">методів: {{ group.methods|length }}</span>
                     <h2>{{ group.type.name }}</h2>
@@ -36,6 +43,13 @@
                             <strong>{{ method.name }}</strong>
                             {% if method.description %}
                                 <p>{{ method.description }}</p>
+                            {% endif %}
+                            {% if method.video_id %}
+                                <div class="method-card__video" data-video="{{ method.video_id }}">
+                                    <img src="https://i.ytimg.com/vi/{{ method.video_id }}/maxresdefault.jpg"
+                                         alt="{{ method.name }}"
+                                         loading="lazy">
+                                </div>
                             {% endif %}
                         </div>
                     {% empty %}

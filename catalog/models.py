@@ -1,3 +1,5 @@
+import re
+
 from django.db import models
 
 # Create your models here.
@@ -43,20 +45,32 @@ class FishingTypes(models.Model):
         db_table='fishing_types_fish',
         blank=True,
     )
+    video_url = models.URLField(blank=True)
 
     class Meta:
         db_table = 'fishing_types'
+
+    @property
+    def video_id(self):
+        match = re.search(r'(?:v=|youtu\.be/|embed/|shorts/)([\w-]{11})', self.video_url)
+        return match.group(1) if match else ''
 
 
 class FishingMethods(models.Model):
     method_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
+    video_url = models.URLField(blank=True)
     min_level = models.ForeignKey('accounts.Levels', models.DO_NOTHING, blank=True, null=True)
     type = models.ForeignKey('FishingTypes', models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
         db_table = 'fishing_methods'
+
+    @property
+    def video_id(self):
+        match = re.search(r'(?:v=|youtu\.be/|embed/|shorts/)([\w-]{11})', self.video_url)
+        return match.group(1) if match else ''
 
 
 class Tackle(models.Model):
