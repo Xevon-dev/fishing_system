@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_GET
 from .advice import get_advice
-from .models import FishSpecies, FishingMethods, Tackle, WaterBodies
+from .models import FishSpecies, FishingMethods, WaterBodies
 from .regions import region_choices
 from .weather import get_forecast
 
@@ -28,11 +28,6 @@ def water_bodies_view(request):
 def fish_advice_view(request):
     fish_list = FishSpecies.objects.all().order_by("name")
     return render(request, "fish_advice.html", {"fish_list": fish_list})
-
-
-def tackle_view(request):
-    tackle_list = Tackle.objects.all().order_by("name")
-    return render(request, "tackle.html", {"tackle_list": tackle_list})
 
 
 def methods_view(request):

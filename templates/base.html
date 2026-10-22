@@ -26,10 +26,8 @@
                 <a href="{% url 'tips_list' %}">Поради рибалок</a>
                 {% if current_user.level.name == "Початківець" %}
                     <a href="{% url 'fish_advice' %}">Поради за рибою</a>
-                    <a href="{% url 'tackle' %}">Підбір снастей</a>
                     <a href="{% url 'methods' %}">Техніки лову</a>
                 {% elif current_user.level.name == "Середній" %}
-                    <a href="{% url 'tackle' %}">Підбір снастей</a>
                     <a href="{% url 'methods' %}">Техніки лову</a>
                 {% elif current_user.level.name == "Досвідчений" %}
                     <a href="{% url 'add_tip' %}">Додати пораду</a>
