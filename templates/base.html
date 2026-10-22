@@ -14,7 +14,7 @@
 
 <header class="header">
     <div class="container navbar">
-        <a class="logo" href="{% url 'home' %}">
+        <a class="logo" href="{% if current_user %}{% url 'profile' %}{% else %}{% url 'home' %}{% endif %}">
             <img class="logo-icon" src="{% static 'images/icons/fish.png' %}" alt="">
             Fish<span>Wise</span>
         </a>

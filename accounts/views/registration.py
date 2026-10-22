@@ -4,7 +4,6 @@ from django.utils import timezone
 
 from ..levels import LEVEL_NAMES
 from ..models import Levels, Users
-from ..session import login_user
 from ..validators import email_error, password_errors, username_error
 
 
@@ -39,15 +38,14 @@ def register_view(request):
             level, _ = Levels.objects.get_or_create(
                 name=LEVEL_NAMES[form["fishing_level"]],
             )
-            user = Users.objects.create(
+            Users.objects.create(
                 username=form["username"],
                 email=form["email"],
                 password_hash=make_password(password),
                 level=level,
                 created_at=timezone.now(),
             )
-            login_user(request, user)
-            return redirect("profile")
+            return redirect("login")
 
     return render(request, "register.html", {
         "errors": errors,
