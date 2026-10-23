@@ -1,8 +1,15 @@
 const SELECTED_WATER_STYLE = {
-  fillColor: "#16a34a",
-  fillOpacity: 0.65,
+  fillColor: "#22c55e",
+  fillOpacity: 0.82,
   strokeColor: "#15803d",
-  strokeWeight: 2,
+  strokeWeight: 4,
+};
+
+const DEFAULT_WATER_STYLE = {
+  fillColor: "#3b82f6",
+  fillOpacity: 0.45,
+  strokeColor: "#1d4ed8",
+  strokeWeight: 1,
 };
 
 function initJournalMap() {
@@ -20,12 +27,23 @@ function initJournalMap() {
   const savedWaterId = mapElement.dataset.waterId || "";
 
   let pickedFeature = null;
+  let selectedWaterId = "";
+
+  function applyWaterStyles() {
+    map.data.setStyle((feature) =>
+      String(feature.getProperty("water_body_id")) === selectedWaterId
+        ? SELECTED_WATER_STYLE
+        : DEFAULT_WATER_STYLE,
+    );
+  }
+
+  applyWaterStyles();
 
 
   function showFeature(feature) {
     map.fitBounds(featureBounds(feature));
-    map.data.revertStyle();
-    map.data.overrideStyle(feature, SELECTED_WATER_STYLE);
+    selectedWaterId = String(feature.getProperty("water_body_id") || "");
+    applyWaterStyles();
     pickedFeature = feature;
   }
 
@@ -48,6 +66,8 @@ function initJournalMap() {
       map.data.forEach((feature) => map.data.remove(feature));
       map.data.addGeoJson(geojson);
       map.fitBounds(boundsOf(geojson));
+      selectedWaterId = savedWaterId;
+      applyWaterStyles();
 
       map.data.forEach((feature) => {
         if (String(feature.getProperty("water_body_id")) === savedWaterId) {
@@ -102,6 +122,17 @@ function initJournalMap() {
   }
 
   button.addEventListener("click", async () => {
+    if (!region.value) {
+      await loadRegionLayer(map, region, button, status);
+      return;
+    }
+    input.value = "";
+    label.textContent = "Водойму ще не обрано";
+    label.classList.remove("is-set");
+    if (focusButton) focusButton.hidden = true;
+    selectedWaterId = "";
+    pickedFeature = null;
+    applyWaterStyles();
     const geojson = await loadRegionLayer(map, region, button, status);
 
     if (geojson) {

@@ -14,7 +14,7 @@
 
         <div class="test-heading">
             <h1>Дізнайся свій рівень риболовлі</h1>
-            <p>Відповідай на 4 короткі запитання.</p>
+            <p>Кількість запитань: {{ questions|length }}. Дай відповідь на кожне.</p>
         </div>
 
         {% if completed %}
@@ -26,10 +26,16 @@
                     {{ level_name }}
                 </div>
 
+                {% if current_user %}
+                    <p>{% if upgraded %}Рівень підвищено! Нові функції вже доступні.{% else %}Твій поточний рівень збережено.{% endif %}</p>
+                    <p>Рівень профілю: {{ saved_level }}</p>
+                    <a class="btn btn-primary" href="{% url 'profile' %}">Повернутися до профілю →</a>
+                {% else %}
                 <a class="btn btn-primary"
                    href="{% url 'register' %}?fishing_level={{ level }}">
                     Повернутися до реєстрації →
                 </a>
+                {% endif %}
             </div>
 
         {% else %}

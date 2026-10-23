@@ -48,6 +48,9 @@
             </div>
 
             <div class="profile-actions">
+                {% if profile_user.level.name == "Початківець" or profile_user.level.name == "Середній" %}
+                    <a class="btn btn-outline" href="{% url 'fishing_test' %}">Пройти тест і підвищити рівень →</a>
+                {% endif %}
                 <a class="btn btn-primary" href="{% url 'stats' %}">📊 Моя статистика</a>
                 <a class="btn btn-outline" href="{% url 'username' %}">✏️ Змінити ім'я</a>
                 <a class="btn btn-outline" href="{% url 'password' %}">🔑 Змінити пароль</a>
@@ -61,16 +64,17 @@
                     <a class="profile-item" href="{% url 'edit_trip' trip.trip_id %}">
                         <strong>{{ trip.water_body.name }}</strong>
                         <p>
-                            {{ trip.start_time|date:"d.m.Y H:i" }}
+                            Створено: {{ trip.created_at|date:"d.m.Y H:i" }}
+                            {% if trip.updated_at %} · Редаговано: {{ trip.updated_at|date:"d.m.Y H:i" }}{% endif %}
                             {% if trip.type %} · {{ trip.type.name }}{% endif %}
                             {% if trip.method %} · {{ trip.method.name }}{% endif %}
                         </p>
-                        {% if trip.fish_note %}
-                            <p class="profile-item-catch">Зловив: {{ trip.fish_note }}</p>
-                        {% endif %}
                         {% if trip.bait_note %}
                             <p class="profile-item-bait">На що: {{ trip.bait_note|truncatechars:60 }}</p>
                         {% endif %}
+                        {% for catch in trip.catches_set.all %}
+                            <p>{{ catch.fish.name }} · {{ catch.quantity|default:"1" }} шт.{% if catch.weight_kg %} · {{ catch.weight_kg }} кг{% endif %}{% if catch.caught_at %} · {{ catch.caught_at|date:"d.m.Y H:i" }}{% endif %}</p>
+                        {% endfor %}
                         <small>Редагувати сесію →</small>
                     </a>
                 {% endfor %}

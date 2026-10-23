@@ -1,0 +1,14 @@
+<fieldset class="catch-editor">
+    <legend>Улов</legend>
+    {% for hidden in catch_form.hidden_fields %}{{ hidden }}{{ hidden.errors }}{% endfor %}
+    {{ catch_form.non_field_errors }}
+    <div class="catch-fields">
+        {% for field in catch_form.visible_fields %}
+            {% if field.name != 'DELETE' %}
+                <div class="form-group">{{ field.label_tag }}{{ field }}{{ field.errors }}</div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    {{ catch_form.DELETE.as_hidden }}
+    <button class="catch-remove-button" type="button" data-catch-remove>Прибрати улов</button>
+</fieldset>

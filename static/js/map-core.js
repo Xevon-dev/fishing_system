@@ -18,6 +18,17 @@ function createWaterMap(selectorOrElement) {
   return map;
 }
 
+function featureBounds(feature) {
+  const bounds = new google.maps.LatLngBounds();
+  const geometry = feature && feature.getGeometry();
+
+  if (geometry) {
+    geometry.forEachLatLng((latLng) => bounds.extend(latLng));
+  }
+
+  return bounds;
+}
+
 
 async function loadRegionLayer(map, region, button, status) {
   if (!region.value) {

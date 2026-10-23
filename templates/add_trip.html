@@ -22,8 +22,9 @@
             </p>
         {% endif %}
 
-        <form method="post" class="auth-form" novalidate>
+        <form method="post" class="auth-form" id="trip-form" novalidate>
             {% csrf_token %}
+            <p id="trip-validation-summary" class="form-validation-summary" role="alert" aria-live="assertive" hidden></p>
 
             <div class="form-group">
                 <label>ВОДОЙМА</label>
@@ -78,14 +79,16 @@
                 </p>
 
                 {% if errors.water_body_id %}
-                    <span class="field-error">{{ errors.water_body_id }}</span>
+                    <span id="trip-water-error" class="field-error">{{ errors.water_body_id }}</span>
+                {% else %}
+                    <span id="trip-water-error" class="field-error" hidden></span>
                 {% endif %}
             </div>
 
-            <div class="form-row">
+            <div class="form-row trip-technique-row">
                 <div class="form-group">
                     <label for="trip-type">ТИП РИБОЛОВЛІ</label>
-                    <select id="trip-type" name="type"
+                    <select id="trip-type" name="type" required
                             class="{% if errors.type %}input-error{% endif %}">
                         <option value="">— обери тип —</option>
                         {% for type in types %}
@@ -113,50 +116,29 @@
                         {% endfor %}
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="trip-method-note">СВОЯ ТЕХНІКА (якщо немає у списку)</label>
+                    <input type="text" id="trip-method-note" name="method_note"
+                           maxlength="255" value="{{ form.method_note }}"
+                           placeholder="Наприклад: карпова оснастка на кукурудзу">
+                </div>
             </div>
 
+            <section class="trip-catches" aria-label="Улови сесії">
+                <h2>Що зловив</h2>
+                <p class="form-hint">Додай окремий запис для кожного виду риби. Якщо нічого не зловив — залиш список порожнім.</p>
+                {{ catches.management_form }}
+                {{ catches.non_form_errors }}
+                <div id="catch-rows">
+                    {% for catch_form in catches %}{% include 'catch_form.html' %}{% endfor %}
+                </div>
+                <template id="catch-template">{% include 'catch_form.html' with catch_form=catches.empty_form %}</template>
+                <button type="button" class="btn btn-outline" id="add-catch">+ Додати ще рибу</button>
+            </section>
             <div class="form-group">
-                <label for="trip-method-note">СВОЯ ТЕХНІКА (якщо немає у списку)</label>
-                <input type="text" id="trip-method-note" name="method_note"
-                       maxlength="255" value="{{ form.method_note }}"
-                       placeholder="Наприклад: карпова оснастка на кукурудзу">
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="trip-fish">ЩО ЗЛОВИВ (НАЗВА РИБИ)</label>
-                    <input type="text" id="trip-fish" name="fish_note"
-                           maxlength="255" value="{{ form.fish_note }}"
-                           placeholder="Наприклад: карась, 1.2 кг">
-                </div>
-
-                <div class="form-group">
-                    <label for="trip-bait">НА ЧОГО ЛОВИВ</label>
-                    <textarea id="trip-bait" name="bait_note" rows="3"
-                              placeholder="Прикормка і насадка на гачку">{{ form.bait_note }}</textarea>
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="trip-start">ДАТА Й ЧАС ПОЧАТКУ</label>
-                    <input type="datetime-local" id="trip-start" name="start_time"
-                           value="{{ form.start_time }}"
-                           class="{% if errors.start_time %}input-error{% endif %}">
-                    {% if errors.start_time %}
-                        <span class="field-error">{{ errors.start_time }}</span>
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    <label for="trip-hours">ТРИВАЛІСТЬ, ГОД</label>
-                    <input type="number" id="trip-hours" name="hours_spent"
-                           min="0" max="72" step="0.5" value="{{ form.hours_spent }}"
-                           class="{% if errors.hours_spent %}input-error{% endif %}">
-                    {% if errors.hours_spent %}
-                        <span class="field-error">{{ errors.hours_spent }}</span>
-                    {% endif %}
-                </div>
+                <label for="trip-bait">НА ЧОГО ЛОВИВ</label>
+                <textarea id="trip-bait" name="bait_note" rows="3"
+                          placeholder="Прикормка і насадка на гачку">{{ form.bait_note }}</textarea>
             </div>
 
             <div class="form-group">
@@ -182,6 +164,8 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'js/journal-catches.js' %}?v={% now 'U' %}"></script>
+<script src="{% static 'js/journal-validation.js' %}?v={% now 'U' %}"></script>
 {% if google_maps_api_key %}
 <script src="{% static 'js/map-core.js' %}?v={% now 'U' %}"></script>
 <script src="{% static 'js/map-water.js' %}?v={% now 'U' %}"></script>

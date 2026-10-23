@@ -5,10 +5,11 @@ from .models import Catches, FishingTrips, Tips
 
 @admin.register(FishingTrips)
 class FishingTripsAdmin(admin.ModelAdmin):
-    list_display = ("trip_id", "user", "water_body", "start_time", "type", "method")
+    list_display = ("trip_id", "user", "water_body", "created_at", "updated_at", "type", "method")
     list_select_related = ("user", "water_body", "type", "method")
     list_filter = ("type", "method")
-    search_fields = ("water_body__name", "fish_note", "note")
+    search_fields = ("water_body__name", "note", "bait_note", "method_note")
+    exclude = ("start_time", "end_time", "hours_spent")
     list_per_page = 50
 
 

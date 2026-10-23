@@ -24,8 +24,8 @@
                 <div class="trip-card">
                     <h3>{{ trip.water_body.name }}</h3>
                     <p class="trip-meta">
-                        {{ trip.start_time|date:"d.m.Y H:i" }}
-                        {% if trip.hours_spent %} · {{ trip.hours_spent }} год{% endif %}
+                        Створено: {{ trip.created_at|date:"d.m.Y H:i" }}
+                        {% if trip.updated_at %} · Редаговано: {{ trip.updated_at|date:"d.m.Y H:i" }}{% endif %}
                     </p>
 
                     {% if trip.type or trip.method or trip.method_note %}
@@ -37,10 +37,6 @@
                                 <span class="trip-tag">{{ trip.method_note }}</span>
                             {% endif %}
                         </p>
-                    {% endif %}
-
-                    {% if trip.fish_note %}
-                        <p class="trip-catch">Зловив: {{ trip.fish_note }}</p>
                     {% endif %}
 
                     {% if trip.bait_note %}
@@ -57,6 +53,7 @@
                             — {{ catch.weight_kg|default:"—" }} кг
                             · кількість: {{ catch.quantity|default:"1" }}
                             {% if catch.tackle %} · {{ catch.tackle.name }}{% endif %}
+                            {% if catch.caught_at %} · {{ catch.caught_at|date:"d.m.Y H:i" }}{% endif %}
                         </div>
                     {% endfor %}
 

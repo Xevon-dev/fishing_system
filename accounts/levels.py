@@ -5,9 +5,11 @@ LEVEL_NAMES = {
 }
 
 
-def level_from_score(score):
-    if score <= 7:
+def level_from_score(score, question_count=4):
+    if question_count <= 0:
         return "beginner"
-    if score <= 12:
+    if score <= 7 * question_count / 4:
+        return "beginner"
+    if score <= 12 * question_count / 4:
         return "intermediate"
     return "advanced"

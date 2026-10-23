@@ -29,7 +29,8 @@ def profile_view(request):
             FishingTrips.objects
             .filter(user_id=user.user_id)
             .select_related("water_body", "type", "method")
-            .order_by("-start_time")[:10]
+            .prefetch_related("catches_set__fish")
+            .order_by("-created_at")[:10]
         ),
         "tips": tips,
     })
