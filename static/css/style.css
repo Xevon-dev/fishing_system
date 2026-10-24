@@ -125,6 +125,30 @@ img {
   font-size: 13px;
   text-align: center;
 }
+@media (max-width: 1050px) and (min-width: 801px) {
+  .navbar {
+    gap: 12px;
+  }
+  .logo {
+    font-size: 25px;
+  }
+  .nav-links {
+    gap: 9px;
+  }
+  .nav-links a {
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .nav-actions {
+    gap: 7px;
+  }
+  .nav-actions .btn,
+  .nav-actions .login-link {
+    padding-inline: 12px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+}
 @media (max-width: 800px) {
   .navbar {
     min-height: 76px;

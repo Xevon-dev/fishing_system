@@ -1,6 +1,5 @@
 body:has(.tackle-page) {
   background: #f7f7fc;
-  color: #173a35;
 }
 .tackle-page {
   min-height: calc(100vh - 94px);
@@ -86,7 +85,7 @@ body:has(.tackle-page) {
 .tackle-section-heading__eyebrow { display: block; margin-bottom: 4px; color: #71867a; font-size: 8px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
 .tackle-section-heading h2 { margin: 0; color: #26483c; font-size: 18px; font-weight: 800; letter-spacing: -.02em; }
 .tackle-section-heading__count { color: #89958e; font-size: 10px; white-space: nowrap; }
-.tackle-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
+.tackle-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
 .tackle-card {
   min-width: 0;
   display: flex;
@@ -102,8 +101,8 @@ body:has(.tackle-page) {
   transition: transform .24s ease, box-shadow .24s ease, border-color .24s ease;
 }
 .tackle-card:hover { transform: translateY(-4px); border-color: #bfdfcd; box-shadow: 0 14px 28px rgb(26 77 54 / 11%); }
-.tackle-card__visual { position: relative; display: grid; aspect-ratio: 1.6 / 1; place-items: center; overflow: hidden; border: 1px solid #eff1f4; border-radius: 10px; background: #fff; }
-.tackle-card__image { width: 100%; height: 100%; min-width: 0; min-height: 0; display: block; padding: 0; object-fit: cover; object-position: center; transition: transform .4s cubic-bezier(.2,.7,.2,1); }
+.tackle-card__visual { position: relative; display: grid; aspect-ratio: 1.8 / 1; place-items: center; overflow: hidden; border: 1px solid #eff1f4; border-radius: 10px; background: #fff; }
+.tackle-card__image { width: 88%; height: 88%; min-width: 0; min-height: 0; display: block; padding: 0; object-fit: contain; object-position: center; transition: transform .4s cubic-bezier(.2,.7,.2,1); }
 .tackle-card:hover .tackle-card__image { transform: scale(1.045); }
 .tackle-card__image-placeholder { color: #b6c7bc; font-size: 30px; }
 .tackle-card__open { position: absolute; top: 7px; right: 7px; display: grid; width: 24px; height: 24px; place-items: center; border: 1px solid #e4e7ee; border-radius: 7px; color: #738078; background: #ffffffd9; font-size: 12px; opacity: .75; transition: opacity .2s ease, transform .2s ease; }
@@ -121,17 +120,10 @@ body:has(.tackle-page) {
 .tackle-empty h2 { margin: 15px 0 5px; color: #254238; font-size: 17px; }
 .tackle-empty p { margin: 0; color: #78857d; font-size: 12px; }
 
-@media (max-width: 1050px) and (min-width: 761px) {
-  body:has(.tackle-page) .navbar { gap: 10px; }
-  body:has(.tackle-page) .logo { gap: 7px; font-size: 24px; }
-  body:has(.tackle-page) .logo-icon { width: 35px; height: 35px; }
-  body:has(.tackle-page) .nav-links { gap: 9px; }
-  body:has(.tackle-page) .nav-links a { font-size: 10px; }
-  body:has(.tackle-page) .nav-actions { gap: 7px; }
-  body:has(.tackle-page) .nav-actions .btn,
-  body:has(.tackle-page) .nav-actions .login-link { padding-inline: 12px; font-size: 11px; }
+@media (max-width: 1100px) {
+  .tackle-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
-@media (max-width: 1050px) {
+@media (max-width: 900px) {
   .tackle-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 760px) {
