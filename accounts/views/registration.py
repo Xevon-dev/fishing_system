@@ -1,12 +1,17 @@
+from urllib.parse import quote
+
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.utils import timezone
+from django.views.decorators.cache import never_cache
 
 from ..levels import LEVEL_NAMES
 from ..models import Levels, Users
 from ..validators import email_error, password_errors, username_error
 
 
+@never_cache
 def register_view(request):
     errors = {}
     form = {
@@ -45,7 +50,7 @@ def register_view(request):
                 level=level,
                 created_at=timezone.now(),
             )
-            return redirect("login")
+            return redirect(f"{reverse('login')}?login={quote(form['username'])}")
 
     return render(request, "register.html", {
         "errors": errors,

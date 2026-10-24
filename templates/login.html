@@ -61,6 +61,7 @@
                         <label for="password">ПАРОЛЬ</label>
                         <div class="auth-field auth-field--password">
                             <input type="password" id="password" name="password"
+                                   {% if login %}autofocus{% endif %}
                                    autocomplete="current-password"
                                    class="{% if errors.password %}input-error{% endif %}">
                             <button type="button" class="auth-eye" data-password-toggle="password" aria-label="Показати пароль">

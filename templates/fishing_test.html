@@ -1,4 +1,3 @@
-
 {% extends 'base.html' %}
 {% load static %}
 
@@ -13,101 +12,148 @@
     <div class="test-shell">
 
         <div class="test-heading">
-            <h1>Дізнайся свій рівень риболовлі</h1>
+            <span class="test-badge"><span class="test-badge__dot" aria-hidden="true"></span>Визначення рівня</span>
+            <h1>Дізнайся свій <span>рівень</span> риболовлі</h1>
             <p>Кількість запитань: {{ questions|length }}. Дай відповідь на кожне.</p>
         </div>
 
         {% if completed %}
 
-            <div class="test-card test-result">
-                <h2>Твій рекомендований рівень</h2>
+            <div class="test-result-wrap">
+                <div class="test-card test-result">
+                    <h2>Твій рекомендований рівень</h2>
 
-                <div class="test-result-level">
-                    {{ level_name }}
+                    <div class="test-result-level">
+                        {{ level_name }}
+                    </div>
+
+                    {% if current_user %}
+                        <p>{% if upgraded %}Рівень підвищено! Нові функції вже доступні.{% else %}Твій поточний рівень збережено.{% endif %}</p>
+                        <p>Рівень профілю: {{ saved_level }}</p>
+                        <a class="btn btn-primary" href="{% url 'profile' %}">Повернутися до профілю →</a>
+                    {% else %}
+                        <a class="btn btn-primary"
+                           href="{% url 'register' %}?fishing_level={{ level }}">
+                            Повернутися до реєстрації →
+                        </a>
+                    {% endif %}
                 </div>
-
-                {% if current_user %}
-                    <p>{% if upgraded %}Рівень підвищено! Нові функції вже доступні.{% else %}Твій поточний рівень збережено.{% endif %}</p>
-                    <p>Рівень профілю: {{ saved_level }}</p>
-                    <a class="btn btn-primary" href="{% url 'profile' %}">Повернутися до профілю →</a>
-                {% else %}
-                <a class="btn btn-primary"
-                   href="{% url 'register' %}?fishing_level={{ level }}">
-                    Повернутися до реєстрації →
-                </a>
-                {% endif %}
             </div>
 
         {% else %}
 
-            <form method="post" class="test-card" id="test-card">
-                {% csrf_token %}
+            <div class="test-layout">
+                <form method="post" class="test-card" id="test-card">
+                    {% csrf_token %}
 
-                {% if error %}
-                    <p class="field-error">{{ error }}</p>
-                {% endif %}
+                    {% if error %}
+                        <p class="field-error">{{ error }}</p>
+                    {% endif %}
 
-                <div class="test-top">
-                    <span id="question-count"></span>
-                    <span id="progress-label"></span>
-                </div>
-
-                <div class="test-progress">
-                    <div class="test-progress-fill" id="progress-fill"></div>
-                </div>
-
-                {% for question in questions %}
-
-                    <div class="question-slide"
-                         {% if not forloop.first %}hidden{% endif %}>
-
-                        <h2 class="test-question">
-                            {{ question.question }}
-                        </h2>
-
-                        <div class="test-options">
-                            {% for answer in question.answers %}
-
-                                <label class="test-option">
-                                    <input
-                                        type="radio"
-                                        name="q{{ question.id }}"
-                                        value="{{ answer.id }}"
-                                    >
-                                    {{ answer.text }}
-                                </label>
-
-                            {% endfor %}
-                        </div>
-
+                    <div class="test-top">
+                        <span class="test-count" id="question-count"></span>
+                        <span class="test-percent" id="progress-label"></span>
                     </div>
 
-                {% endfor %}
+                    <div class="test-progress">
+                        <div class="test-progress-fill" id="progress-fill"></div>
+                    </div>
 
-                <p id="answer-error" class="answer-error" role="alert"></p>
+                    {% for question in questions %}
 
-                <div class="test-actions">
-                    <button type="button"
-                            class="test-back"
-                            id="back-button">
-                        Назад
-                    </button>
+                        <div class="question-slide"
+                             {% if not forloop.first %}hidden{% endif %}>
 
-                    <button type="button"
-                            class="test-next"
-                            id="next-button">
-                        Далі →
-                    </button>
-                </div>
+                            <h2 class="test-question">
+                                {{ question.question }}
+                            </h2>
 
-            </form>
+                            <div class="test-options">
+                                {% for answer in question.answers %}
+
+                                    <label class="test-option">
+                                        <input
+                                            type="radio"
+                                            name="q{{ question.id }}"
+                                            value="{{ answer.id }}"
+                                        >
+                                        <span>{{ answer.text }}</span>
+                                    </label>
+
+                                {% endfor %}
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                    <p id="answer-error" class="answer-error" role="alert"></p>
+
+                    <div class="test-actions">
+                        <button type="button"
+                                class="test-back"
+                                id="back-button">
+                            ← Назад
+                        </button>
+
+                        <button type="button"
+                                class="test-next"
+                                id="next-button">
+                            Далі →
+                        </button>
+                    </div>
+
+                </form>
+
+                <aside class="test-aside">
+                    <div class="test-aside__head">
+                        <span class="test-aside__icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                                <path d="M12 3.4 14 9l5.6 2-5.6 2-2 5.6-2-5.6L4.4 11 10 9Z"/>
+                            </svg>
+                        </span>
+                        <h2>Що дає точне визначення рівня?</h2>
+                    </div>
+
+                    <ul class="test-aside__list">
+                        <li>
+                            <svg viewBox="0 0 20 20" aria-hidden="true">
+                                <circle cx="10" cy="10" r="10" fill="currentColor" opacity=".16"/>
+                                <path d="m6 10.2 2.6 2.6 5.4-5.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span><strong>Персональні рекомендації</strong> — снасті й техніки під твій рівень.</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 20 20" aria-hidden="true">
+                                <circle cx="10" cy="10" r="10" fill="currentColor" opacity=".16"/>
+                                <path d="m6 10.2 2.6 2.6 5.4-5.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span><strong>Потрібні розділи</strong> — відкриються матеріали твого рівня.</span>
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 20 20" aria-hidden="true">
+                                <circle cx="10" cy="10" r="10" fill="currentColor" opacity=".16"/>
+                                <path d="m6 10.2 2.6 2.6 5.4-5.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span><strong>Зрозумілий старт</strong> — побачиш, з чого почати далі.</span>
+                        </li>
+                    </ul>
+                </aside>
+            </div>
 
         {% endif %}
 
     </div>
 </section>
+
+<footer class="home-footer">
+    <div class="home-footer__inner">
+        <a class="home-footer__brand" href="{% url 'home' %}"><span class="home-footer__dot" aria-hidden="true"></span>FishWise</a>
+        <p>© FishWise. Твій помічник у світі риболовлі.</p>
+    </div>
+</footer>
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/fishing_test.js' %}"></script>
+<script src="{% static 'js/fishing_test.js' %}?v={% now 'U' %}"></script>
 {% endblock %}

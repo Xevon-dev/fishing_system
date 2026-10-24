@@ -2,6 +2,7 @@ import re
 
 from django.contrib.auth.hashers import check_password
 from django.shortcuts import redirect, render
+from django.views.decorators.cache import never_cache
 
 from ..models import Users
 from ..session import login_user, logout_user
@@ -9,9 +10,10 @@ from ..session import login_user, logout_user
 EMAIL_RE = re.compile(r"[^@\s]+@[^@\s]+\.[^@\s]+")
 
 
+@never_cache
 def login_view(request):
     errors = {}
-    login_value = ""
+    login_value = request.GET.get("login", "").strip()
 
     if request.method == "POST":
         login_value = request.POST.get("username", "").strip()
