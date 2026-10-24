@@ -10,26 +10,46 @@
 {% block content %}
 <section class="fish-encyclopedia container">
     <header class="fish-encyclopedia__heading">
-        <p class="fish-encyclopedia__eyebrow">FishWise · довідник риб</p>
+        <p class="fish-encyclopedia__eyebrow"><span></span> FishWise · довідник риб</p>
         <h1>Енциклопедія рибака</h1>
-        <p>Опис видів, поради з лову та посилання на додаткову інформацію.</p>
+        <p>Дізнавайся більше про рибу, її звички та особливості лову.</p>
     </header>
 
     {% if fish_list %}
+        <div class="fish-encyclopedia__toolbar">
+            <span class="fish-filters-label">ФІЛЬТР:</span>
+            <nav class="fish-filters" aria-label="Фільтр за категорією риби">
+                <button class="fish-filter is-active" type="button" data-fish-filter="all">Всі види <span>{{ fish_list|length }}</span></button>
+                {% for category in fish_categories %}
+                    <button class="fish-filter" type="button" data-fish-filter="{{ category.slug }}">{{ category.name }} <span>{{ category.fish_count }}</span></button>
+                {% endfor %}
+            </nav>
+        </div>
+
         <div class="fish-encyclopedia__grid">
             {% for fish in fish_list %}
-                <article class="fish-card {% if forloop.counter|divisibleby:2 %}fish-card--image-last{% else %}fish-card--image-first{% endif %}">
+                <article class="fish-card {% if forloop.counter|divisibleby:2 %}fish-card--image-left{% else %}fish-card--image-right{% endif %}" data-fish-name="{{ fish.name|lower }}" data-fish-categories="{% for category in fish.categories.all %}{{ category.slug }}{% if not forloop.last %},{% endif %}{% endfor %}">
                     <div class="fish-card__media">
                     {% if fish.image %}
-                        <img class="fish-card__image" src="{{ fish.image.url }}" alt="{{ fish.name }}" loading="lazy">
+                        <img class="fish-card__image" src="{{ fish.image.url }}?v={% now 'U' %}" alt="{{ fish.name }}" loading="lazy">
                     {% else %}
                         <div class="fish-card__image fish-card__image--empty" role="img" aria-label="Фото {{ fish.name }} відсутнє">
                             <span>Фото готується</span>
                         </div>
                     {% endif %}
+                        <div class="fish-card__tags">
+                            {% for category in fish.categories.all %}<span>{{ category.name }}</span>{% endfor %}
+                        </div>
+                        <div class="fish-card__media-caption"><span>FishWise</span><span>Довідник риб</span></div>
                     </div>
                     <div class="fish-card__body">
-                        <h2>{{ fish.name }}</h2>
+                        <div class="fish-card__title-row">
+                            <div>
+                                <span class="fish-card__eyebrow">Вид риби</span>
+                                <h2>{{ fish.name }}</h2>
+                            </div>
+                            <span class="fish-card__mark" aria-hidden="true">⌕</span>
+                        </div>
                         {% if fish.description %}
                             <p class="fish-card__description">{{ fish.description }}</p>
                         {% endif %}
@@ -39,17 +59,25 @@
                                 <p>{{ fish.advice }}</p>
                             </div>
                         {% endif %}
+                        <div class="fish-card__actions">
                         {% if fish.wikipedia %}
                             <a class="fish-card__link" href="{{ fish.wikipedia }}" target="_blank" rel="noopener noreferrer">
-                                Детальніше у Вікіпедії <span aria-hidden="true">↗</span>
+                                Детальніше про вид <span aria-hidden="true">↗</span>
                             </a>
                         {% endif %}
+                            <a class="fish-card__tackle" href="{% url 'tackle_fish' fish.fish_id %}">Підібрати снасті</a>
+                        </div>
                     </div>
                 </article>
             {% endfor %}
+            <p class="fish-encyclopedia__no-results" hidden>За вашим запитом риб не знайдено.</p>
         </div>
     {% else %}
         <p class="fish-encyclopedia__empty">Довідник поки порожній.</p>
     {% endif %}
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/fish-encyclopedia.js' %}?v={% now 'U' %}"></script>
 {% endblock %}

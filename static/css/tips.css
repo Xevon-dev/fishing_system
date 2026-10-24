@@ -1,0 +1,183 @@
+.tips-page {
+    min-height: calc(100vh - 82px);
+    padding: 54px 24px 68px;
+    background: #faf8ff;
+}
+
+.tips-heading {
+    max-width: 760px;
+    margin: 0 auto 34px;
+    text-align: center;
+}
+
+.tips-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin: 0 0 14px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #e9eaff;
+    color: #17684f;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.tips-eyebrow span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #15936b;
+}
+
+.tips-heading h1 {
+    margin: 0 0 10px;
+    color: #103d31;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(30px, 4vw, 42px);
+    line-height: 1.14;
+    letter-spacing: -0.025em;
+}
+
+.tips-subtitle {
+    max-width: 720px;
+    margin: 0 auto;
+    color: #747482;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.tips-list {
+    width: min(100%, 920px);
+    margin: 0 auto;
+}
+
+.tips-count {
+    margin: 0 0 12px 4px;
+    color: #737383;
+    font-size: 12px;
+}
+
+.tips-count strong {
+    color: #454653;
+}
+
+.tip-card {
+    --tip-accent: #16866a;
+    margin: 0 0 16px;
+    padding: 22px 24px 20px;
+    border: 1px solid #eeedf3;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 5px 18px rgb(39 31 67 / 5%);
+}
+
+.tip-card:nth-of-type(3n + 2) { --tip-accent: #6576d7; }
+.tip-card:nth-of-type(3n) { --tip-accent: #efa849; }
+
+.tip-byline {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    margin-bottom: 13px;
+}
+
+.tip-avatar {
+    display: grid;
+    flex: 0 0 34px;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--tip-accent);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.tip-author {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.tip-author strong {
+    overflow: hidden;
+    color: #343640;
+    font-size: 13px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.tip-author time {
+    color: #92929e;
+    font-size: 11px;
+}
+
+.tip-badge {
+    overflow: hidden;
+    max-width: 45%;
+    margin-left: 2px;
+    padding: 4px 9px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--tip-accent) 12%, white);
+    color: var(--tip-accent);
+    font-size: 10px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.tip-card h2 {
+    margin: 0 0 10px;
+    color: #173f34;
+    font-size: 18px;
+    line-height: 1.35;
+}
+
+.tip-content {
+    padding: 13px 15px;
+    border-left: 3px solid var(--tip-accent);
+    border-radius: 10px;
+    background: #f5f6ff;
+    color: #424456;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.tip-content p {
+    margin: 0;
+}
+
+.tip-content p + p {
+    margin-top: 8px;
+}
+
+.tip-edit-link {
+    display: inline-block;
+    margin-top: 12px;
+    color: #087e68;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.tip-edit-link:hover { text-decoration: underline; }
+
+.tips-empty {
+    padding: 28px;
+    border: 1px solid #eeedf3;
+    border-radius: 16px;
+    background: #fff;
+    color: #747482;
+    text-align: center;
+}
+
+@media (max-width: 600px) {
+    .tips-page { padding: 38px 16px 48px; }
+    .tips-heading { margin-bottom: 26px; }
+    .tip-card { padding: 18px 16px; }
+    .tip-card h2 { font-size: 16px; }
+}

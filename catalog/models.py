@@ -34,9 +34,27 @@ class FishSpecies(models.Model):
     image = models.ImageField(upload_to="fish/", blank=True)
     wikipedia = models.URLField(max_length=500, blank=True)
     image_source = models.URLField(max_length=500, blank=True)
+    categories = models.ManyToManyField(
+        "FishCategory",
+        related_name="fish",
+        blank=True,
+    )
 
     class Meta:
         db_table = 'fish_species'
+
+    def __str__(self):
+        return self.name
+
+
+class FishCategory(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=100, unique=True)
+
+    class Meta:
+        db_table = "fish_categories"
+        ordering = ("id",)
 
     def __str__(self):
         return self.name

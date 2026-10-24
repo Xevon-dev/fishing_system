@@ -4,31 +4,32 @@
 {% block title %}Поради рибалок — FishWise{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/auth.css' %}?v={% now 'U' %}">
+<link rel="stylesheet" href="{% static 'css/tips.css' %}?v={% now 'U' %}">
 {% endblock %}
 
 {% block content %}
-<section class="auth-section">
-    <div class="auth-heading">
+<section class="tips-page">
+    <header class="tips-heading">
+        <p class="tips-eyebrow"><span aria-hidden="true"></span> Спільнота FishWise</p>
         <h1>Цитати та поради рибалок</h1>
-        <p>Досвід спільноти FishWise</p>
-    </div>
+        <p class="tips-subtitle">Досвід спільноти FishWise: авторські тонкощі проводки, секрети монтажів, вибір приманок та живі спостереження на українських водоймах.</p>
+    </header>
 
-    <div class="auth-card">
+    <div class="tips-list">
+        {% if tips %}<p class="tips-count">Знайдено: <strong>{{ tips|length }} порад</strong></p>{% endif %}
         {% if tips %}
             {% for tip in tips %}
                 <article class="tip-card">
-                    <h3>{{ tip.title|default:"Порада рибалки" }}</h3>
-                    <p>{{ tip.content }}</p>
-                    <p class="tip-meta">
-                        {% if tip.fish %}
-                            {{ tip.fish.name }} ·
-                        {% endif %}
-                        Автор: {{ tip.author.username }}
-                        {% if tip.created_at %}
-                            · {{ tip.created_at|date:"d.m.Y" }}
-                        {% endif %}
-                    </p>
+                    <div class="tip-byline">
+                        <span class="tip-avatar" aria-hidden="true">{{ tip.author.username|slice:":1"|upper }}</span>
+                        <div class="tip-author">
+                            <strong>{{ tip.author.username }}</strong>
+                            <time>{% if tip.created_at %}{{ tip.created_at|date:"d.m.Y" }}{% else %}Дата не вказана{% endif %}</time>
+                        </div>
+                        <span class="tip-badge">{% if tip.fish %}{{ tip.fish.name }}{% else %}Порада рибалки{% endif %}</span>
+                    </div>
+                    <h2>{{ tip.title|default:"Порада рибалки" }}</h2>
+                    <div class="tip-content">{{ tip.content|linebreaks }}</div>
                     {% if current_user and tip.author_id == current_user.user_id %}
                         <a class="tip-edit-link"
                            href="{% url 'edit_tip' tip.tip_id %}">✏️ Редагувати</a>
@@ -36,7 +37,7 @@
                 </article>
             {% endfor %}
         {% else %}
-            <p class="level-description">Порад поки немає.</p>
+            <div class="tips-empty">Порад поки немає. Завітайте пізніше — тут з’являться корисні підказки від рибалок.</div>
         {% endif %}
     </div>
 </section>

@@ -4,12 +4,19 @@ from django.utils.html import format_html
 
 from .models import (
     FishSpecies,
+    FishCategory,
     FishingMethods,
     FishingTypes,
     Tackle,
     TackleSets,
     WaterBodies,
 )
+
+
+@admin.register(FishCategory)
+class FishCategoryAdmin(admin.ModelAdmin):
+    list_display = ("name", "slug")
+    search_fields = ("name", "slug")
 
 
 @admin.register(WaterBodies)
@@ -31,7 +38,8 @@ class FishSpeciesAdmin(admin.ModelAdmin):
         "wikipedia_link",
     )
     search_fields = ("name", "description", "advice")
-    fields = ("name", "description", "advice", "image", "wikipedia", "image_source")
+    fields = ("name", "description", "advice", "image", "wikipedia", "image_source", "categories")
+    filter_horizontal = ("categories",)
 
     @admin.display(description="опис")
     def description_preview(self, obj):

@@ -1,143 +1,320 @@
 .fish-encyclopedia {
-  padding-block: 42px 64px;
+  min-height: calc(100vh - 94px);
+  padding-block: 36px 64px;
+  background: #f8f8fd;
 }
+
 .fish-encyclopedia__heading {
   max-width: 720px;
-  margin: 0 auto 32px;
+  margin: 0 auto 21px;
   text-align: center;
 }
+
 .fish-encyclopedia__eyebrow {
-  margin: 0 0 8px;
-  color: var(--teal);
-  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 9px;
+  padding: 5px 11px;
+  border: 1px solid #cbe9d9;
+  border-radius: 999px;
+  color: #17845c;
+  background: #eaf8ef;
+  font-size: 9px;
   font-weight: 800;
-  letter-spacing: 0.12em;
+  letter-spacing: .07em;
   text-transform: uppercase;
 }
+
+.fish-encyclopedia__eyebrow span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #1bb27c;
+}
+
 .fish-encyclopedia__heading h1 {
   margin: 0;
-  color: var(--navy);
-  font-size: clamp(28px, 4vw, 42px);
+  color: #153b32;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(28px, 3.5vw, 38px);
   line-height: 1.15;
 }
+
 .fish-encyclopedia__heading > p:last-child {
-  margin: 12px 0 0;
-  color: var(--muted);
+  margin: 8px 0 0;
+  color: #7e8983;
+  font-size: 12px;
 }
+
+.fish-encyclopedia__toolbar {
+  width: min(100%, 1120px);
+  margin: 0 auto 19px;
+  padding: 14px 16px;
+  display: block;
+  border: 1px solid #e9eaf1;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 5px 18px rgb(34 44 67 / 4%);
+}
+
+.fish-filters-label {
+  display: block;
+  margin: 0 0 7px 4px;
+  color: #9aa49e;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+
+.fish-filters {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.fish-filter {
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid #e9eaf0;
+  border-radius: 999px;
+  color: #66756d;
+  background: #fff;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color .2s ease, background .2s ease, border-color .2s ease;
+}
+
+.fish-filter span {
+  margin-left: 4px;
+  color: #9ba5a0;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.fish-filter:hover,
+.fish-filter.is-active {
+  border-color: #08684a;
+  color: #fff;
+  background: #08684a;
+}
+
+.fish-filter.is-active span { color: #cce7d9; }
+
+.fish-search {
+  display: flex;
+  flex: 0 0 190px;
+  align-items: center;
+  gap: 7px;
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid #e9edf0;
+  border-radius: 999px;
+  color: #91a098;
+  background: #fbfcfb;
+}
+
+.fish-search > span { font-size: 19px; line-height: 1; }
+.fish-search input { width: 100%; padding: 0; border: 0; outline: 0; color: #24443a; background: transparent; font: inherit; font-size: 10px; }
+.fish-search input::placeholder { color: #9aa59f; }
+
 .fish-encyclopedia__grid {
+  width: min(100%, 1120px);
+  margin: 0 auto;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 20px;
-  align-items: stretch;
+  gap: 18px;
 }
+
 .fish-card {
   overflow: hidden;
   display: flex;
-  flex-direction: row;
   min-width: 0;
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  background: var(--white);
-  box-shadow: 0 8px 24px rgb(7 59 83 / 7%);
+  min-height: 285px;
+  border: 1px solid #e6e9f0;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 5px 17px rgb(35 42 66 / 5%);
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
 }
-.fish-card--image-last {
-  flex-direction: row-reverse;
+
+.fish-card--image-right { flex-direction: row-reverse; }
+.fish-card--image-left { flex-direction: row; }
+
+.fish-card:hover {
+  transform: translateY(-2px);
+  border-color: #c9e4d4;
+  box-shadow: 0 9px 22px rgb(35 75 56 / 9%);
 }
+
+.fish-card[hidden] { display: none; }
+
 .fish-card__media {
+  position: relative;
   display: flex;
-  flex: 0 0 40%;
-  flex-direction: column;
-  align-self: center;
-  height: 300px;
+  flex: 0 0 42%;
   min-width: 0;
-  background: var(--pale);
+  min-height: 285px;
+  background: #e8eee9;
 }
+
 .fish-card__image {
+  display: block;
   width: 100%;
   height: 100%;
-  flex: 1;
-  min-height: 0;
-  padding: 14px;
-  object-fit: contain;
-  background: var(--pale);
+  min-height: 285px;
+  object-fit: cover;
 }
+
 .fish-card__image--empty {
   display: grid;
   place-items: center;
-  color: var(--muted);
+  color: #74857b;
+  font-size: 12px;
   font-weight: 700;
 }
-.fish-card__body {
+
+.fish-card__tags {
+  position: absolute;
+  top: 10px;
+  left: 10px;
   display: flex;
-  flex: 1 1 60%;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 28px 32px;
+  flex-wrap: wrap;
+  gap: 5px;
 }
-.fish-card__body h2 {
-  margin: 0 0 10px;
-  color: var(--navy);
-  font-size: 22px;
-}
-.fish-card__description,
-.fish-card__advice p {
-  margin: 0;
-  color: var(--muted);
-  line-height: 1.65;
-}
-.fish-card__advice {
-  width: 100%;
-  margin-top: 18px;
-  padding: 14px 16px;
-  border-left: 3px solid var(--teal);
-  border-radius: 0 10px 10px 0;
-  background: var(--pale);
-}
-.fish-card__advice h3 {
-  margin: 0 0 5px;
-  color: var(--navy);
-  font-size: 14px;
-}
-.fish-card__link {
-  margin-top: auto;
-  padding-top: 18px;
-  color: var(--blue);
-  font-size: 14px;
+
+.fish-card__tags span {
+  padding: 4px 8px;
+  border: 1px solid rgb(255 255 255 / 70%);
+  border-radius: 999px;
+  color: #26483b;
+  background: rgb(255 255 255 / 91%);
+  font-size: 10px;
   font-weight: 800;
 }
-.fish-card__link:hover {
-  color: var(--teal);
+
+.fish-card__media-caption {
+  position: absolute;
+  right: 9px;
+  bottom: 9px;
+  left: 9px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  text-shadow: 0 1px 5px #000;
 }
+
+.fish-card__body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 0;
+  padding: 22px 24px 18px;
+}
+
+.fish-card__title-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.fish-card__eyebrow { color: #849188; font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.fish-card__body h2 { margin: 3px 0 0; color: #21473a; font-size: 25px; line-height: 1.25; }
+.fish-card__mark { display: grid; width: 26px; height: 26px; flex: 0 0 26px; place-items: center; border: 1px solid #e8ece8; border-radius: 8px; color: #7b8d82; font-size: 17px; }
+
+.fish-card__description {
+  margin: 8px 0 0;
+  color: #78857d;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.fish-card__advice {
+  width: 100%;
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-left: 2px solid #32a77a;
+  border-radius: 0 9px 9px 0;
+  background: #f3f4fc;
+}
+
+.fish-card__advice h3 { display: flex; align-items: center; gap: 6px; margin: 0 0 5px; color: #27815f; font-size: 12px; }
+.fish-card__advice h3::before { content: "✦"; font-size: 10px; }
+.fish-card__advice p { margin: 0; color: #626f69; font-size: 13px; line-height: 1.6; }
+
+.fish-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 14px;
+}
+
+.fish-card__link {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 5px;
+  margin-top: 0;
+  padding-top: 0;
+  color: #27815f;
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.fish-card__link:hover { color: #075b41; }
+
+.fish-card__tackle {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 22px;
+  border-radius: 999px;
+  color: #fff;
+  background: #08684a;
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: background .2s ease, transform .2s ease;
+}
+
+.fish-card__tackle:hover { background: #0b7955; transform: translateY(-1px); }
+.fish-encyclopedia__no-results { grid-column: 1 / -1; padding: 20px; color: #78857d; text-align: center; }
+
 .fish-encyclopedia__empty {
+  width: min(100%, 1120px);
+  margin: 0 auto;
   padding: 28px;
-  border: 1px solid var(--border);
+  border: 1px solid #e6e9f0;
   border-radius: 14px;
-  background: var(--white);
-  color: var(--muted);
+  color: #78857d;
+  background: #fff;
   text-align: center;
 }
-@media (max-width: 760px) {
-  .fish-encyclopedia {
-    padding-block: 30px 44px;
-  }
-  .fish-encyclopedia__grid {
-    gap: 16px;
-  }
+
+@media (max-width: 700px) {
+  .fish-encyclopedia { padding-block: 27px 44px; }
+  .fish-encyclopedia__toolbar { align-items: stretch; flex-direction: column; }
+  .fish-filters { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 3px; }
+  .fish-search { flex: 0 0 auto; }
+}
+
+@media (max-width: 540px) {
   .fish-card,
-  .fish-card--image-last {
-    flex-direction: column;
-  }
-  .fish-card__media {
-    flex-basis: auto;
-    align-self: stretch;
-    height: 280px;
-  }
-  .fish-card__image {
-    height: 100%;
-    flex: none;
-  }
-  .fish-card__body {
-    padding: 22px;
-  }
+  .fish-card--image-right,
+  .fish-card--image-left { flex-direction: column; }
+  .fish-card__media { flex-basis: auto; min-height: 220px; }
+  .fish-card__image { height: 220px; min-height: 220px; }
+  .fish-card__body { padding: 18px; }
+  .fish-card__body h2 { font-size: 20px; }
+  .fish-card__description { font-size: 12px; }
 }
