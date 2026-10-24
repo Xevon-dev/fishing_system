@@ -1,59 +1,215 @@
-/* Техніки лову: картки типів + акордеон */
+/* Fishing methods page */
+.methods-page {
+  min-height: calc(100vh - 94px);
+  padding: 35px 20px 72px;
+  background: #f7f9f7;
+}
+
+.methods-page .auth-heading {
+  margin: 0 auto 25px;
+  text-align: center;
+}
+
+.methods-page .auth-heading h1 {
+  color: #173b32;
+  font-size: clamp(25px, 3vw, 34px);
+  font-weight: 800;
+  letter-spacing: -.04em;
+}
+
+.methods-page .auth-heading p {
+  color: #7a8980;
+  font-size: 13px;
+}
+
+.method-filters {
+  width: min(100%, 1120px);
+  margin: 0 auto 18px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+.method-filter {
+  min-height: 40px;
+  padding: 0 17px;
+  border: 1px solid #e7ece8;
+  border-radius: 999px;
+  color: #607168;
+  background: #fff;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: color .2s ease, background .2s ease, border-color .2s ease;
+}
+
+.method-filter:hover,
+.method-filter.is-active {
+  border-color: #086548;
+  color: #fff;
+  background: #086548;
+}
+
+.methods-layout {
+  width: min(100%, 1120px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(220px, .92fr);
+  align-items: start;
+  gap: 16px;
+}
 
 .method-cards {
-  width: min(880px, 100%);
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  width: 100%;
+  margin: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
 }
+
+.methods-sidebar {
+  display: none;
+  position: sticky;
+  top: 18px;
+  padding: 17px;
+  border: 1px solid #e5ece6;
+  border-radius: 13px;
+  background: #fff;
+  box-shadow: 0 4px 14px rgb(30 58 43 / 5%);
+}
+
+.methods-sidebar.has-techniques { display: block; }
+.methods-sidebar .method-card__body { display: block; padding: 0; }
+
+.methods-sidebar__label {
+  color: #20825b;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.methods-sidebar h2 {
+  margin: 8px 0 6px;
+  color: #23483b;
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.methods-sidebar p {
+  margin: 0 0 14px;
+  color: #77847b;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.methods-sidebar__button {
+  display: flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 999px;
+  color: #fff;
+  background: #086548;
+  font-size: 10px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.methods-sidebar__button:hover { background: #0b7955; }
 
 .method-card {
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  background: #fff;
-  box-shadow: 0 10px 28px rgba(7, 59, 83, 0.05);
   overflow: hidden;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  border: 1px solid #e5ece6;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 4px 14px rgb(30 58 43 / 5%);
+  transition: border-color .2s ease, box-shadow .2s ease;
 }
 
-.method-card:hover {
-  border-color: #00b8b2;
-  box-shadow: 0 14px 32px rgba(7, 59, 83, 0.1);
+.method-card:hover,
+.method-card.is-open {
+  border-color: #a9d6bc;
+  box-shadow: 0 8px 22px rgb(30 88 57 / 8%);
 }
 
-/* шапка картки */
 .method-card__head {
   display: block;
   width: 100%;
-  padding: 20px 22px;
-  border: none;
-  background: transparent;
+  padding: 18px 20px 14px;
+  border: 0;
   color: inherit;
+  background: transparent;
   font: inherit;
   text-align: left;
   cursor: pointer;
-  position: relative;
 }
 
 .method-card__head h2 {
-  margin: 6px 0 8px;
-  font-size: 19px;
-  color: var(--navy);
+  margin: 8px 0 6px;
+  color: #23483b;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -.02em;
 }
 
-/* прев'ю відео з YouTube */
+.method-card__count {
+  display: inline-flex;
+  padding: 5px 10px;
+  border-radius: 999px;
+  color: #16734f;
+  background: #e9f6ee;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.method-card__text {
+  margin: 0 0 8px;
+  color: #6e7c73;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.method-card__fish {
+  margin: 0;
+  color: #62756a;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.method-card__fish strong { color: #267253; }
+
+.method-card__more {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  margin-top: 12px;
+  padding: 0 18px;
+  border-radius: 999px;
+  color: #fff;
+  background: #086548;
+  font-size: 12px;
+  font-weight: 800;
+  transition: background .2s ease;
+}
+
+.method-card__head:hover .method-card__more { background: #0b7955; }
+
 .method-card__video {
   position: relative;
-  height: 200px;
-  background: #000;
+  overflow: hidden;
+  aspect-ratio: 16 / 7;
+  margin: 0 14px 14px;
+  border-radius: 10px;
+  background: #eaf0ec;
   cursor: pointer;
 }
 
-.method-card__video.is-playing {
-  height: auto;
-  aspect-ratio: 16 / 9;
-}
+.method-card__video.is-playing { aspect-ratio: 16 / 9; }
 
 .method-card__video img,
 .method-card__video iframe {
@@ -69,119 +225,54 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  width: 56px;
-  height: 56px;
   display: grid;
+  width: 48px;
+  height: 48px;
+  padding-left: 3px;
   place-items: center;
   border-radius: 50%;
-  background: rgba(255, 0, 0, 0.9);
   color: #fff;
-  font-size: 20px;
-  padding-left: 4px;
-  transition: background 0.2s, transform 0.2s;
+  background: #087653e8;
+  font-size: 17px;
+  transform: translate(-50%, -50%);
+  transition: transform .2s ease, background .2s ease;
 }
 
-.method-card__video:hover::after {
-  background: #ff0000;
-  transform: translate(-50%, -50%) scale(1.08);
-}
+.method-card__video:hover::after { background: #086548; transform: translate(-50%, -50%) scale(1.08); }
+.method-card__video.is-playing::after { content: none; }
 
-.method-card__video.is-playing::after {
-  content: none;
-}
-
-.method-card__count {
-  display: inline-block;
-  padding: 3px 10px;
-  border-radius: 20px;
-  background: #eef7f9;
-  color: #087e9b;
-  font-size: 11px;
-  font-weight: 800;
-}
-
-.method-card__text {
-  margin: 0 0 10px;
-  font-size: 14px;
-  line-height: 1.6;
-  color: #475569;
-}
-
-.method-card__fish {
-  margin: 0;
-  font-size: 13px;
-  line-height: 1.55;
-  color: #0f766e;
-}
-
-.method-card__more {
-  display: inline-block;
-  margin-top: 12px;
-  font-size: 12px;
-  font-weight: 800;
-  color: #087e9b;
-}
-
-.method-card__more::after {
-  content: " ▾";
-}
-
-/* розгорнутий список */
 .method-card__body {
   display: none;
-  padding: 4px 22px 20px;
+  padding: 0 14px 14px;
 }
+
+.method-card.is-open .method-card__body { display: block; }
 
 .method-item {
-  padding: 14px 16px;
-  border-radius: 13px;
-  background: #f8fafb;
-  border: 1px solid var(--border);
+  padding: 14px;
+  border: 1px solid #e9eee9;
+  border-radius: 11px;
+  background: #f8faf8;
 }
 
-.method-item + .method-item {
-  margin-top: 10px;
-}
-
-.method-item strong {
-  display: block;
-  font-size: 15px;
-  color: var(--navy);
-}
-
-.method-item p {
-  margin: 8px 0 0;
-  font-size: 13px;
-  line-height: 1.6;
-  color: #475569;
-}
-
-.method-item .method-card__video {
-  height: 160px;
-  margin-top: 12px;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-/* відкрита картка */
-.method-card.is-open {
-  border-color: #00b8b2;
-}
-
-.method-card.is-open .method-card__body {
-  display: block;
-}
-
-.method-card.is-open .method-card__more::after {
-  content: " ▲";
-}
+.method-item + .method-item { margin-top: 10px; }
+.method-item strong { display: block; color: #23483b; font-size: 14px; }
+.method-item p { margin: 7px 0 0; color: #6e7c73; font-size: 12px; line-height: 1.65; }
+.method-item .method-card__video { aspect-ratio: 16 / 9; margin: 12px 0 0; }
 
 @media (max-width: 560px) {
-  .method-card__head {
-    padding: 18px;
-  }
-  .method-card__body {
-    padding: 0 18px 18px;
-  }
+  .methods-page { padding: 28px 14px 50px; }
+  .methods-page .auth-heading { margin-bottom: 20px; }
+  .method-filters { justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 5px; }
+  .method-filter { flex: 0 0 auto; }
+  .methods-layout { grid-template-columns: minmax(0, 1fr); }
+  .methods-sidebar { position: static; }
+  .method-card__head { padding: 16px 15px 12px; }
+  .method-card__head h2 { font-size: 16px; }
+  .method-card__video { aspect-ratio: 16 / 9; margin: 0 10px 10px; }
+  .method-card__body { padding: 0 10px 10px; }
+}
+
+@media (min-width: 561px) and (max-width: 800px) {
+  .methods-layout { grid-template-columns: minmax(0, 1fr) 210px; gap: 12px; }
 }

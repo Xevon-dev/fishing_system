@@ -9,22 +9,22 @@
 {% endblock %}
 
 {% block content %}
-<section class="auth-section">
+<section class="auth-section methods-page">
     <div class="auth-heading">
         <h1>Способи та техніки лову</h1>
         <p>Обери тип ловлі — побачиш техніки, якими ловлять цю рибу</p>
     </div>
 
-    <div class="method-cards">
+    <nav class="method-filters" aria-label="Категорії технік лову">
         {% for group in groups %}
-            <div class="method-card">
-                {% if group.type.video_id %}
-                    <div class="method-card__video" data-video="{{ group.type.video_id }}">
-                        <img src="https://i.ytimg.com/vi/{{ group.type.video_id }}/maxresdefault.jpg"
-                             alt="{{ group.type.name }}"
-                             loading="lazy">
-                    </div>
-                {% endif %}
+            <button class="method-filter{% if forloop.first %} is-active{% endif %}" type="button" data-method-filter="{{ group.type.type_id }}">{{ group.type.name }}</button>
+        {% endfor %}
+    </nav>
+
+    <div class="methods-layout">
+      <div class="method-cards" id="method-list">
+        {% for group in groups %}
+            <article class="method-card" data-method-category="{{ group.type.type_id }}">
                 <button class="method-card__head" type="button">
                     <span class="method-card__count">методів: {{ group.methods|length }}</span>
                     <h2>{{ group.type.name }}</h2>
@@ -36,6 +36,14 @@
                     {% endif %}
                     <span class="method-card__more">Показати техніки</span>
                 </button>
+
+                {% if group.type.video_id %}
+                    <div class="method-card__video" data-video="{{ group.type.video_id }}">
+                        <img src="https://i.ytimg.com/vi/{{ group.type.video_id }}/maxresdefault.jpg"
+                             alt="{{ group.type.name }}"
+                             loading="lazy">
+                    </div>
+                {% endif %}
 
                 <div class="method-card__body" id="methods-{{ group.type.type_id }}">
                     {% for method in group.methods %}
@@ -56,8 +64,11 @@
                         <p class="level-description">Технік поки немає.</p>
                     {% endfor %}
                 </div>
-            </div>
+            </article>
         {% endfor %}
+      </div>
+
+      <aside class="methods-sidebar" aria-live="polite" aria-label="Техніки вибраного способу"></aside>
     </div>
 </section>
 {% endblock %}
