@@ -6,6 +6,7 @@ from journal.models import Catches, FishingTrips, Tips
 from ..models import Users
 from ..session import current_user
 from ..validators import email_error, username_error
+from ..image_uploads import image_upload_error
 
 
 def is_expert(user):
@@ -141,4 +142,34 @@ def profile_edit_view(request):
 
     user.save(update_fields=fields)
 
+    return redirect("profile")
+
+
+def profile_photo_view(request):
+    user = current_user(request)
+    if not user:
+        return redirect("login")
+    if request.method != "POST":
+        return redirect("profile")
+
+    if request.POST.get("remove_photo"):
+        if user.profile_photo:
+            user.profile_photo.delete(save=False)
+            user.profile_photo = None
+            user.save(update_fields=["profile_photo"])
+        return redirect("profile")
+
+    photo = request.FILES.get("profile_photo")
+    error = image_upload_error(photo)
+    if not photo and not error:
+        error = "Вибери фото профілю."
+    if error:
+        context = profile_context(user)
+        context["profile_photo_error"] = error
+        return render(request, "profile.html", context)
+
+    if user.profile_photo:
+        user.profile_photo.delete(save=False)
+    user.profile_photo = photo
+    user.save(update_fields=["profile_photo"])
     return redirect("profile")

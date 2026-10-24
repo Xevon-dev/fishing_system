@@ -17,6 +17,7 @@ class Users(models.Model):
     password_hash = models.CharField(max_length=255)
     level = models.ForeignKey('Levels', models.DO_NOTHING, blank=True, null=True)
     created_at = models.DateTimeField(blank=True, null=True)
+    profile_photo = models.ImageField(upload_to="profiles/", blank=True, null=True)
 
     class Meta:
         db_table = 'users'

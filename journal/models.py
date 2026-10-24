@@ -31,6 +31,7 @@ class FishingTrips(models.Model):
     )
     method_note = models.CharField(max_length=255, blank=True, null=True)
     bait_note = models.TextField(blank=True, null=True)
+    photo = models.ImageField(upload_to="trips/", blank=True, null=True)
 
     class Meta:
         db_table = 'fishing_trips'
@@ -40,7 +41,10 @@ class Catches(models.Model):
     catch_id = models.AutoField(primary_key=True)
     caught_at = models.DateTimeField(blank=True, null=True)
     trip = models.ForeignKey('FishingTrips', models.DO_NOTHING)
-    fish = models.ForeignKey('catalog.FishSpecies', models.DO_NOTHING)
+    fish = models.ForeignKey(
+        'catalog.FishSpecies', models.DO_NOTHING, blank=True, null=True
+    )
+    custom_fish_name = models.CharField(max_length=100, blank=True, default="")
     tackle = models.ForeignKey(
         'catalog.Tackle',
         models.DO_NOTHING,
@@ -54,6 +58,8 @@ class Catches(models.Model):
         null=True
     )
     quantity = models.IntegerField(blank=True, null=True)
+    tackle_note = models.CharField(max_length=200, blank=True, default="")
+    bait_note = models.TextField(blank=True, default="")
     photo_url = models.CharField(
         max_length=255,
         blank=True,

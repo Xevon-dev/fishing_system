@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     rows.append(row);
     total.value = String(index + 1);
     button.disabled = index + 1 >= max;
-    row.querySelector("select")?.focus();
+    row.querySelector('input[list="fish-options"]')?.focus();
   });
 
   rows.addEventListener("click", (event) => {

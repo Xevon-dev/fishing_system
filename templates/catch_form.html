@@ -1,11 +1,15 @@
 <fieldset class="catch-editor">
-    <legend>Улов</legend>
+    <legend>Дані улову</legend>
     {% for hidden in catch_form.hidden_fields %}{{ hidden }}{{ hidden.errors }}{% endfor %}
     {{ catch_form.non_field_errors }}
     <div class="catch-fields">
         {% for field in catch_form.visible_fields %}
             {% if field.name != 'DELETE' %}
-                <div class="form-group">{{ field.label_tag }}{{ field }}{{ field.errors }}</div>
+                <div class="form-group catch-field catch-field--{{ field.name }}">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.errors %}<div class="field-error" role="alert">{{ field.errors|join:" " }}</div>{% endif %}
+                </div>
             {% endif %}
         {% endfor %}
     </div>

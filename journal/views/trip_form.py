@@ -1,14 +1,12 @@
 
 
-from catalog.models import FishingMethods, FishingTypes, WaterBodies
+from catalog.models import FishingTypes, WaterBodies
 from ..common import as_int
 
 FIELDS = (
     "water_body_id",
     "type",
-    "method",
     "method_note",
-    "bait_note",
     "note",
 )
 
@@ -18,18 +16,14 @@ def form_defaults(trip=None):
         return {
             "water_body_id": str(trip.water_body_id),
             "type": str(trip.type_id or ""),
-            "method": str(trip.method_id or ""),
-            "method_note": trip.method_note or "",
-            "bait_note": trip.bait_note or "",
+            "method_note": trip.method_note or (trip.method.name if trip.method_id else ""),
             "note": trip.note or "",
         }
 
     return {
         "water_body_id": "",
         "type": "",
-        "method": "",
         "method_note": "",
-        "bait_note": "",
         "note": "",
     }
 
@@ -53,16 +47,16 @@ def parse_form(post, trip=None):
         errors["type"] = "Обери тип риболовлі"
         type_id = None
 
-    method_id = as_int(form["method"])
-    if method_id and not FishingMethods.objects.filter(pk=method_id).exists():
-        method_id = None
+    if len(form["method_note"]) > 255:
+        errors["method_note"] = "Максимум 255 символів."
+    if len(form["note"]) > 3000:
+        errors["note"] = "Нотатка має містити не більше 3 000 символів."
 
     values = {
         "water_body": water_body,
         "type_id": type_id,
-        "method_id": method_id,
+        "method_id": None,
         "method_note": form["method_note"] or None,
-        "bait_note": form["bait_note"] or None,
         "note": form["note"] or None,
     }
 

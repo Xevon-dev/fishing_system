@@ -159,3 +159,177 @@
 .catch-editor .errorlist, .trip-catches > .errorlist { color: #b42318; padding-left: 18px; font-size: 13px; }
 @media (max-width: 850px) { .catch-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 520px) { .catch-fields { grid-template-columns: 1fr; } }
+
+/* Fishing journal overview */
+.journal-page {
+  min-height: calc(100vh - 76px);
+  padding: 28px 22px 64px;
+  background: #f8f7fc;
+}
+.journal-wrap { width: min(1120px, 100%); margin: 0 auto; }
+.journal-hero {
+  position: relative;
+  overflow: hidden;
+  min-height: 230px;
+  padding: 38px 44px;
+  border-radius: 22px;
+  background: radial-gradient(ellipse at 88% 30%, rgb(30 144 102 / 22%), transparent 36%), linear-gradient(115deg, #062e25, #064b38 72%, #073d31);
+  box-shadow: 0 14px 30px rgb(5 54 39 / 17%);
+  color: #fff;
+}
+.journal-hero::after {
+  position: absolute;
+  right: -40px;
+  bottom: -120px;
+  width: 340px;
+  height: 240px;
+  border: 1px solid rgb(255 255 255 / 8%);
+  border-radius: 50%;
+  content: "";
+  box-shadow: 0 0 0 28px rgb(255 255 255 / 2%), 0 0 0 58px rgb(255 255 255 / 2%);
+  pointer-events: none;
+}
+.journal-kicker { margin: 0 0 10px; color: #8ae0bb; font-size: 12px; font-weight: 700; letter-spacing: .04em; }
+.journal-hero h1 { margin: 0 0 9px; font-size: clamp(30px, 4vw, 42px); line-height: 1.1; letter-spacing: -.03em; }
+.journal-hero > p:not(.journal-kicker) { max-width: 580px; margin: 0; color: #d2e4dc; font-size: 14px; line-height: 1.65; }
+.journal-add {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+  padding: 11px 17px;
+  border: 1px solid #24b783;
+  border-radius: 999px;
+  background: #13a875;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background .18s, transform .18s;
+}
+.journal-add:hover { transform: translateY(-1px); background: #0f9668; }
+.journal-add span { font-size: 17px; line-height: 1; }
+.journal-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin: 20px 0 34px; }
+.journal-stat { position: relative; min-height: 120px; padding: 17px 18px; border: 1px solid #eeedf3; border-radius: 15px; background: #fff; box-shadow: 0 4px 14px rgb(39 31 67 / 3%); }
+.journal-stat-icon { position: absolute; top: 16px; right: 16px; display: grid; width: 29px; height: 29px; place-items: center; border-radius: 9px; background: #e8f7f0; color: #15936b; font-size: 16px; }
+.journal-stat p { margin: 0 0 9px; color: #777986; font-size: 12px; }
+.journal-stat strong { display: block; color: #173f34; font-size: 25px; line-height: 1; }
+.journal-stat strong i { font-size: 14px; font-style: normal; }
+.journal-stat small { display: block; margin-top: 8px; color: #999aa3; font-size: 10px; }
+.journal-list-heading { display: flex; align-items: end; justify-content: space-between; margin-bottom: 14px; }
+.journal-list-heading h2 { margin: 0 0 4px; color: #193b32; font-size: 21px; }
+.journal-list-heading p { margin: 0; color: #81828d; font-size: 12px; }
+.journal-trips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 16px; }
+.journal-trips .trip-card { min-width: 0; margin: 0; padding: 19px; border: 1px solid #eeedf3; border-radius: 16px; background: #fff; box-shadow: 0 4px 15px rgb(39 31 67 / 4%); }
+.journal-trips .trip-card--with-photo { overflow: hidden; padding: 0; }
+.trip-session-photo { display: block; width: 100%; max-width: none; height: 220px; margin: 0; border-radius: 16px 16px 0 0; object-fit: cover; }
+.trip-card-body { padding: 19px; }
+.trip-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.journal-trips .trip-card h3 { color: #183d33; font-size: 16px; }
+.journal-trips .trip-meta { margin: 5px 0 12px; font-size: 11px; }
+.trip-map-link { display: grid; flex: 0 0 32px; width: 32px; height: 32px; place-items: center; border-radius: 10px; background: #eaf7f1; color: #13835f; font-size: 18px; text-decoration: none; }
+.journal-trips .trip-tags { margin: 0 0 10px; }
+.journal-trips .trip-tag { padding: 5px 9px; background: #f0f5f4; color: #356c59; font-size: 10px; }
+.journal-trips .trip-bait { margin: 8px 0; color: #656775; font-size: 11px; }
+.journal-trips .catch-row { display: flex; align-items: center; gap: 10px; margin: 10px 0 0; padding: 10px; background: #eff9f4; }
+.catch-fish-icon { display: grid; flex: 0 0 28px; width: 28px; height: 28px; place-items: center; border-radius: 50%; background: #16866a; color: #fff; }
+.journal-trips .catch-row > div { display: flex; min-width: 0; flex: 1; flex-direction: column; gap: 3px; }
+.journal-trips .catch-row strong { color: #25443a; font-size: 11px; }
+.journal-trips .catch-row small { overflow: hidden; color: #77817c; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.journal-trips .catch-row b { color: #16805e; font-size: 12px; white-space: nowrap; }
+.trip-no-catch { margin: 10px 0 0; padding: 10px; border-radius: 8px; background: #f6f6f9; color: #858692; font-size: 11px; }
+.journal-trips .trip-actions { gap: 7px; margin-top: 13px; padding-top: 11px; }
+.journal-trips .trip-actions .btn { padding: 7px 10px; font-size: 11px; }
+.journal-empty { grid-column: 1 / -1; padding: 46px 20px; border: 1px solid #eeedf3; border-radius: 16px; background: #fff; text-align: center; }
+.journal-empty > span { font-size: 30px; }
+.journal-empty h3 { margin: 10px 0 6px; color: #193b32; }
+.journal-empty p { margin: 0; color: #777986; font-size: 13px; }
+.journal-add--empty { margin-top: 17px; }
+@media (max-width: 760px) {
+  .journal-page { padding: 18px 14px 44px; }
+  .journal-hero { min-height: auto; padding: 30px 24px; }
+  .journal-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 14px 0 26px; }
+  .journal-stat { min-height: 108px; padding: 14px; }
+  .journal-trips { grid-template-columns: 1fr; }
+}
+@media (max-width: 420px) {
+  .journal-hero { padding: 26px 19px; border-radius: 17px; }
+  .journal-stat { padding: 12px; }
+  .journal-stat strong { font-size: 22px; }
+  .journal-trips .trip-card { padding: 15px; }
+  .trip-session-photo { height: 200px; }
+  .trip-card-body { padding: 15px; }
+}
+
+/* Add/edit session form */
+.trip-form-page { min-height: calc(100vh - 76px); padding: 36px 20px 62px; background: #f8f7fc; }
+.trip-form-heading { width: min(920px, 100%); margin: 0 auto 22px; text-align: center; }
+.trip-back-link { display: inline-block; margin-bottom: 12px; color: #188363; font-size: 12px; font-weight: 700; text-decoration: none; }
+.trip-form-heading h1 { margin: 0 0 8px; color: #123e32; font-family: Georgia, "Times New Roman", serif; font-size: clamp(30px, 4vw, 40px); }
+.trip-form-heading p { margin: 0; color: #777986; font-size: 13px; }
+.trip-form-card { width: min(920px, 100%); margin: 0 auto; padding: 0; border: 0; border-radius: 18px; background: transparent; box-shadow: none; }
+.trip-form-card .auth-form { display: flex; flex-direction: column; gap: 20px; }
+.trip-form-card .form-group { margin: 0; }
+.trip-form-card .form-group > label, .trip-form-card .catch-editor label { color: #394b45; font-size: 10px; font-weight: 800; letter-spacing: .055em; }
+.trip-form-card input:not([type="checkbox"]):not([type="file"]), .trip-form-card select, .trip-form-card textarea { border-color: #e2e8e5; border-radius: 10px; background-color: #fcfdfc; }
+.trip-form-card input:focus, .trip-form-card select:focus, .trip-form-card textarea:focus { border-color: #20a87b; outline: 3px solid rgb(32 168 123 / 12%); }
+.trip-form-card #trip-map { height: 330px; margin: 12px 0; border: 1px solid #e6ece9; border-radius: 13px; }
+.trip-water-section, .trip-notes-section { padding: 20px; border: 1px solid #eeedf3; border-radius: 16px; background: #fff; box-shadow: 0 5px 18px rgb(39 31 67 / 4%); }
+.trip-water-section > .trip-section-heading { margin-bottom: 14px; }
+.trip-water-section > .trip-form-section-title { margin: 0; }
+.trip-form-card .trip-map-controls select { min-width: 220px; flex: 1; }
+.trip-form-card .trip-map-controls .btn { border-radius: 10px; }
+.trip-form-card .trip-water-name { margin-top: 8px; }
+.trip-form-card .trip-technique-row { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 20px; border: 1px solid #eeedf3; border-radius: 16px; background: #fff; box-shadow: 0 5px 18px rgb(39 31 67 / 4%); }
+.trip-technique-heading { display: flex; grid-column: 1 / -1; align-items: center; gap: 11px; margin-bottom: 1px; }
+.trip-technique-heading > div { min-width: 0; }
+.trip-technique-heading h2 { margin: 0; color: #173f34; font-size: 15px; }
+.trip-technique-heading p { margin: 4px 0 0; color: #858791; font-size: 11px; }
+.trip-form-card .trip-catches { padding: 20px; border: 1px solid #eeedf3; border-radius: 16px; background: #fff; box-shadow: 0 5px 18px rgb(39 31 67 / 4%); }
+.trip-catches h2, .trip-photo-section h2 { margin: 0; color: #173f34; font-size: 16px; }
+.trip-catches > .form-hint { margin: 7px 0 15px; }
+.trip-form-card .catch-editor { padding: 16px; border-color: #e7ece9; border-radius: 13px; background: #fff; }
+.trip-form-card .catch-editor legend { padding: 0 7px; color: #63736c; font-size: 11px; font-weight: 700; }
+.trip-form-card .catch-fields { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.trip-form-card .catch-field--fish_name { grid-column: span 2; }
+.trip-form-card .catch-field--custom_tackle { grid-column: span 2; }
+.trip-form-card .catch-field--bait_note { grid-column: 1 / -1; }
+.trip-form-card #add-catch { border-color: #b5e5d5; color: #157b5c; background: #f0faf6; }
+.trip-photo-section { padding: 20px; border: 1px solid #eeedf3; border-radius: 16px; background: #fff; box-shadow: 0 5px 18px rgb(39 31 67 / 4%); }
+.trip-section-heading { display: flex; align-items: center; gap: 11px; margin-bottom: 15px; }
+.trip-section-heading > div { min-width: 0; }
+.trip-section-icon { display: grid; flex: 0 0 34px; width: 34px; height: 34px; place-items: center; border-radius: 11px; background: #e9f8f1; color: #178260; font-size: 18px; }
+.trip-section-heading p { margin: 4px 0 0; color: #858791; font-size: 11px; }
+.trip-photo-upload { position: relative; display: flex; min-height: 150px; flex-direction: column; align-items: center; justify-content: center; gap: 7px; padding: 18px; border: 1px dashed #9ed8c2; border-radius: 13px; background: #fbfefc; color: #334b41; text-align: center; cursor: pointer; transition: .18s ease; }
+.trip-photo-upload:hover, .trip-photo-upload.is-dragging { border-color: #14966c; background: #f0faf5; }
+.trip-photo-upload input[type="file"] { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.trip-upload-icon { display: grid; width: 32px; height: 32px; place-items: center; border-radius: 50%; background: #e8f7f0; color: #138660; font-size: 20px; }
+.trip-photo-upload strong { font-size: 12px; }
+.trip-photo-upload small, .trip-photo-filename { color: #888b94; font-size: 10px; }
+.trip-photo-filename { color: #14805e; font-weight: 700; }
+.trip-photo-preview:not([hidden]) { display: block; width: min(100%, 390px); max-height: 190px; margin: 0 auto 8px; border-radius: 10px; object-fit: contain; }
+.trip-current-photo { display: flex; align-items: center; gap: 14px; margin: 0 0 13px; }
+.trip-current-photo img { width: 110px; height: 76px; border-radius: 9px; object-fit: cover; }
+.trip-remove-photo { display: inline-flex; align-items: center; gap: 6px; padding: 7px 10px; border: 1px solid #f0d7d7; border-radius: 9px; background: #fffafa; color: #a64141; font-size: 11px; font-weight: 700; cursor: pointer; }
+.trip-remove-photo input { margin: 0; accent-color: #b74646; }
+.trip-remove-photo span { font-size: 16px; line-height: 12px; }
+.trip-save-button { align-self: flex-end; min-width: 180px; border: 0; border-radius: 10px; background: #0c9b6d; }
+.trip-save-button:hover { background: #087a56; }
+@media (max-width: 650px) {
+  .trip-form-page { padding: 25px 12px 44px; }
+  .trip-form-card { padding: 17px 13px; }
+  .trip-form-card .trip-technique-row, .trip-form-card .trip-catches, .trip-photo-section { padding: 15px; }
+  .trip-form-card #trip-map { height: 260px; }
+  .trip-save-button { align-self: stretch; }
+}
+@media (max-width: 850px) { .trip-form-card .trip-technique-row { grid-template-columns: 1fr; } }
+@media (max-width: 850px) {
+  .trip-form-card .catch-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .trip-form-card .catch-field--fish_name, .trip-form-card .catch-field--custom_tackle, .trip-form-card .catch-field--bait_note { grid-column: 1 / -1; }
+}
+@media (max-width: 520px) {
+  .trip-form-card .catch-fields { grid-template-columns: 1fr; }
+  .trip-form-card .catch-field--fish_name, .trip-form-card .catch-field--custom_tackle, .trip-form-card .catch-field--bait_note { grid-column: auto; }
+}

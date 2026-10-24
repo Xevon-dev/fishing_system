@@ -20,7 +20,11 @@
             <div class="profile-main">
                 <section class="profile-card">
                     <div class="profile-ident">
-                        <span class="profile-avatar" aria-hidden="true">{{ profile_user.username|first|upper }}</span>
+                        {% if profile_user.profile_photo %}
+                            <img class="profile-avatar profile-avatar--image" src="{{ profile_user.profile_photo.url }}" alt="Фото профілю {{ profile_user.username }}">
+                        {% else %}
+                            <span class="profile-avatar" aria-hidden="true">{{ profile_user.username|first|upper }}</span>
+                        {% endif %}
 
                         <div class="profile-ident__text">
                             <div class="profile-name">
@@ -49,6 +53,18 @@
                             Редагувати профіль
                         </button>
                     </div>
+
+                    <form class="profile-photo-form" method="post" enctype="multipart/form-data" action="{% url 'profile_photo' %}">
+                        {% csrf_token %}
+                        <label class="profile-photo-label" for="profile-photo-input">Фото профілю</label>
+                        <div class="profile-photo-controls">
+                            <input id="profile-photo-input" type="file" name="profile_photo" accept="image/*" required>
+                            <button class="profile-btn profile-photo-save" type="submit">Завантажити фото</button>
+                            {% if profile_user.profile_photo %}<button class="profile-btn profile-photo-remove" type="submit" name="remove_photo" value="1" formnovalidate>Видалити фото</button>{% endif %}
+                        </div>
+                        <small>Файл зображення · без обмеження за розміром</small>
+                        {% if profile_photo_error %}<span class="field-error">{{ profile_photo_error }}</span>{% endif %}
+                    </form>
 
                     <div class="profile-fields">
                         <div class="profile-field">
@@ -130,11 +146,8 @@
                                             {% if trip.type %} · {{ trip.type.name }}{% endif %}
                                             {% if trip.method %} · {{ trip.method.name }}{% endif %}
                                         </span>
-                                        {% if trip.bait_note %}
-                                            <span class="profile-trip__bait">На що: {{ trip.bait_note|truncatechars:60 }}</span>
-                                        {% endif %}
                                         {% for catch in trip.catches_set.all %}
-                                            <span class="profile-trip__catch">{{ catch.fish.name }} · {{ catch.quantity|default:"1" }} шт.{% if catch.weight_kg %} · {{ catch.weight_kg }} кг{% endif %}{% if catch.caught_at %} · {{ catch.caught_at|date:"d.m.Y H:i" }}{% endif %}</span>
+                                            <span class="profile-trip__catch">{% firstof catch.custom_fish_name catch.fish.name "Риба" %} · {{ catch.quantity|default:"1" }} шт.{% if catch.weight_kg %} · {{ catch.weight_kg }} кг{% endif %}{% if catch.bait_note %} · На що: {{ catch.bait_note|truncatechars:50 }}{% endif %}{% if catch.caught_at %} · {{ catch.caught_at|date:"d.m.Y H:i" }}{% endif %}</span>
                                         {% endfor %}
                                     </span>
 

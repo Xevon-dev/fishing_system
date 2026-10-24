@@ -4,12 +4,13 @@ from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
-from catalog.models import FishingMethods, FishingTypes, WaterBodies
+from catalog.models import FishSpecies, FishingTypes, WaterBodies
 from catalog.regions import region_choices
 from ..common import as_int, current_user
 from ..models import Catches, FishingTrips
 from .trip_form import form_defaults, parse_form
 from ..catch_forms import CatchInlineFormSet
+from accounts.image_uploads import image_upload_error
 
 
 def journal_view(request):
@@ -24,7 +25,24 @@ def journal_view(request):
         .prefetch_related("catches_set__fish", "catches_set__tackle")
         .order_by("-created_at")
     )
-    return render(request, "journal.html", {"trips": trips})
+    trip_count = catch_count = water_count = 0
+    total_weight = 0
+    seen_waters = set()
+    for trip in trips:
+        trip_count += 1
+        seen_waters.add(trip.water_body_id)
+        for catch in trip.catches_set.all():
+            catch_count += catch.quantity or 1
+            if catch.weight_kg:
+                total_weight += catch.weight_kg * (catch.quantity or 1)
+    water_count = len(seen_waters)
+    return render(request, "journal.html", {
+        "trips": trips,
+        "trip_count": trip_count,
+        "catch_count": catch_count,
+        "water_count": water_count,
+        "total_weight": total_weight,
+    })
 
 
 def trip_form_view(request, trip=None):
@@ -37,10 +55,12 @@ def trip_form_view(request, trip=None):
         instance = trip or FishingTrips(user=user)
         for field, value in values.items():
             setattr(instance, field, value)
-        catches = CatchInlineFormSet(request.POST, instance=instance, prefix="catches")
+        catches = CatchInlineFormSet(request.POST, request.FILES, instance=instance, prefix="catches")
         catches_valid = catches.is_valid()
+        photo = request.FILES.get("photo")
+        photo_error = image_upload_error(photo)
 
-        if not errors and catches_valid:
+        if not errors and catches_valid and not photo_error:
             with transaction.atomic():
                 if trip:
                     instance.updated_at = timezone.now()
@@ -48,6 +68,12 @@ def trip_form_view(request, trip=None):
                     # Legacy start_time is retained for old database compatibility,
                     # but it is no longer a user-entered session time.
                     instance.start_time = timezone.now()
+                if photo:
+                    if instance.photo:
+                        instance.photo.delete(save=False)
+                    instance.photo = photo
+                elif request.POST.get("remove_photo") and instance.photo:
+                    instance.photo.delete(save=False)
                 instance.save()
                 catches.save()
             return redirect("journal")
@@ -67,10 +93,11 @@ def trip_form_view(request, trip=None):
         "trip": trip,
         "selected_water": selected_water,
         "errors": errors,
+        "photo_error": photo_error if request.method == "POST" else "",
         "form": form,
         "catches": catches,
         "types": FishingTypes.objects.order_by("type_id"),
-        "methods": FishingMethods.objects.order_by("type_id", "method_id"),
+        "fish_options": FishSpecies.objects.order_by("name"),
         "regions": region_choices(),
         "google_maps_api_key": settings.GOOGLE_MAPS_API_KEY,
     })

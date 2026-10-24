@@ -9,24 +9,35 @@
 {% endblock %}
 
 {% block content %}
-<section class="auth-section">
-    <div class="auth-heading">
-        <h1>Риболовні сесії</h1>
-        <p>Твої виходи на риболовлю, улови та снасті</p>
-        <p class="mt-16">
-            <a class="btn btn-primary" href="{% url 'add_trip' %}">+ Додати сесію</a>
-        </p>
-    </div>
+<section class="journal-page">
+    <div class="journal-wrap">
+        <header class="journal-hero">
+            <p class="journal-kicker">Твоя рибальська історія</p>
+            <h1>Риболовні сесії</h1>
+            <p>Зберігай виїзди, улови та улюблені водойми — кожна сесія допомагає краще зрозуміти, що працює.</p>
+            <a class="journal-add" href="{% url 'add_trip' %}"><span aria-hidden="true">＋</span> Додати сесію</a>
+        </header>
 
-    <div class="auth-card">
+        <div class="journal-stats" aria-label="Статистика риболовлі">
+            <article class="journal-stat"><span class="journal-stat-icon">◷</span><p>Усього сесій</p><strong>{{ trip_count }}</strong><small>записів у журналі</small></article>
+            <article class="journal-stat"><span class="journal-stat-icon">⚖</span><p>Загальна вага</p><strong>{{ total_weight|floatformat:1 }} <i>кг</i></strong><small>зафіксованих уловів</small></article>
+            <article class="journal-stat"><span class="journal-stat-icon">♧</span><p>Зловлено риб</p><strong>{{ catch_count }}</strong><small>екземплярів у записах</small></article>
+            <article class="journal-stat"><span class="journal-stat-icon">⌖</span><p>Водойми</p><strong>{{ water_count }}</strong><small>різних місць риболовлі</small></article>
+        </div>
+
+        <div class="journal-list-heading"><div><h2>Мої виїзди</h2><p>Твої останні риболовні пригоди</p></div></div>
+        <div class="journal-trips">
         {% if trips %}
             {% for trip in trips %}
-                <div class="trip-card">
-                    <h3>{{ trip.water_body.name }}</h3>
-                    <p class="trip-meta">
-                        Створено: {{ trip.created_at|date:"d.m.Y H:i" }}
-                        {% if trip.updated_at %} · Редаговано: {{ trip.updated_at|date:"d.m.Y H:i" }}{% endif %}
-                    </p>
+                <div class="trip-card{% if trip.photo %} trip-card--with-photo{% endif %}">
+                    {% if trip.photo %}<img class="trip-session-photo" src="{{ trip.photo.url }}" alt="Фото сесії на водоймі {{ trip.water_body.name }}" loading="lazy">{% endif %}
+                    <div class="trip-card-body">
+                    <div class="trip-card-top">
+                        <div><h3>{{ trip.water_body.name }}</h3>
+                            <p class="trip-meta">{{ trip.created_at|date:"d.m.Y" }}{% if trip.water_body.region %} · {{ trip.water_body.region }}{% endif %}</p>
+                        </div>
+                        <a class="trip-map-link" href="{% url 'water_bodies' %}?water={{ trip.water_body_id }}" aria-label="Показати водойму на карті">⌖</a>
+                    </div>
 
                     {% if trip.type or trip.method or trip.method_note %}
                         <p class="trip-tags">
@@ -39,22 +50,14 @@
                         </p>
                     {% endif %}
 
-                    {% if trip.bait_note %}
-                        <p class="trip-bait">На що ловив: {{ trip.bait_note }}</p>
-                    {% endif %}
-
                     {% if trip.note %}
                         <p class="trip-bait">{{ trip.note|truncatechars:120 }}</p>
                     {% endif %}
 
                     {% for catch in trip.catches_set.all %}
-                        <div class="catch-row">
-                            <strong>{{ catch.fish.name }}</strong>
-                            — {{ catch.weight_kg|default:"—" }} кг
-                            · кількість: {{ catch.quantity|default:"1" }}
-                            {% if catch.tackle %} · {{ catch.tackle.name }}{% endif %}
-                            {% if catch.caught_at %} · {{ catch.caught_at|date:"d.m.Y H:i" }}{% endif %}
-                        </div>
+                        <div class="catch-row"><span class="catch-fish-icon">♧</span><div><strong>{% firstof catch.custom_fish_name catch.fish.name "Риба" %}</strong><small>{% if catch.quantity %}{{ catch.quantity }} шт.{% else %}1 шт.{% endif %}{% if catch.tackle %} · {{ catch.tackle.name }}{% endif %}{% if catch.tackle_note %} · {{ catch.tackle_note }}{% endif %}{% if catch.bait_note %} · На що: {{ catch.bait_note }}{% endif %}</small></div><b>{% if catch.weight_kg %}{{ catch.weight_kg|floatformat:1 }} кг{% else %}Вага не вказана{% endif %}</b></div>
+                    {% empty %}
+                        <p class="trip-no-catch">Улов ще не додано</p>
                     {% endfor %}
 
                     <div class="trip-actions">
@@ -71,11 +74,13 @@
                             <button type="submit" class="btn btn-danger btn-sm">Видалити</button>
                         </form>
                     </div>
+                    </div>
                 </div>
             {% endfor %}
         {% else %}
-            <p class="level-description">Сесій поки немає.</p>
+            <div class="journal-empty"><span>🎣</span><h3>Тут почнеться твоя рибальська історія</h3><p>Додай першу сесію, щоб зберегти водойму, техніку та улов.</p><a class="journal-add journal-add--empty" href="{% url 'add_trip' %}">＋ Додати першу сесію</a></div>
         {% endif %}
+        </div>
     </div>
 </section>
 {% endblock %}
