@@ -1,18 +1,70 @@
 {% for day in days %}
-    <div class="weather-day">
-        <div class="weather-day-label">{{ day.label }}</div>
+    <div class="weather-panel" data-weather-panel="{{ forloop.counter0 }}"{% if not forloop.first %} hidden{% endif %}>
+        <span class="weather-panel__label">{{ day.label }}</span>
 
-        <div class="weather-top">
-            <div>
-                <div class="weather-condition">{{ day.condition }}</div>
-                <div class="weather-temp">{{ day.temp }}°C</div>
+        <div class="weather-main">
+            <img class="weather-icon" src="{{ day.icon }}" width="52" height="52" alt="{{ day.condition }}">
+
+            <div class="weather-main__temp">
+                <span class="weather-temp">{% if day.temp > 0 %}+{% endif %}{{ day.temp }}°C</span>
+                <span class="weather-feels">Відчувається як {% if day.feels > 0 %}+{% endif %}{{ day.feels }}°C</span>
             </div>
-            <img src="{{ day.icon }}" width="64" height="64" alt="{{ day.condition }}">
+
+            <span class="weather-badge">{{ day.condition }}</span>
         </div>
 
-        <div class="weather-row">💨 Вітер — {{ day.wind }} км/год</div>
-        <div class="weather-row">🌧 Опади — {{ day.precip }} мм</div>
-        <div class="weather-row">💧 Вологість — {{ day.humidity }}%</div>
-        <div class="weather-row">🔵 Тиск — {{ day.pressure }} мм рт.ст.</div>
+        <div class="weather-grid">
+            <div class="weather-cell">
+                <span class="weather-cell__icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+                        <path d="M3 8h11a2.8 2.8 0 1 0-2.8-2.8"/>
+                        <path d="M3 12.5h15a2.8 2.8 0 1 1-2.8 2.8"/>
+                        <path d="M3 17h8"/>
+                    </svg>
+                </span>
+                <span class="weather-cell__text">
+                    <span class="weather-cell__label">Вітер</span>
+                    <span class="weather-cell__value">{{ day.wind }} км/год ({{ day.wind_dir }})</span>
+                </span>
+            </div>
+
+            <div class="weather-cell">
+                <span class="weather-cell__icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+                        <path d="M7.2 15a4.2 4.2 0 1 1 .9-8.3 5.2 5.2 0 0 1 9.6 1.4A3.4 3.4 0 0 1 17.4 15"/>
+                        <path d="M8.4 18.2 7.7 20.6M12.4 18.2 11.7 20.6M16.4 18.2 15.7 20.6"/>
+                    </svg>
+                </span>
+                <span class="weather-cell__text">
+                    <span class="weather-cell__label">Опади</span>
+                    <span class="weather-cell__value">{{ day.precip }} мм{% if not day.precip %} (без опадів){% endif %}</span>
+                </span>
+            </div>
+
+            <div class="weather-cell">
+                <span class="weather-cell__icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+                        <path d="M12 3.6s5.2 5.4 5.2 9a5.2 5.2 0 1 1-10.4 0c0-3.6 5.2-9 5.2-9Z"/>
+                    </svg>
+                </span>
+                <span class="weather-cell__text">
+                    <span class="weather-cell__label">Вологість</span>
+                    <span class="weather-cell__value">{{ day.humidity }}%</span>
+                </span>
+            </div>
+
+            <div class="weather-cell">
+                <span class="weather-cell__icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+                        <path d="M4 17a8 8 0 1 1 16 0"/>
+                        <path d="M12 12.5 15.4 9.2"/>
+                    </svg>
+                </span>
+                <span class="weather-cell__text">
+                    <span class="weather-cell__label">Тиск</span>
+                    <span class="weather-cell__value">{{ day.pressure }} мм рт.ст.</span>
+                </span>
+            </div>
+        </div>
     </div>
 {% endfor %}

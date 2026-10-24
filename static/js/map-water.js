@@ -27,39 +27,68 @@ function showWater(box, props) {
   title.textContent = get("name") || "Водойма без назви";
   box.append(title);
 
+  const type = get("type") || "водойма";
+
   const meta = document.createElement("div");
   meta.className = "water-meta";
-  meta.textContent =
-    (get("type") || "водойма") +
-    (get("area_km2") ? " · " + get("area_km2") + " км²" : "");
+  meta.textContent = [
+    type.charAt(0).toUpperCase() + type.slice(1),
+    get("area_km2") ? get("area_km2") + " км²" : "",
+  ]
+    .filter(Boolean)
+    .join(" · ");
   box.append(meta);
 
-  for (const [label, key, className] of [
-    ["Глибина", "depth", ""],
-    ["Риба", "fish", "water-fish"],
-    ["Опис", "description", "water-desc"],
+  const rows = document.createElement("dl");
+  rows.className = "water-rows";
+
+  for (const [label, key] of [
+    ["Глибина", "depth"],
+    ["Риба", "fish"],
+    ["Опис", "description"],
   ]) {
     if (!get(key)) {
       continue;
     }
-    const line = document.createElement("div");
-    line.className = className;
-    line.textContent = label + ": " + get(key);
-    box.append(line);
+
+    const row = document.createElement("div");
+    row.className = "water-row";
+
+    const term = document.createElement("dt");
+    term.textContent = label;
+
+    const value = document.createElement("dd");
+    value.textContent = get(key);
+
+    row.append(term, value);
+    rows.append(row);
   }
 
+  if (rows.children.length) {
+    box.append(rows);
+  }
+
+  const links = document.createElement("div");
+  links.className = "water-links";
+
   for (const [label, key] of [
-    ["Детальніше у Вікіпедії", "wikipedia"],
+    ["Вікіпедія", "wikipedia"],
     ["Джерело", "source"],
   ]) {
     if (!get(key)) {
       continue;
     }
+
     const link = document.createElement("a");
+    link.className = "water-link";
     link.href = get(key);
     link.target = "_blank";
     link.rel = "noopener";
     link.textContent = label;
-    box.append(link);
+    links.append(link);
+  }
+
+  if (links.children.length) {
+    box.append(links);
   }
 }

@@ -104,6 +104,11 @@ img {
 .btn-primary:hover {
   background: #007e77;
 }
+.btn-icon {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+}
 .btn-outline {
   border-color: var(--blue);
   color: var(--blue);

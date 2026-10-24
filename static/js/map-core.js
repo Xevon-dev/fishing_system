@@ -55,6 +55,7 @@ async function loadRegionLayer(map, region, button, status) {
     map.data.forEach((feature) => map.data.remove(feature));
     map.data.addGeoJson(geojson);
     map.fitBounds(boundsOf(geojson));
+    status.textContent = name + " · " + geojson.features.length + " водойм";
 
     return { geojson, name };
   } catch (error) {

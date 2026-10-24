@@ -57,6 +57,7 @@ function initMap() {
   async function focusWater(waterId, regionSlug) {
     if (regionSlug && region.querySelector(`option[value="${regionSlug}"]`)) {
       region.value = regionSlug;
+      region.dispatchEvent(new Event("change"));
     }
 
     const geojson = await loadRegionLayer(map, region, button, status);
@@ -87,6 +88,7 @@ function initMap() {
   const fromUrl = new URLSearchParams(location.search).get("region");
   if (fromUrl && region.querySelector(`option[value="${fromUrl}"]`)) {
     region.value = fromUrl;
+    region.dispatchEvent(new Event("change"));
   }
 
   map.data.addListener("click", (event) => {
@@ -99,11 +101,12 @@ function initMap() {
       return;
     }
 
-    info.textContent =
-      "Координати кліку: " +
-      event.latLng.lat().toFixed(5) +
-      ", " +
-      event.latLng.lng().toFixed(5);
+    info.replaceChildren();
+
+    const hint = document.createElement("p");
+    hint.className = "map-card__empty";
+    hint.textContent = "Натисни на водойму, щоб побачити дані.";
+    info.append(hint);
 
     lastWater = null;
     loadWeather(weatherBox, event.latLng);

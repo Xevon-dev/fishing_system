@@ -8,6 +8,25 @@ from ..weather import get_forecast
 
 DAYS_UA = ("Сьогодні", "Завтра", "Післязавтра")
 
+WIND_DIRECTIONS_UA = {
+    "N": "Пн",
+    "NNE": "Пн-Пн-Сх",
+    "NE": "Пн-Сх",
+    "ENE": "Сх-Пн-Сх",
+    "E": "Сх",
+    "ESE": "Сх-Пд-Сх",
+    "SE": "Пд-Сх",
+    "SSE": "Пд-Пд-Сх",
+    "S": "Пд",
+    "SSW": "Пд-Пд-Зх",
+    "SW": "Пд-Зх",
+    "WSW": "Зх-Пд-Зх",
+    "W": "Зх",
+    "WNW": "Зх-Пн-Зх",
+    "NW": "Пн-Зх",
+    "NNW": "Пн-Пн-Зх",
+}
+
 
 @require_GET
 def weather_view(request):
@@ -29,7 +48,11 @@ def weather_view(request):
             "condition": day["condition"]["text"],
             "icon": "https:" + day["condition"]["icon"],
             "temp": round(day["avgtemp_c"]),
+            "feels": round(hours[12]["feelslike_c"]),
             "wind": round(day["maxwind_kph"]),
+            "wind_dir": WIND_DIRECTIONS_UA.get(
+                hours[12]["wind_dir"], hours[12]["wind_dir"]
+            ),
             "precip": day["totalprecip_mm"],
             "humidity": round(day["avghumidity"]),
             "pressure": round(hours[12]["pressure_mb"] * 0.750062),
@@ -54,7 +77,7 @@ def advice_view(request):
         paragraphs = get_advice(water)
     except Exception as error:
         return JsonResponse(
-            {"error": f"Не вдалося отримати рекомендацію: {error}"}, status=502
+            {"error": f"Не вдалося отримати прогноз кльову: {error}"}, status=502
         )
 
     return render(request, "advice_card.html", {

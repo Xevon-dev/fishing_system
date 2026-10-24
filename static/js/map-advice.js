@@ -1,18 +1,15 @@
-/**
- * Порада від ШІ генерується лише на вимогу — щоб не витрачати запити даремно.
- */
 function prepareAdvice(box, latLng, water) {
   box.replaceChildren();
 
   const hint = document.createElement("p");
   hint.className = "advice-text";
   hint.textContent =
-    "Порада від ШІ генерується за запитом і займає 5–10 секунд.";
+    "Прогноз кльову формується за запитом і займає 5–10 секунд.";
 
   const button = document.createElement("button");
   button.type = "button";
   button.className = "advice-button";
-  button.textContent = "✨ Дізнатися пораду";
+  button.textContent = "Дізнатися прогноз";
   button.addEventListener("click", () => loadAdvice(box, latLng, water));
 
   box.append(hint, button);
@@ -29,7 +26,7 @@ async function loadAdvice(box, latLng, water) {
     fish: water ? water.fish : "",
   });
 
-  box.textContent = "Думаю над рекомендацією… (5–10 с)";
+  box.textContent = "Формую прогноз кльову… (5–10 с)";
 
   try {
     const response = await fetch(box.dataset.adviceUrl + "?" + params);
@@ -37,11 +34,11 @@ async function loadAdvice(box, latLng, water) {
 
     try {
       const data = JSON.parse(text);
-      box.textContent = data.error || "Не вдалося отримати рекомендацію.";
+      box.textContent = data.error || "Не вдалося отримати прогноз кльову.";
     } catch (notJson) {
       box.innerHTML = text;
     }
   } catch (error) {
-    box.textContent = "Не вдалося отримати рекомендацію.";
+    box.textContent = "Не вдалося отримати прогноз кльову.";
   }
 }
