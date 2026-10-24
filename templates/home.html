@@ -1,81 +1,136 @@
-
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}FishWise — Твій помічник у риболовлі{% endblock %}
+{% block title %}FishWise — Твоя риболовля{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/home.css' %}?v={% now 'U' %}">
 {% endblock %}
 
-{% block content %}
-
-<section class="hero container" id="home">
-    <div class="hero-content">
-        <span class="hero-eyebrow">Твій цифровий помічник</span>
-        <h1>Відкрий світ рибальських пригод</h1>
-
-        <p>
-            Знаходь цікаві водойми, отримуй корисні поради та зберігай
-            свої рибальські досягнення разом із FishWise.
-        </p>
-
-        <div class="hero-buttons">
-            <a href="{% url 'register' %}" class="btn btn-primary">Почати зараз →</a>
-            <a href="#features" class="btn btn-outline">Дізнатися більше</a>
-        </div>
-
-        <div class="hero-bottom">
-            <strong>Для кожного рибалки</strong>
-            <span>Від першого закиду до справжньої майстерності</span>
-        </div>
-    </div>
-
-    <div class="hero-image-wrapper">
-        <img class="hero-image"
-             src="{% static 'images/photo/fishing_home.jpg' %}"
-             alt="Риболовля на озері">
-    </div>
-</section>
-
-<section class="features-section" id="features">
-    <div class="container">
-        <div class="section-heading">
-            <h2>Можливості FishWise</h2>
-            <p>Усе необхідне для зручної риболовлі в одному місці.</p>
-        </div>
-
-        <div class="features-grid">
-            <article class="feature-card">
-                <div class="feature-icon">
-                    <img src="{% static 'images/icons/map.png' %}" alt="">
-                </div>
-                <h3>Карта водойм</h3>
-                <p>Знаходь водойми та відкривай нові місця для риболовлі.</p>
-            </article>
-
-            <article class="feature-card">
-                <div class="feature-icon">
-                    <img src="{% static 'images/icons/convenience.png' %}" alt="">
-                </div>
-                <h3>Поради та снасті</h3>
-                <p>Дізнавайся більше про техніки та рибальські снасті.</p>
-            </article>
-
-            <article class="feature-card">
-                <div class="feature-icon">
-                    <img src="{% static 'images/icons/dieting.png' %}" alt="">
-                </div>
-                <h3>Журнал уловів</h3>
-                <p>Записуй результати риболовлі та аналізуй досягнення.</p>
-            </article>
-        </div>
-    </div>
-</section>
-
-<footer class="site-footer">
-    © FishWise. Твій помічник у світі риболовлі.
-</footer>
-
+{% block nav_links %}
+<a class="is-active" href="{% url 'home' %}#home">Головна</a>
+<a href="{% url 'home' %}#features">Можливості</a>
 {% endblock %}
 
+{% block nav_actions %}
+<a class="login-link" href="{% url 'login' %}">Увійти</a>
+<a class="btn btn-primary" href="{% url 'register' %}">Реєстрація</a>
+{% endblock %}
+
+{% block content %}
+<div class="home-page">
+    <section class="home-hero" id="home">
+        <div class="container home-hero__grid">
+            <div class="home-hero__content">
+                <p class="home-kicker"><span class="home-kicker__dot"></span> FISHWISE · ТВОЯ РИБОЛОВЛЯ</p>
+                <h1>Знайди водойму.<br><span>Плануй виїзд.</span><br>Пам’ятай улов.</h1>
+                <p class="home-hero__lead">Карта водойм, поради та журнал риболовлі — все потрібне перед очима.</p>
+
+                <div class="home-hero__actions">
+                    {% if current_user %}
+                        <a class="home-button home-button--primary" href="{% url 'water_bodies' %}">Знайти водойму <span aria-hidden="true">↗</span></a>
+                        <a class="home-button home-button--quiet" href="{% url 'journal' %}">Мій журнал</a>
+                    {% else %}
+                        <a class="home-button home-button--primary" href="{% url 'register' %}">Зареєструватися <span aria-hidden="true">↗</span></a>
+                        <a class="home-button home-button--quiet" href="{% url 'login' %}">Увійти</a>
+                    {% endif %}
+                </div>
+
+                <div class="home-hero__notes" aria-label="Що є у FishWise">
+                    <span><i class="home-check" aria-hidden="true"></i> Водойми та їхні деталі</span>
+                    <span><i class="home-check" aria-hidden="true"></i> Улови з часом і вагою</span>
+                </div>
+            </div>
+
+            <figure class="home-visual">
+                <span class="home-visual__shift">
+                    <img class="home-visual__image" src="{% static 'images/photo/fishing_home.jpg' %}" alt="Рибалка на спокійній водоймі серед гір">
+                </span>
+                <div class="home-visual__badge">
+                    <span class="home-visual__badge-icon" aria-hidden="true"></span>
+                    <span class="home-visual__badge-text">
+                        <strong>{{ water_count_text }} водойм</strong>
+                        <small>Доступні на карті</small>
+                    </span>
+                    <a class="home-visual__badge-link" href="{% url 'water_bodies' %}">На карті</a>
+                </div>
+            </figure>
+        </div>
+    </section>
+
+    <section class="home-features" id="features">
+        <div class="container">
+            <header class="home-section-heading home-reveal">
+                <div>
+                    <p class="home-kicker">ПЛАНУЙ ВИЇЗД. ФІКСУЙ УЛОВ.</p>
+                    <h2>Спіймай свою золоту рибку</h2>
+                </div>
+                <p class="home-section-heading__aside">Водойми, поради й журнал риболовлі — у FishWise.</p>
+            </header>
+
+            <div class="home-feature-grid">
+                <a class="home-feature-card home-feature-card--map home-reveal" href="{% if current_user %}{% url 'water_bodies' %}{% else %}{% url 'register' %}{% endif %}">
+                    <span class="home-feature-card__top"><span>01</span><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></i></span>
+                    <h3>Карта водойм</h3>
+                    <p>Переглянь водойми й обери місце для риболовлі.</p>
+                    <span class="home-feature-card__action">
+                        <span class="home-feature-card__cta">{% if current_user %}Відкрити карту{% else %}Зареєструватися{% endif %} <b aria-hidden="true">↗</b></span>
+                        <span class="home-feature-card__tag">Місця</span>
+                    </span>
+                    <span class="home-feature-card__art" aria-hidden="true"><span></span><i></i><b></b></span>
+                </a>
+
+                <a class="home-feature-card home-feature-card--advice home-reveal" href="{% if current_user %}{% url 'fish_advice' %}{% else %}{% url 'register' %}{% endif %}">
+                    <span class="home-feature-card__top"><span>02</span><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 7v14M12 7C9 4 5.5 4 3 5v14c2.5-1 6-1 9 2m0-14c3-3 6.5-3 9-2v14c-2.5-1-6-1-9 2"/></svg></i></span>
+                    <h3>Поради та снасті</h3>
+                    <p>Види риб, техніки та поради щодо снастей.</p>
+                    <span class="home-feature-card__action">
+                        <span class="home-feature-card__cta">{% if current_user %}Переглянути поради{% else %}Зареєструватися{% endif %} <b aria-hidden="true">↗</b></span>
+                        <span class="home-feature-card__tag">Поради</span>
+                    </span>
+                    <span class="home-feature-card__art home-feature-card__art--rings" aria-hidden="true"><i></i><b></b></span>
+                </a>
+
+                <a class="home-feature-card home-feature-card--journal home-reveal" href="{% if current_user %}{% url 'journal' %}{% else %}{% url 'register' %}{% endif %}">
+                    <span class="home-feature-card__top"><span>03</span><i aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4M8 3v2M16 3v2"/></svg></i></span>
+                    <h3>Журнал уловів</h3>
+                    <p>Записуй кожну рибу, її вагу та час улову.</p>
+                    <span class="home-feature-card__action">
+                        <span class="home-feature-card__cta">{% if current_user %}Відкрити журнал{% else %}Зареєструватися{% endif %} <b aria-hidden="true">↗</b></span>
+                        <span class="home-feature-card__tag">Улови</span>
+                    </span>
+                    <span class="home-feature-card__art home-feature-card__art--sun" aria-hidden="true"><i></i></span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="home-level-cta home-reveal">
+        <div class="container">
+            <div class="home-level-cta__panel">
+                <div class="home-level-cta__copy">
+                    <p class="home-kicker"><span class="home-kicker__dot"></span> ТЕСТ РІВНЯ РИБАЛКИ</p>
+                    <h2>Не знаєш свого рівня?</h2>
+                    <p>Відповідай на короткі запитання й отримай добірку можливостей для свого досвіду.</p>
+                    <div class="home-level-cta__actions">
+                        <a class="home-button home-button--level" href="{% url 'fishing_test' %}">Пройти тест <span aria-hidden="true">↗</span></a>
+                        <a class="home-level-cta__more" href="#features">Дізнатися більше <span aria-hidden="true">↗</span></a>
+                    </div>
+                </div>
+                <div class="home-level-cta__visual" aria-hidden="true"><span class="home-level-cta__orbit home-level-cta__orbit--one"></span><span class="home-level-cta__orbit home-level-cta__orbit--two"></span><span class="home-level-cta__float">✳</span></div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="home-footer">
+        <div class="container home-footer__inner">
+            <a class="home-footer__brand" href="{% url 'home' %}"><span class="home-footer__dot" aria-hidden="true"></span>FishWise</a>
+            <p>© FishWise. Твій помічник у світі риболовлі.</p>
+        </div>
+    </footer>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script defer src="{% static 'js/home-motion.js' %}?v={% now 'U' %}"></script>
+{% endblock %}

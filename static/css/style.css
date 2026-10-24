@@ -62,6 +62,8 @@ img {
 .logo span {
   color: var(--blue);
 }
+.logo .logo-text { color: inherit; }
+.logo .logo-text span { color: var(--blue); }
 .logo-icon {
   width: 40px;
   height: 40px;
