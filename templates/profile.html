@@ -1,135 +1,378 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Профіль — FishWise{% endblock %}
+{% block title %}Мій профіль — FishWise{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/auth.css' %}?v={% now 'U' %}">
+<link rel="stylesheet" href="{% static 'css/profile.css' %}?v={% now 'U' %}">
 {% endblock %}
 
 {% block content %}
 <section class="profile-page">
-    <div class="profile-heading">
-        <h1>Мій профіль</h1>
-        <p>Дані рибака, сесії та поради</p>
-    </div>
-
-    <div class="profile-layout">
-        <div class="settings-card">
-            <div class="profile-head">
-                <span class="avatar-circle">{{ profile_user.username|first|upper }}</span>
-                <div>
-                    <strong>{{ profile_user.username }}</strong>
-                    {% if profile_user.level %}
-                        <span class="level-badge">{{ profile_user.level.name }}</span>
-                    {% else %}
-                        <span class="level-badge is-empty">Рівень не обрано</span>
-                    {% endif %}
-                </div>
-            </div>
-
-            <div class="profile-fields">
-                <div>
-                    <span>Ім'я</span>
-                    <strong>{{ profile_user.username }}</strong>
-                </div>
-                <div>
-                    <span>Email</span>
-                    <strong>{{ profile_user.email }}</strong>
-                </div>
-                <div>
-                    <span>Рівень</span>
-                    <strong>{{ profile_user.level.name|default:"Не обрано" }}</strong>
-                </div>
-                <div>
-                    <span>Дата реєстрації</span>
-                    <strong>{{ profile_user.created_at|date:"d.m.Y"|default:"—" }}</strong>
-                </div>
-            </div>
-
-            <div class="profile-actions">
-                {% if profile_user.level.name == "Початківець" or profile_user.level.name == "Середній" %}
-                    <a class="btn btn-outline" href="{% url 'fishing_test' %}">Пройти тест і підвищити рівень →</a>
-                {% endif %}
-                <a class="btn btn-primary" href="{% url 'stats' %}">📊 Моя статистика</a>
-                <a class="btn btn-outline" href="{% url 'username' %}">✏️ Змінити ім'я</a>
-                <a class="btn btn-outline" href="{% url 'password' %}">🔑 Змінити пароль</a>
-            </div>
+    <div class="profile-shell">
+        <div class="profile-hero">
+            <h1>Мій профіль</h1>
+            <p>Дані рибака, риболовні сесії та твій рівень у FishWise.</p>
         </div>
 
-        <div class="settings-card">
-            <h2>Мої сесії</h2>
-            {% if trips %}
-                {% for trip in trips %}
-                    <a class="profile-item" href="{% url 'edit_trip' trip.trip_id %}">
-                        <strong>{{ trip.water_body.name }}</strong>
-                        <p>
-                            Створено: {{ trip.created_at|date:"d.m.Y H:i" }}
-                            {% if trip.updated_at %} · Редаговано: {{ trip.updated_at|date:"d.m.Y H:i" }}{% endif %}
-                            {% if trip.type %} · {{ trip.type.name }}{% endif %}
-                            {% if trip.method %} · {{ trip.method.name }}{% endif %}
-                        </p>
-                        {% if trip.bait_note %}
-                            <p class="profile-item-bait">На що: {{ trip.bait_note|truncatechars:60 }}</p>
-                        {% endif %}
-                        {% for catch in trip.catches_set.all %}
-                            <p>{{ catch.fish.name }} · {{ catch.quantity|default:"1" }} шт.{% if catch.weight_kg %} · {{ catch.weight_kg }} кг{% endif %}{% if catch.caught_at %} · {{ catch.caught_at|date:"d.m.Y H:i" }}{% endif %}</p>
-                        {% endfor %}
-                        <small>Редагувати сесію →</small>
-                    </a>
-                {% endfor %}
+        <div class="profile-layout">
+            <div class="profile-main">
+                <section class="profile-card">
+                    <div class="profile-ident">
+                        <span class="profile-avatar" aria-hidden="true">{{ profile_user.username|first|upper }}</span>
 
-                <p class="profile-more"><a href="{% url 'journal' %}">Усі сесії →</a></p>
-            {% else %}
-                <p class="profile-empty">Сесій поки немає.</p>
-                <p class="profile-more"><a href="{% url 'add_trip' %}">+ Додати першу сесію</a></p>
-            {% endif %}
-        </div>
+                        <div class="profile-ident__text">
+                            <div class="profile-name">
+                                <strong>{{ profile_user.username }}</strong>
+                                <svg class="profile-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <circle cx="12" cy="12" r="9"/>
+                                    <path d="m8.4 12.2 2.4 2.4 4.8-5"/>
+                                </svg>
+                            </div>
 
-        {% if is_expert %}
-            <div class="settings-card">
-                <h2>Мої поради</h2>
-                {% if tips %}
-                    {% for tip in tips %}
-                        <a class="profile-item" href="{% url 'edit_tip' tip.tip_id %}">
-                            <strong>{{ tip.title|default:"Порада рибалки" }}</strong>
-                            <p>{{ tip.content|truncatechars:110 }}</p>
-                            <small>Редагувати пораду →</small>
+                            <span class="profile-level">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+                                    <rect x="3.6" y="6" width="16.8" height="12" rx="2.4"/>
+                                    <circle cx="9" cy="10.6" r="1.7"/>
+                                    <path d="M6.2 15.6a3.2 3.2 0 0 1 5.6 0M14.4 10.6h3.2M14.4 14h3.2"/>
+                                </svg>
+                                {% if profile_user.level %}{{ profile_user.level.name }}{% else %}Рівень не обрано{% endif %}
+                            </span>
+                        </div>
+
+                        <button type="button" class="profile-edit-btn" data-profile-edit>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M4.5 19.5h4L19 9a2.6 2.6 0 0 0-3.7-3.7L4.8 15.8Z"/>
+                                <path d="m14.4 6.3 3.3 3.3"/>
+                            </svg>
+                            Редагувати профіль
+                        </button>
+                    </div>
+
+                    <div class="profile-fields">
+                        <div class="profile-field">
+                            <span>Ім'я</span>
+                            <strong>{{ profile_user.username }}</strong>
+                        </div>
+                        <div class="profile-field">
+                            <span>Email</span>
+                            <strong>{{ profile_user.email|default:"—" }}</strong>
+                        </div>
+                        <div class="profile-field">
+                            <span>Рівень</span>
+                            <strong>{{ profile_user.level.name|default:"Не обрано" }}</strong>
+                        </div>
+                        <div class="profile-field">
+                            <span>Дата реєстрації</span>
+                            <strong>{{ profile_user.created_at|date:"d.m.Y"|default:"—" }}</strong>
+                        </div>
+                    </div>
+
+                    <div class="profile-actions">
+                        <a class="profile-btn profile-btn--primary" href="{% url 'add_trip' %}">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M4.5 12.6c3.6-3.9 11.4-3.9 15 0-3.6 3.9-11.4 3.9-15 0Z"/>
+                                <path d="M15 8.4V6.6a1.4 1.4 0 0 1 1.4-1.4H19"/>
+                                <circle cx="10.4" cy="11.7" r=".9"/>
+                            </svg>
+                            {% if trip_count %}Додати нову сесію{% else %}Готувати свій перший улов{% endif %}
                         </a>
-                    {% endfor %}
 
-                    <p class="profile-more"><a href="{% url 'tips_list' %}">Усі поради →</a></p>
-                {% else %}
-                    <p class="profile-empty">Порад поки немає.</p>
-                    <p class="profile-more"><a href="{% url 'add_tip' %}">+ Додати пораду</a></p>
+                        <a class="profile-btn" href="{% url 'stats' %}">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+                                <path d="M4.5 19V13M9.5 19V8M14.5 19v-4M19.5 19V6"/>
+                            </svg>
+                            Моя статистика
+                        </a>
+
+                        {% if is_expert %}
+                            <a class="profile-btn" href="{% url 'add_tip' %}">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M12 3.6 13.9 8.8 19 10l-5.1 1.4L12 16.6l-1.9-5.2L5 10l5.1-1.4Z"/>
+                                </svg>
+                                Додати пораду
+                            </a>
+                        {% else %}
+                            <a class="profile-btn" href="{% url 'fishing_test' %}">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+                                    <circle cx="12" cy="12" r="8"/>
+                                    <circle cx="12" cy="12" r="3.4"/>
+                                </svg>
+                                Підвищити рівень
+                            </a>
+                        {% endif %}
+                    </div>
+                </section>
+
+                <section class="profile-card profile-sessions">
+                    <div class="profile-card__head">
+                        <h2>Мої сесії</h2>
+                        <span class="profile-count">{{ trip_count }}</span>
+                    </div>
+
+                    {% if trips %}
+                        <div class="profile-list">
+                            {% for trip in trips %}
+                                <a class="profile-trip" href="{% url 'edit_trip' trip.trip_id %}">
+                                    <span class="profile-trip__icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M3.6 12.4c2.4 2.6 6.4 3.4 9.4 1.9l3.6 3.6"/>
+                                            <path d="M15.4 12.6c1.9-2.1 1.1-5-1.4-6-2.1-.8-4.4.4-4.9 2.5"/>
+                                            <path d="M9.3 9.1 7 6.8M6.2 12.6 3.8 14.8"/>
+                                        </svg>
+                                    </span>
+
+                                    <span class="profile-trip__text">
+                                        <strong>{{ trip.water_body.name }}</strong>
+                                        <span class="profile-trip__meta">
+                                            {{ trip.created_at|date:"d.m.Y H:i" }}
+                                            {% if trip.type %} · {{ trip.type.name }}{% endif %}
+                                            {% if trip.method %} · {{ trip.method.name }}{% endif %}
+                                        </span>
+                                        {% if trip.bait_note %}
+                                            <span class="profile-trip__bait">На що: {{ trip.bait_note|truncatechars:60 }}</span>
+                                        {% endif %}
+                                        {% for catch in trip.catches_set.all %}
+                                            <span class="profile-trip__catch">{{ catch.fish.name }} · {{ catch.quantity|default:"1" }} шт.{% if catch.weight_kg %} · {{ catch.weight_kg }} кг{% endif %}{% if catch.caught_at %} · {{ catch.caught_at|date:"d.m.Y H:i" }}{% endif %}</span>
+                                        {% endfor %}
+                                    </span>
+
+                                    <span class="profile-trip__arrow" aria-hidden="true">→</span>
+                                </a>
+                            {% endfor %}
+                        </div>
+
+                        <a class="profile-more" href="{% url 'journal' %}">Усі сесії →</a>
+                    {% else %}
+                        <div class="profile-empty">
+                            <span class="profile-empty__art" aria-hidden="true">
+                                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M13 24c5.4-6 14.6-6 20 0-5.4 6-14.6 6-20 0Z"/>
+                                    <path d="M13 24 6.6 17.6v12.8Z"/>
+                                    <circle cx="27.4" cy="22.4" r="1.2"/>
+                                    <path d="M18 17.2c2.4-2 5.4-2.6 8-2"/>
+                                    <circle cx="36.6" cy="14.4" r="1.6"/>
+                                    <circle cx="40.4" cy="9.8" r="1"/>
+                                </svg>
+                            </span>
+                            <strong>Сесій поки немає</strong>
+                            <p>Зафіксуй свій перший вихід на воду, щоб додати спостереження та відмітки улову.</p>
+                            <a class="profile-btn profile-btn--primary" href="{% url 'add_trip' %}">Додати нову сесію</a>
+                        </div>
+                    {% endif %}
+                </section>
+
+                {% if is_expert %}
+                    <section class="profile-card profile-sessions">
+                        <div class="profile-card__head">
+                            <h2>Мої поради</h2>
+                            <span class="profile-count">{{ tip_count }}</span>
+                        </div>
+
+                        {% if tips %}
+                            <div class="profile-list">
+                                {% for tip in tips %}
+                                    <a class="profile-trip" href="{% url 'edit_tip' tip.tip_id %}">
+                                        <span class="profile-trip__icon" aria-hidden="true">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M12 4.4 13.8 9.2 18.6 11l-4.8 1.8L12 17.6l-1.8-4.8L5.4 11l4.8-1.8Z"/>
+                                            </svg>
+                                        </span>
+
+                                        <span class="profile-trip__text">
+                                            <strong>{{ tip.title|default:"Порада рибалки" }}</strong>
+                                            <span class="profile-trip__meta">{{ tip.content|truncatechars:110 }}</span>
+                                        </span>
+
+                                        <span class="profile-trip__arrow" aria-hidden="true">→</span>
+                                    </a>
+                                {% endfor %}
+                            </div>
+
+                            <a class="profile-more" href="{% url 'tips_list' %}">Усі поради →</a>
+                        {% else %}
+                            <div class="profile-empty">
+                                <span class="profile-empty__art" aria-hidden="true">
+                                    <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M24 8.4 27.6 18 37.2 21.6 27.6 25.2 24 34.8 20.4 25.2 10.8 21.6 20.4 18Z"/>
+                                    </svg>
+                                </span>
+                                <strong>Порад поки немає</strong>
+                                <p>Поділись досвідом із початківцями — твоя порада з'явиться тут.</p>
+                                <a class="profile-btn profile-btn--primary" href="{% url 'add_tip' %}">Додати пораду</a>
+                            </div>
+                        {% endif %}
+                    </section>
                 {% endif %}
             </div>
-        {% endif %}
 
-        <div class="settings-card">
-            <h2>Вихід</h2>
-            <p class="profile-hint">
-                Завершити сесію на цьому пристрої.
-            </p>
-            <a class="btn btn-outline"
-               href="{% url 'logout' %}"
-               data-confirm="Вийти з акаунту?">Вийти</a>
+            <aside class="profile-side">
+                <section class="profile-card profile-stats">
+                    <div class="profile-card__head">
+                        <h2>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+                                <path d="M4.5 19V13M9.5 19V8M14.5 19v-4M19.5 19V6"/>
+                            </svg>
+                            Статистика
+                        </h2>
+                    </div>
+
+                    <div class="profile-stats__grid">
+                        <div class="profile-stat">
+                            <span class="profile-stat__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3.6 8.4 12 4.2l8.4 4.2L12 12.6Z"/>
+                                    <path d="M3.6 8.4v7.2l8.4 4.2 8.4-4.2V8.4"/>
+                                    <path d="M12 12.6v6.6"/>
+                                </svg>
+                            </span>
+                            <b>{{ total_weight }}<span class="profile-stat__unit"> кг</span></b>
+                            <span class="profile-stat__label">Уся вага уловів</span>
+                        </div>
+
+                        <div class="profile-stat">
+                            <span class="profile-stat__icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3.4 12c3.7-3.7 10.7-3.7 14.4 0-3.7 3.7-10.7 3.7-14.4 0Z"/>
+                                    <path d="M17.8 12 21 9.4v5.2Z"/>
+                                    <circle cx="8.6" cy="11.4" r=".9"/>
+                                </svg>
+                            </span>
+                            <b>{{ max_weight }}<span class="profile-stat__unit"> кг</span></b>
+                            <span class="profile-stat__label">Найбільша спіймана риба</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="profile-card profile-upgrade">
+                    <span class="profile-upgrade__icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 3.2 14.2 8.9 20.4 11l-6.2 2.1L12 18.8 9.8 13.1 3.6 11l6.2-2.1Z"/>
+                            <path d="M18.6 16.4 19.4 18.4 21.4 19.2 19.4 20 18.6 22 17.8 20 15.8 19.2 17.8 18.4Z"/>
+                        </svg>
+                    </span>
+
+                    <h2>Готові підвищити категорію?</h2>
+                    <p>Пройдіть короткий тест про свій досвід — і дізнаєтеся, який рівень рибака вам відповідає.</p>
+
+                    <ul class="profile-upgrade__list">
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="m5 12.4 4.2 4.2L19 6.8"/>
+                            </svg>
+                            6 питань про досвід і звички на риболовлі
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="m5 12.4 4.2 4.2L19 6.8"/>
+                            </svg>
+                            Рівень: Початківець, Середній або Досвідчений
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="m5 12.4 4.2 4.2L19 6.8"/>
+                            </svg>
+                            Результат одразу зберігається у профілі
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="m5 12.4 4.2 4.2L19 6.8"/>
+                            </svg>
+                            Досвідченим відкривається додавання порад
+                        </li>
+                    </ul>
+
+                    <a class="profile-upgrade__btn" href="{% url 'fishing_test' %}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="12" cy="12" r="8"/>
+                            <circle cx="12" cy="12" r="3.4"/>
+                        </svg>
+                        Підвищити категорію
+                    </a>
+
+                    <div class="profile-upgrade__account">
+                        <a class="profile-upgrade__action" href="{% url 'logout' %}" data-confirm="Вийти з акаунту?">Вийти з акаунту</a>
+
+                        <form method="post" action="{% url 'delete_account' %}" data-confirm="Точно видалити акаунт? Це не можна скасувати!">
+                            {% csrf_token %}
+                            <button type="submit" class="profile-upgrade__action profile-upgrade__action--danger">Видалити акаунт</button>
+                        </form>
+                    </div>
+                </section>
+            </aside>
         </div>
 
-        <div class="settings-card is-danger">
-            <h2>Небезпечна зона</h2>
-            <p class="profile-hint">
-                Видалення акаунта неможливо скасувати. Разом з акаунтом
-                зникнуть твої риболовні сесії та поради.
-            </p>
-            <form method="post" action="{% url 'delete_account' %}"
-                  data-confirm="Точно видалити акаунт? Це не можна скасувати!">
+        <dialog class="profile-dialog" id="profile-edit"{% if edit_errors %} data-open="1"{% endif %}>
+            <form class="profile-dialog__inner" method="post" action="{% url 'profile_edit' %}">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-danger">Видалити акаунт</button>
+
+                <div class="profile-dialog__head">
+                    <h2>Редагувати профіль</h2>
+                    <button type="button" class="profile-dialog__close" data-profile-close aria-label="Закрити">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true">
+                            <path d="M6.4 6.4 17.6 17.6M17.6 6.4 6.4 17.6"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="profile-dialog__body">
+                    <div class="profile-dialog__row">
+                        <label class="profile-input">
+                            <span>Ім'я</span>
+                            <input type="text" name="username" autocomplete="username" required value="{% if edit_form %}{{ edit_form.username }}{% else %}{{ profile_user.username }}{% endif %}">
+                            {% if edit_errors.username %}<em>{{ edit_errors.username }}</em>{% endif %}
+                        </label>
+
+                        <label class="profile-input">
+                            <span>Email</span>
+                            <input type="email" name="email" autocomplete="email" required value="{% if edit_form %}{{ edit_form.email }}{% else %}{{ profile_user.email }}{% endif %}">
+                            {% if edit_errors.email %}<em>{{ edit_errors.email }}</em>{% endif %}
+                        </label>
+                    </div>
+
+                    <p class="profile-dialog__hint">Пароль змінюйте лише за потреби — інакше залиште поля порожніми.</p>
+
+                    <div class="profile-dialog__row profile-dialog__row--single">
+                        <label class="profile-input">
+                            <span>Поточний пароль</span>
+                            <input type="password" name="current_password" autocomplete="current-password">
+                            {% if edit_errors.current_password %}<em>{{ edit_errors.current_password }}</em>{% endif %}
+                        </label>
+                    </div>
+
+                    <div class="profile-dialog__row">
+                        <label class="profile-input">
+                            <span>Новий пароль</span>
+                            <input type="password" name="new_password" autocomplete="new-password">
+                            {% if edit_errors.new_password %}<em>{{ edit_errors.new_password }}</em>{% endif %}
+                        </label>
+
+                        <label class="profile-input">
+                            <span>Підтвердження пароля</span>
+                            <input type="password" name="confirm_password" autocomplete="new-password">
+                            {% if edit_errors.confirm_password %}<em>{{ edit_errors.confirm_password }}</em>{% endif %}
+                        </label>
+                    </div>
+                </div>
+
+                <div class="profile-dialog__actions">
+                    <button type="button" class="profile-btn" data-profile-close>Скасувати</button>
+                    <button type="submit" class="profile-btn profile-btn--primary">Зберегти зміни</button>
+                </div>
             </form>
-        </div>
+        </dialog>
     </div>
 </section>
+
+<footer class="home-footer">
+    <div class="home-footer__inner">
+        <a class="home-footer__brand" href="{% url 'home' %}"><span class="home-footer__dot" aria-hidden="true"></span>FishWise</a>
+        <p>© FishWise. Твій помічник у світі риболовлі.</p>
+    </div>
+</footer>
 {% endblock %}
 
-{% block extra_js %}{% endblock %}
+{% block extra_js %}
+<script src="{% static 'js/profile.js' %}?v={% now 'U' %}"></script>
+{% endblock %}

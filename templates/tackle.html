@@ -4,76 +4,133 @@
 {% block title %}Підбір снастей — FishWise{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/auth.css' %}?v={% now 'U' %}">
 <link rel="stylesheet" href="{% static 'css/tackle.css' %}?v={% now 'U' %}">
 {% endblock %}
 
 {% block content %}
-<section class="auth-section">
-    <div class="auth-heading">
-        <h1>Підбір снастей</h1>
-        <p>Обери рибу — покажемо снасті, з яких зручно почати</p>
-    </div>
+<div class="tackle-page">
+    <div class="tackle-shell">
+        <header class="tackle-hero">
+            <span class="tackle-hero__eyebrow"><i></i> РИБОЛОВЛЯ ПОЧИНАЄТЬСЯ З ПІДГОТОВКИ</span>
+            <h1>Підбір снастей</h1>
+            <p>Обери рибу та бюджет — ми покажемо перевірені монтажі, комплекти й оснащення.</p>
+        </header>
 
-    <div class="fish-chips">
-        {% for item in fish_list %}
-            <a class="fish-chip{% if fish and fish.fish_id == item.fish_id %} is-active{% endif %}"
-               href="{% url 'tackle_fish' item.fish_id %}">{{ item.name }}</a>
-        {% endfor %}
-    </div>
-
-    {% if fish %}
-        <h2 class="tackle-fish-title">Снасті для: {{ fish.name }}</h2>
-
-        <div class="tier-tabs">
-            {% for value in tiers %}
-                <a class="tier-tab{% if value == tier %} is-active{% endif %}"
-                   href="{% url 'tackle_fish' fish.fish_id %}?tier={{ value|urlencode }}">{{ value|capfirst }}</a>
-            {% endfor %}
-        </div>
-
-        {% for group in groups %}
-            <section class="tackle-group">
-                <h3 class="tackle-type">{{ group.type }}</h3>
-
-                {% if group.sets %}
-                    <h4 class="tackle-subtitle">Готові комплекти</h4>
-                    <div class="tackle-grid">
-                        {% for item in group.sets %}
-                            <a class="tackle-card tackle-card--set" href="{{ item.url }}" target="_blank" rel="noopener">
-                                {% if item.image %}
-                                    <img class="tackle-card__image" src="{{ item.image }}" alt="{{ item.name }}" loading="lazy">
-                                {% endif %}
-                                <span class="tackle-card__kind">комплект</span>
-                                <strong>{{ item.name }}</strong>
-                                <span class="tackle-card__price">{{ item.price }} грн</span>
-                                <span class="tackle-card__shop">{{ item.shop }}</span>
-                            </a>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-
-                {% for kind in group.kinds %}
-                    <h4 class="tackle-subtitle">{{ kind.kind|capfirst }}</h4>
-                    <div class="tackle-grid">
-                        {% for item in kind.items %}
-                            <a class="tackle-card" href="{{ item.url }}" target="_blank" rel="noopener">
-                                {% if item.image %}
-                                    <img class="tackle-card__image" src="{{ item.image }}" alt="{{ item.name }}" loading="lazy">
-                                {% endif %}
-                                <span class="tackle-card__kind">{{ item.kind }}</span>
-                                <strong>{{ item.name }}</strong>
-                                <span class="tackle-card__price">{{ item.price }} грн</span>
-                                <span class="tackle-card__shop">{{ item.shop }}</span>
-                            </a>
-                        {% endfor %}
-                    </div>
+        <section class="fish-picker" aria-labelledby="fish-picker-title">
+            <div class="fish-picker__heading">
+                <span class="fish-picker__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M3 12s3.2-5 8.4-5c3.3 0 5.4 1.7 7 3.2L22 8v8l-3.6-2.2c-1.6 1.5-3.7 3.2-7 3.2C6.2 17 3 12 3 12Z"/><circle cx="8" cy="11" r=".8"/><path d="M3 12H1"/></svg>
+                </span>
+                <h2 id="fish-picker-title">Обери цільову рибу</h2>
+                <span class="fish-picker__hint">{{ fish_list|length }} види</span>
+            </div>
+            <div class="fish-chips">
+                {% for item in fish_list %}
+                    <a class="fish-chip{% if fish and fish.fish_id == item.fish_id %} is-active{% endif %}"
+                       href="{% url 'tackle_fish' item.fish_id %}"{% if fish and fish.fish_id == item.fish_id %} aria-current="page"{% endif %}>
+                        {{ item.name }}
+                    </a>
                 {% endfor %}
+            </div>
+        </section>
+
+        {% if fish %}
+            <section class="selected-fish" aria-label="Поточний вибір">
+                <div class="selected-fish__identity">
+                    <span class="selected-fish__mark" aria-hidden="true">✳</span>
+                    <div>
+                        <span class="selected-fish__caption">СНАСТІ ДЛЯ</span>
+                        <h2>{{ fish.name }}</h2>
+                    </div>
+                </div>
+                <div class="tier-control" aria-label="Цінова категорія">
+                    <span class="tier-control__label">ЦІНОВА КАТЕГОРІЯ</span>
+                    <div class="tier-tabs">
+                        {% for value in tiers %}
+                            <a class="tier-tab{% if value == tier %} is-active{% endif %}"
+                               href="{% url 'tackle_fish' fish.fish_id %}?tier={{ value|urlencode }}"
+                               {% if value == tier %}aria-current="page"{% endif %}>
+                                {{ value|capfirst }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
             </section>
-        {% empty %}
-            <p class="level-description">Для цієї риби снастей поки немає.</p>
-        {% endfor %}
-    {% endif %}
-</section>
+
+            {% for group in groups %}
+                <section class="tackle-group" aria-labelledby="tackle-group-{{ forloop.counter }}">
+                    {% if group.sets %}
+                        <div class="tackle-section-heading">
+                            <div>
+                                <span class="tackle-section-heading__eyebrow">{{ group.type }}</span>
+                                <h2 id="tackle-group-{{ forloop.counter }}">Готові комплекти</h2>
+                            </div>
+                            <span class="tackle-section-heading__count">{{ group.sets|length }} варіанти</span>
+                        </div>
+                        <div class="tackle-grid">
+                            {% for item in group.sets %}
+                                <a class="tackle-card tackle-card--set" href="{{ item.url }}" target="_blank" rel="noopener noreferrer">
+                                    <span class="tackle-card__visual">
+                                        {% if item.image %}
+                                            <img class="tackle-card__image" src="{{ item.image }}" alt="{{ item.name }}" loading="lazy">
+                                        {% else %}
+                                            <span class="tackle-card__image-placeholder" aria-hidden="true">✳</span>
+                                        {% endif %}
+                                        <span class="tackle-card__open" aria-hidden="true">↗</span>
+                                    </span>
+                                    <span class="tackle-card__kind">Готовий комплект</span>
+                                    <strong class="tackle-card__name">{{ item.name }}</strong>
+                                    <span class="tackle-card__bottom"><span class="tackle-card__price">{{ item.price }} <small>грн</small></span><span class="tackle-card__shop">{{ item.shop }}</span></span>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% for kind in group.kinds %}
+                        <div class="tackle-section-heading tackle-section-heading--kind">
+                            <div>
+                                {% if not group.sets %}<span class="tackle-section-heading__eyebrow">{{ group.type }}</span>{% endif %}
+                                <h2 id="tackle-group-{{ forloop.parentloop.counter }}-kind-{{ forloop.counter }}">{{ kind.kind|capfirst }}</h2>
+                            </div>
+                            <span class="tackle-section-heading__count">{{ kind.items|length }} позицій</span>
+                        </div>
+                        <div class="tackle-grid">
+                            {% for item in kind.items %}
+                                <a class="tackle-card" href="{{ item.url }}" target="_blank" rel="noopener noreferrer">
+                                    <span class="tackle-card__visual">
+                                        {% if item.image %}
+                                            <img class="tackle-card__image" src="{{ item.image }}" alt="{{ item.name }}" loading="lazy">
+                                        {% else %}
+                                            <span class="tackle-card__image-placeholder" aria-hidden="true">✳</span>
+                                        {% endif %}
+                                        <span class="tackle-card__open" aria-hidden="true">↗</span>
+                                    </span>
+                                    <span class="tackle-card__kind">{{ item.kind }}</span>
+                                    <strong class="tackle-card__name">{{ item.name }}</strong>
+                                    <span class="tackle-card__bottom"><span class="tackle-card__price">{{ item.price }} <small>грн</small></span><span class="tackle-card__shop">{{ item.shop }}</span></span>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </section>
+            {% empty %}
+                <div class="tackle-empty">
+                    <span aria-hidden="true">✳</span>
+                    <h2>Для цієї риби снастей поки немає</h2>
+                    <p>Спробуй іншу цінову категорію або обери іншу рибу.</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="tackle-empty tackle-empty--prompt">
+                <span aria-hidden="true">↖</span>
+                <h2>З чого почнемо?</h2>
+                <p>Обери рибу вище — і побачиш добірку снастей під свій бюджет.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
 <script src="{% static 'js/tackle.js' %}?v={% now 'U' %}"></script>
 {% endblock %}
