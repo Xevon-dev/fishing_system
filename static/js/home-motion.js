@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!("IntersectionObserver" in window)) return;
 
   const targets = page.querySelectorAll(
-    ".home-section-heading, .home-feature-card, .home-level-cta__panel, .home-footer__inner",
+    ".home-section-heading, .home-feature-card, .home-level-cta__panel",
   );
   if (!targets.length) return;
 

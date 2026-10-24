@@ -11,32 +11,35 @@ EMAIL_RE = re.compile(r"[^@\s]+@[^@\s]+\.[^@\s]+")
 
 def login_view(request):
     errors = {}
-    email = ""
+    login_value = ""
 
     if request.method == "POST":
-        email = request.POST.get("email", "").strip()
+        login_value = request.POST.get("username", "").strip()
         password = request.POST.get("password", "")
 
-        if not email:
-            errors["email"] = "Введіть email"
-        elif not EMAIL_RE.fullmatch(email):
-            errors["email"] = "Некоректна електронна пошта"
+        if not login_value:
+            errors["username"] = "Введіть логін"
+        elif "@" in login_value and not EMAIL_RE.fullmatch(login_value):
+            errors["username"] = "Некоректна електронна пошта"
 
         if not password:
             errors["password"] = "Введіть пароль"
 
         if not errors:
-            user = Users.objects.filter(email=email).first()
+            user = Users.objects.filter(username=login_value).first()
+
+            if not user and "@" in login_value:
+                user = Users.objects.filter(email=login_value).first()
 
             if not user:
-                errors["email"] = "Користувача з такою поштою немає"
+                errors["username"] = "Користувача з таким логіном немає"
             elif not check_password(password, user.password_hash):
                 errors["password"] = "Невірний пароль"
             else:
                 login_user(request, user)
                 return redirect("profile")
 
-    return render(request, "login.html", {"errors": errors, "email": email})
+    return render(request, "login.html", {"errors": errors, "login": login_value})
 
 
 def logout_view(request):
