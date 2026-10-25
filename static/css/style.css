@@ -109,6 +109,43 @@ img {
 .btn-primary:hover {
   background: #007e77;
 }
+.header .nav-actions .profile-nav-btn {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 999px;
+  background: linear-gradient(120deg, #08764f, #10a47c, #08764f);
+  background-size: 200% 200%;
+  box-shadow: 0 6px 16px rgb(8 118 79 / 20%);
+  animation: profile-nav-gradient 7s ease infinite;
+  transition: transform .22s ease, box-shadow .22s ease;
+}
+.header .nav-actions .profile-nav-btn::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0 auto 0 -45%;
+  width: 35%;
+  background: linear-gradient(100deg, transparent, rgb(255 255 255 / 30%), transparent);
+  content: "";
+  transform: skewX(-20deg);
+  transition: left .45s ease;
+}
+.header .nav-actions .profile-nav-btn:hover {
+  background: linear-gradient(120deg, #08764f, #10a47c, #08764f);
+  background-size: 200% 200%;
+  box-shadow: 0 10px 23px rgb(8 118 79 / 30%);
+  transform: translateY(-2px);
+}
+.header .nav-actions .profile-nav-btn:hover::after { left: 120%; }
+.header .nav-actions .profile-nav-btn:active { transform: translateY(0) scale(.97); }
+@keyframes profile-nav-gradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .header .nav-actions .profile-nav-btn { animation: none; transition: none; }
+  .header .nav-actions .profile-nav-btn::after { transition: none; }
+}
 .btn-icon {
   width: 16px;
   height: 16px;

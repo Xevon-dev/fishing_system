@@ -56,7 +56,8 @@ def fishing_test_view(request):
             user = Users.objects.select_for_update().select_related("level").get(pk=user.pk)
             ranks = list(LEVEL_NAMES.values())
             current_rank = ranks.index(user.level.name) if user.level and user.level.name in ranks else -1
-            if ranks.index(LEVEL_NAMES[level]) > current_rank:
+            can_upgrade = user.level and user.level.name in {"Початківець", "Середній"}
+            if can_upgrade and ranks.index(LEVEL_NAMES[level]) > current_rank:
                 user.level, _ = Levels.objects.get_or_create(name=LEVEL_NAMES[level])
                 user.save(update_fields=["level"])
                 context["upgraded"] = True

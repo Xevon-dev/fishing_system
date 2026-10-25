@@ -13,6 +13,10 @@ def is_expert(user):
     return bool(user.level and user.level.name == "Досвідчений")
 
 
+def can_upgrade_level(user):
+    return bool(user.level and user.level.name in {"Початківець", "Середній"})
+
+
 def format_weight(value):
     if not value:
         return "0"
@@ -37,6 +41,7 @@ def profile_context(user):
     return {
         "profile_user": user,
         "is_expert": is_expert(user),
+        "can_upgrade_level": can_upgrade_level(user),
         "trips": (
             trips
             .select_related("water_body", "type", "method")

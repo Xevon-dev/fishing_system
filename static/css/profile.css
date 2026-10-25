@@ -468,6 +468,11 @@
   box-shadow: 0 22px 44px rgba(6, 46, 33, 0.22);
   color: #e9f4ec;
 }
+.profile-upgrade--account-only .profile-upgrade__account {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
 .profile-upgrade__icon {
   width: 34px;
   height: 34px;
