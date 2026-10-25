@@ -1,14 +1,14 @@
-function initRegionPicker() {
-  const picker = document.querySelector("#region-picker");
+function initRegionPicker({ pickerId, selectId, inputId, toggleId, listId }) {
+  const picker = document.querySelector(pickerId);
 
   if (!picker) {
     return;
   }
 
-  const select = picker.querySelector("#water-region");
-  const input = picker.querySelector("#region-input");
-  const toggle = picker.querySelector("#region-toggle");
-  const list = picker.querySelector("#region-list");
+  const select = picker.querySelector(selectId);
+  const input = picker.querySelector(inputId);
+  const toggle = picker.querySelector(toggleId);
+  const list = picker.querySelector(listId);
 
   let activeIndex = -1;
 
@@ -157,8 +157,31 @@ function initRegionPicker() {
   });
 
   select.addEventListener("change", syncInput);
+  select.addEventListener("change", () => {
+    input.dispatchEvent(new Event("change", { bubbles: true }));
+  });
 
   syncInput();
 }
 
-initRegionPicker();
+initRegionPicker({
+  pickerId: "#region-picker",
+  selectId: "#water-region",
+  inputId: "#region-input",
+  toggleId: "#region-toggle",
+  listId: "#region-list",
+});
+initRegionPicker({
+  pickerId: "#trip-region-picker",
+  selectId: "#trip-region",
+  inputId: "#trip-region-input",
+  toggleId: "#trip-region-toggle",
+  listId: "#trip-region-list",
+});
+initRegionPicker({
+  pickerId: "#trip-type-picker",
+  selectId: "#trip-type",
+  inputId: "#trip-type-input",
+  toggleId: "#trip-type-toggle",
+  listId: "#trip-type-list",
+});

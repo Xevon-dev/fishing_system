@@ -59,10 +59,12 @@
                         <label class="profile-photo-label" for="profile-photo-input">Фото профілю</label>
                         <div class="profile-photo-controls">
                             <input id="profile-photo-input" type="file" name="profile_photo" accept="image/*" required>
+                            <label class="profile-photo-choose" for="profile-photo-input"><span aria-hidden="true">↑</span> Обрати зображення</label>
+                            <span class="profile-photo-filename" id="profile-photo-filename">Файл не вибрано</span>
                             <button class="profile-btn profile-photo-save" type="submit">Завантажити фото</button>
-                            {% if profile_user.profile_photo %}<button class="profile-btn profile-photo-remove" type="submit" name="remove_photo" value="1" formnovalidate>Видалити фото</button>{% endif %}
+                            {% if profile_user.profile_photo %}<button class="profile-btn profile-photo-remove" type="submit" name="remove_photo" value="1" formnovalidate data-confirm="Видалити фото профілю?">Видалити фото</button>{% endif %}
                         </div>
-                        <small>Файл зображення · без обмеження за розміром</small>
+                        <small>Зображення JPG, PNG або WEBP</small>
                         {% if profile_photo_error %}<span class="field-error">{{ profile_photo_error }}</span>{% endif %}
                     </form>
 
@@ -378,12 +380,6 @@
     </div>
 </section>
 
-<footer class="home-footer">
-    <div class="home-footer__inner">
-        <a class="home-footer__brand" href="{% url 'home' %}"><span class="home-footer__dot" aria-hidden="true"></span>FishWise</a>
-        <p>© FishWise. Твій помічник у світі риболовлі.</p>
-    </div>
-</footer>
 {% endblock %}
 
 {% block extra_js %}

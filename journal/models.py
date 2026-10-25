@@ -31,10 +31,22 @@ class FishingTrips(models.Model):
     )
     method_note = models.CharField(max_length=255, blank=True, null=True)
     bait_note = models.TextField(blank=True, null=True)
-    photo = models.ImageField(upload_to="trips/", blank=True, null=True)
 
     class Meta:
         db_table = 'fishing_trips'
+
+
+class FishingTripPhotos(models.Model):
+    photo_id = models.AutoField(primary_key=True)
+    trip = models.ForeignKey(
+        'FishingTrips',
+        models.CASCADE,
+        related_name='photos',
+    )
+    photo = models.ImageField(upload_to="trips/")
+
+    class Meta:
+        db_table = "fishing_trip_photos"
 
 
 class Catches(models.Model):
@@ -80,8 +92,29 @@ class Tips(models.Model):
         blank=True,
         null=True
     )
+    fishes = models.ManyToManyField(
+        'catalog.FishSpecies',
+        related_name='multi_tips',
+        blank=True,
+    )
+    applies_to_all_fish = models.BooleanField(default=False)
     content = models.TextField()
     created_at = models.DateTimeField(blank=True, null=True)
+    photo = models.ImageField(upload_to="tips/", blank=True, null=True)
 
     class Meta:
         db_table = 'tips'
+
+
+class TipLike(models.Model):
+    id = models.AutoField(primary_key=True)
+    tip = models.ForeignKey(Tips, on_delete=models.CASCADE, related_name="likes")
+    user = models.ForeignKey('accounts.Users', on_delete=models.CASCADE, related_name="tip_likes")
+    is_like = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = "tip_likes"
+        constraints = [
+            models.UniqueConstraint(fields=("tip", "user"), name="unique_tip_like_per_user"),
+        ]

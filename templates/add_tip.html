@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Додати пораду — FishWise{% endblock %}
+{% block title %}{% if tip %}Редагувати пораду{% else %}Додати пораду{% endif %} — FishWise{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/auth.css' %}?v={% now 'U' %}">
@@ -9,57 +9,99 @@
 {% endblock %}
 
 {% block content %}
-<section class="auth-section">
-    <div class="auth-heading">
+<section class="tip-compose-page">
+    <header class="tip-compose-heading">
+        <span class="tip-compose-badge"><span aria-hidden="true"></span> Спільнота FishWise · Публікація поради</span>
         <h1>{% if tip %}Редагувати пораду{% else %}Додати власну пораду{% endif %}</h1>
-        <p>
-            {% if tip %}
-                Зміни назву або текст — ШІ перевірить пораду ще раз
-            {% else %}
-                Поділись досвідом з іншими рибалками
-            {% endif %}
-        </p>
-    </div>
+        <p>Поділись практичним досвідом, який допоможе іншим рибалкам на водоймі.</p>
+    </header>
 
-    <div class="auth-card">
-        {% if not_allowed %}
-            <p class="level-description level-hint">
-                Додавати поради можуть лише досвідчені рибалки.
-            </p>
-        {% else %}
-            <form method="post" class="auth-form" novalidate>
+    {% if not_allowed %}
+        <div class="tip-compose-denied">Додавати поради можуть лише досвідчені рибалки.</div>
+    {% else %}
+        <div class="tip-compose-layout">
+            {% if tip.photo %}<form id="delete-tip-photo" class="tip-photo-delete-form" method="post" action="{% url 'delete_tip_photo' tip.tip_id %}" data-confirm="Видалити фото до цієї поради?">{% csrf_token %}</form>{% endif %}
+            <form method="post" class="tip-compose-form auth-form" enctype="multipart/form-data" novalidate>
                 {% csrf_token %}
+                <div class="tip-form-topline"><span class="tip-form-icon" aria-hidden="true">✎</span><div><strong>Нова порада</strong><small>Поля з позначкою * обов’язкові</small></div></div>
 
-                <div class="form-group">
-                    <label for="title">НАЗВА ПОРАДИ</label>
-                    <input type="text" id="title" name="title" maxlength="200"
-                           value="{{ title }}"
-                           class="{% if errors.title %}input-error{% endif %}">
-                    {% if errors.title %}
-                        <span class="field-error">{{ errors.title }}</span>
-                    {% endif %}
+                <div class="form-group tip-field">
+                    <label for="tip-title">НАЗВА ПОРАДИ <span>*</span></label>
+                    <input type="text" id="tip-title" name="title" maxlength="200" minlength="10" required
+                            placeholder="Коротка й зрозуміла назва поради"
+                           value="{{ title }}" class="{% if errors.title %}input-error{% endif %}">
+                    <small class="tip-field-hint">Коротко сформулюй головну думку поради.</small>
+                    {% if errors.title %}<span class="field-error" role="alert">{{ errors.title }}</span>{% endif %}
                 </div>
 
-                <div class="form-group">
-                    <label for="content">ТЕКСТ ПОРАДИ</label>
-                    <textarea id="content" name="content" rows="5"
+                <div class="form-group tip-field tip-fish-field">
+                    <div class="tip-fish-label"><label>ОБЕРИ РИБУ ДЛЯ ПОРАДИ <span>*</span></label><small><span id="tip-fish-count">{{ selected_fish_ids|length }}</span> обрано</small></div>
+                    <p class="tip-fish-hint">Познач одну або кілька риб, яких стосується порада.</p>
+                    <input type="hidden" id="tip-applies-all-fish" name="applies_to_all_fish" value="{% if applies_to_all_fish %}1{% else %}0{% endif %}">
+                    <button type="button" id="tip-select-all-fish" class="tip-select-all-fish" aria-pressed="{% if applies_to_all_fish %}true{% else %}false{% endif %}">Стосується всіх риб</button>
+                    <div class="tip-fish-picker" role="group" aria-label="Обери рибу для поради">
+                        {% for fish in fish_options %}
+                            <label class="tip-fish-chip">
+                                <input type="checkbox" name="fishes" value="{{ fish.fish_id }}" {% if fish.fish_id in selected_fish_ids %}checked{% endif %}>
+                                <span>{{ fish.name }}</span>
+                            </label>
+                        {% empty %}
+                            <p class="tip-fish-empty">Список риб поки порожній.</p>
+                        {% endfor %}
+                    </div>
+                    {% if errors.fishes %}<span class="field-error" role="alert">{{ errors.fishes }}</span>{% endif %}
+                </div>
+
+                <div class="form-group tip-field tip-content-field">
+                    <div class="tip-content-label"><label for="tip-content">ТЕКСТ ПОРАДИ <span>*</span></label><small><span id="tip-content-count">{{ content|length }}</span> / 2000</small></div>
+                    <div class="tip-editor-toolbar" role="toolbar" aria-label="Форматування тексту">
+                        <button type="button" data-insert="bullet" title="Додати пункт списку">• Список</button>
+                        <button type="button" data-insert="number" title="Додати нумерований пункт">1. Нумерація</button>
+                        <span>Пиши просто й конкретно — як пояснював би товаришу на березі.</span>
+                    </div>
+                    <textarea id="tip-content" name="content" rows="8" maxlength="2000" minlength="20" required
+                              placeholder="Опиши умови, снасті, приманку або прийом, який спрацював…"
                               class="{% if errors.content %}input-error{% endif %}">{{ content }}</textarea>
-                    {% if errors.content %}
-                        <span class="field-error">{{ errors.content }}</span>
-                    {% endif %}
+                    {% if errors.content %}<span class="field-error" role="alert">{{ errors.content }}</span>{% endif %}
                 </div>
 
-                <p class="level-hint">
-                    Пораду перевіряє ШІ — щоб у списку не було набору символів.
-                    Перевірка займає кілька секунд.
-                </p>
+                <section class="tip-photo-section" aria-labelledby="tip-photo-title">
+                    <div class="tip-photo-heading"><span class="tip-photo-icon" aria-hidden="true">▧</span><div><h2 id="tip-photo-title">Фото до поради <small>необов’язково</small></h2><p>Додай знімок улову, приманки чи місця лову.</p></div></div>
+                    {% if tip.photo %}<div class="tip-current-photo"><img src="{{ tip.photo.url }}" alt="Фото до поради"><button class="tip-photo-remove" type="submit" form="delete-tip-photo" formnovalidate title="Видалити фото" aria-label="Видалити фото до поради"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3m3 0-.8 13H6.8L6 7m4 4v5m4-5v5"/></svg> Видалити фото</button></div>{% endif %}
+                    <label class="tip-photo-drop" for="tip-photo">
+                        <input id="tip-photo" type="file" name="photo" accept="image/*">
+                        <span class="tip-photo-upload-icon" aria-hidden="true">↑</span>
+                        <strong>Перетягни фото сюди або <em>вибери файл</em></strong>
+                        <small>Одне зображення · JPG, PNG або WEBP</small>
+                    </label>
+                    <div id="tip-selected-photo" class="tip-selected-photo" hidden>
+                        <img id="tip-photo-preview" alt="Попередній перегляд фото" hidden>
+                        <span id="tip-photo-filename"></span>
+                        <button type="button" id="tip-photo-clear" class="tip-photo-remove" title="Прибрати вибране фото"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3m3 0-.8 13H6.8L6 7m4 4v5m4-5v5"/></svg> Видалити фото</button>
+                    </div>
+                    <span id="tip-photo-error" class="field-error" role="alert" {% if not errors.photo %}hidden{% endif %}>{{ errors.photo }}</span>
+                </section>
 
-                <button type="submit" class="auth-submit">
-                    {% if tip %}Зберегти зміни →{% else %}Опублікувати →{% endif %}
-                </button>
+                <div class="tip-form-footer">
+                    <p>Заповни форму та поділись досвідом зі спільнотою.</p>
+                    <button type="submit" class="auth-submit tip-publish-button">{% if tip %}Зберегти зміни{% else %}Опублікувати пораду{% endif %}<span aria-hidden="true">→</span></button>
+                </div>
             </form>
-        {% endif %}
-    </div>
+
+            <aside class="tip-compose-aside">
+                <section class="tip-aside-card">
+                    <h2><span aria-hidden="true">✓</span> Як написати корисну пораду?</h2>
+                    <ul>
+                        <li><span>1</span><p><strong>Будь конкретним.</strong> Опиши ситуацію, умови та що саме спрацювало.</p></li>
+                        <li><span>2</span><p><strong>Поділись деталями.</strong> Вкажи приманку, снасть або техніку, якщо це важливо.</p></li>
+                        <li><span>3</span><p><strong>Пиши своїми словами.</strong> Особистий досвід найкраще допомагає іншим.</p></li>
+                        <li><span>4</span><p><strong>Перевір текст.</strong> Після публікації пораду побачить спільнота FishWise.</p></li>
+                    </ul>
+                </section>
+                <div class="tip-aside-note"><span aria-hidden="true">✓</span><p><strong>Перевірка перед публікацією</strong><br>Порада проходить автоматичну перевірку, щоб залишатися корисною та безпечною для спільноти.</p></div>
+            </aside>
+        </div>
+    {% endif %}
 </section>
 {% endblock %}
 

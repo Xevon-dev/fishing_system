@@ -4,8 +4,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const waterId = form.querySelector("#trip-water-id");
   const waterError = form.querySelector("#trip-water-error");
-  const region = form.querySelector("#trip-region");
+  const waterSection = form.querySelector(".trip-water-section");
+  const regionPicker = form.querySelector("#trip-region-picker");
+  const regionInput = form.querySelector("#trip-region-input");
   const type = form.querySelector("#trip-type");
+  const typePicker = form.querySelector("#trip-type-picker");
+  const typeInput = form.querySelector("#trip-type-input");
 
   const showError = (field, message) => {
     if (!field) return;
@@ -23,13 +27,45 @@ document.addEventListener("DOMContentLoaded", () => {
     error.textContent = message;
   };
 
+  const clearWaterError = () => {
+    if (waterId?.value) {
+      waterSection?.classList.remove("has-error");
+      regionPicker?.classList.remove("has-error");
+      regionInput?.classList.remove("input-error");
+      regionInput?.removeAttribute("aria-invalid");
+      if (waterError) {
+        waterError.hidden = true;
+        waterError.textContent = "";
+      }
+    }
+  };
+  waterId?.addEventListener("change", clearWaterError);
+  typeInput?.addEventListener("change", () => {
+    if (!type?.value) return;
+    typePicker?.classList.remove("has-error");
+    typeInput.classList.remove("input-error");
+    typeInput.removeAttribute("aria-invalid");
+    typePicker?.querySelectorAll("[data-client-error]").forEach((error) => error.remove());
+  });
+
+  const setDateTimeLimits = () => {
+    const maxLocalDateTime = new Date(Date.now() - new Date().getTimezoneOffset() * 60_000)
+      .toISOString()
+      .slice(0, 16);
+    form.querySelectorAll('input[type="datetime-local"]').forEach((input) => {
+      input.max = maxLocalDateTime;
+    });
+  };
+  setDateTimeLimits();
+  form.addEventListener("focusin", (event) => {
+    if (event.target.matches('input[type="datetime-local"]')) setDateTimeLimits();
+  });
+
   form.addEventListener("submit", (event) => {
     form.querySelectorAll("[data-client-error]").forEach((error) => error.remove());
     form.querySelectorAll(".input-error").forEach((field) => field.classList.remove("input-error"));
-    if (waterError) {
-      waterError.hidden = true;
-      waterError.textContent = "";
-    }
+    clearWaterError();
+    setDateTimeLimits();
 
     let firstInvalid = null;
     let invalid = false;
@@ -40,15 +76,23 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     if (!waterId?.value) {
+      waterSection?.classList.add("has-error");
+      regionPicker?.classList.add("has-error");
+      regionInput?.classList.add("input-error");
+      regionInput?.setAttribute("aria-invalid", "true");
       if (waterError) {
-        waterError.textContent = "Обери водойму на карті перед збереженням.";
+        waterError.textContent = "Оберіть водойму на карті.";
         waterError.hidden = false;
       }
-      firstInvalid = form.querySelector("#trip-layer-btn") || region;
+      firstInvalid = regionInput || form.querySelector("#trip-layer-btn");
       invalid = true;
     }
 
-    if (!type?.value) invalidate(type, "Обери тип риболовлі.");
+    if (!type?.value) {
+      typePicker?.classList.add("has-error");
+      typeInput?.setAttribute("aria-invalid", "true");
+      invalidate(typeInput, "Оберіть тип риболовлі зі списку.");
+    }
 
     const technique = form.querySelector("#trip-method-note");
     const note = form.querySelector("#trip-note");
@@ -60,13 +104,13 @@ document.addEventListener("DOMContentLoaded", () => {
       photoError.hidden = true;
       photoError.textContent = "";
     }
-    if (photo?.files?.[0]) {
-      const file = photo.files[0];
+    for (const file of Array.from(photo?.files || [])) {
       if (file.type && !file.type.startsWith("image/")) {
-        photoError.textContent = "Вибери файл зображення.";
+        photoError.textContent = "Вибери файли зображень.";
         photoError.hidden = false;
         firstInvalid ||= photo;
         invalid = true;
+        break;
       }
     }
 
@@ -98,6 +142,8 @@ document.addEventListener("DOMContentLoaded", () => {
         invalidate(caughtAt, "Вкажи дату й час улову.");
       } else if (Number.isNaN(new Date(caughtAt.value).getTime())) {
         invalidate(caughtAt, "Перевір дату й час улову.");
+      } else if (new Date(caughtAt.value).getTime() > Date.now()) {
+        invalidate(caughtAt, "Не можна вказати час улову з майбутнього.");
       }
       if (weight?.value && (!Number.isFinite(Number(weight.value)) || Number(weight.value) <= 0)) {
         invalidate(weight, "Вага має бути більшою за 0 кг.");

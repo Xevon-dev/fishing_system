@@ -40,7 +40,7 @@ def parse_form(post, trip=None):
     if water_body_id:
         water_body = WaterBodies.objects.filter(pk=water_body_id).first()
     if not water_body:
-        errors["water_body_id"] = "Обери водойму на карті"
+        errors["water_body_id"] = "Оберіть водойму на карті."
 
     type_id = as_int(form["type"])
     if not type_id or not FishingTypes.objects.filter(pk=type_id).exists():

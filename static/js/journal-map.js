@@ -99,6 +99,7 @@ function initJournalMap() {
     const area = feature.getProperty("area_km2");
 
     input.value = id;
+    input.dispatchEvent(new Event("change", { bubbles: true }));
     label.textContent =
       "Обрано: " +
       name +

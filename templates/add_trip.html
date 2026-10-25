@@ -5,6 +5,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/auth.css' %}?v={% now 'U' %}">
+<link rel="stylesheet" href="{% static 'css/map.css' %}?v={% now 'U' %}">
 <link rel="stylesheet" href="{% static 'css/journal.css' %}?v={% now 'U' %}">
 {% endblock %}
 
@@ -17,6 +18,11 @@
     </div>
 
     <div class="trip-form-card">
+        {% if trip %}
+            {% for trip_photo in trip.photos.all %}
+                <form id="delete-trip-photo-{{ trip_photo.photo_id }}" class="trip-photo-delete-form" method="post" action="{% url 'delete_trip_photo' trip.trip_id trip_photo.photo_id %}" data-confirm="Видалити це фото сесії?">{% csrf_token %}</form>
+            {% endfor %}
+        {% endif %}
         {% if not google_maps_api_key %}
             <p class="auth-message error">
                 Ключ Google Maps не знайдено. Додай GOOGLE_MAPS_API_KEY у файл .env
@@ -25,21 +31,18 @@
 
         <form method="post" class="auth-form" id="trip-form" enctype="multipart/form-data" novalidate>
             {% csrf_token %}
-            <datalist id="fish-options">
-                {% for fish in fish_options %}<option value="{{ fish.name }}"></option>{% endfor %}
-            </datalist>
-
-            <section class="trip-water-section" aria-labelledby="trip-water-title">
-            <div class="trip-section-heading"><span class="trip-section-icon">⌖</span><div><h2 id="trip-water-title">ВОДОЙМА</h2><p>Обери водойму на карті або скористайся областю.</p></div></div>
+            <section class="trip-water-section{% if errors.water_body_id %} has-error{% endif %}" aria-labelledby="trip-water-title">
+            <div class="trip-section-heading"><span class="trip-section-icon">⌖</span><div><h2 id="trip-water-title">ВОДОЙМА</h2><p>Оберіть водойму на карті або спочатку завантажте водойми області.</p></div></div>
             <div class="form-group">
 
                 <div class="trip-map-controls">
-                    <select id="trip-region" aria-label="Область">
-                        <option value="">— обери область —</option>
-                        {% for region in regions %}
-                            <option value="{{ region.region_slug }}">{{ region.region }}</option>
-                        {% endfor %}
-                    </select>
+                    <div class="map-select trip-map-select{% if errors.water_body_id %} has-error{% endif %}" id="trip-region-picker">
+                        <svg class="map-select__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 21s-6.2-5.7-6.2-10.3A6.2 6.2 0 0 1 12 4.5a6.2 6.2 0 0 1 6.2 6.2C18.2 15.3 12 21 12 21Z"/><circle cx="12" cy="10.5" r="2.3"/></svg>
+                        <input type="text" id="trip-region-input" class="map-select__input" placeholder="— оберіть область —" autocomplete="off" spellcheck="false" role="combobox" aria-label="Область" aria-autocomplete="list" aria-expanded="false" aria-controls="trip-region-list" {% if errors.water_body_id %}aria-invalid="true"{% endif %}>
+                        <button type="button" class="map-select__toggle" id="trip-region-toggle" aria-label="Показати список областей"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 9.5 6 6 6-6"/></svg></button>
+                        <select id="trip-region" class="map-select__native" aria-label="Область" tabindex="-1"><option value="">— оберіть область —</option>{% for region in regions %}<option value="{{ region.region_slug }}">{{ region.region }}</option>{% endfor %}</select>
+                        <ul class="map-select__list" id="trip-region-list" role="listbox" hidden></ul>
+                    </div>
                     <button
                         id="trip-layer-btn"
                         class="btn btn-primary"
@@ -51,7 +54,7 @@
                 </div>
 
                 <p id="trip-layer-status" class="form-hint">
-                    Обери область, натисни «Показати водойми» і клікни по водоймі.
+                    Оберіть область, натисніть «Показати водойми» та клацніть потрібну водойму на карті.
                 </p>
 
                 <div id="trip-map"
@@ -82,8 +85,8 @@
                     </button>
                 </p>
 
-                {% if errors.water_body_id %}
-                    <span id="trip-water-error" class="field-error">{{ errors.water_body_id }}</span>
+                    {% if errors.water_body_id %}
+                    <span id="trip-water-error" class="field-error" role="alert">{{ errors.water_body_id }}</span>
                 {% else %}
                     <span id="trip-water-error" class="field-error" hidden></span>
                 {% endif %}
@@ -92,29 +95,25 @@
             </section>
 
             <div class="form-row trip-technique-row">
-                <div class="trip-technique-heading"><span class="trip-section-icon">♧</span><div><h2>ТИП ТА ТЕХНІКА ЛОВУ</h2><p>Вкажи, як проходила сесія.</p></div></div>
+                <div class="trip-technique-heading"><span class="trip-section-icon">♧</span><div><h2>ТИП ТА ТЕХНІКА ЛОВУ</h2><p>Тип риболовлі обов’язковий, техніку можна не вказувати.</p></div></div>
                 <div class="form-group">
-                    <label for="trip-type">ТИП РИБОЛОВЛІ</label>
-                    <select id="trip-type" name="type" required
-                            class="{% if errors.type %}input-error{% endif %}">
-                        <option value="">— обери тип —</option>
-                        {% for type in types %}
-                            <option value="{{ type.type_id }}"
-                                    {% if form.type == type.type_id|stringformat:"s" %}selected{% endif %}>
-                                {{ type.name }}
-                            </option>
-                        {% endfor %}
-                    </select>
+                    <label for="trip-type-input">ТИП РИБОЛОВЛІ</label>
+                    <div class="map-select trip-map-select{% if errors.type %} has-error{% endif %}" id="trip-type-picker">
+                        <svg class="map-select__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 8.5c2.1-2.3 6.9-2.3 9 0-2.1 2.3-6.9 2.3-9 0Z"/><path d="M14 8.5h4.8l2.2 2v3.8h-2"/><circle cx="8" cy="14.5" r="2"/><circle cx="17" cy="14.5" r="2"/><path d="M10 14.5h5"/></svg>
+                        <input type="text" id="trip-type-input" class="map-select__input" placeholder="— оберіть тип риболовлі —" autocomplete="off" spellcheck="false" role="combobox" aria-label="Тип риболовлі" aria-autocomplete="list" aria-expanded="false" aria-controls="trip-type-list" {% if errors.type %}aria-invalid="true"{% endif %}>
+                        <button type="button" class="map-select__toggle" id="trip-type-toggle" aria-label="Показати типи риболовлі"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 9.5 6 6 6-6"/></svg></button>
+                        <select id="trip-type" name="type" class="map-select__native" tabindex="-1" required><option value="">— оберіть тип риболовлі —</option>{% for type in types %}<option value="{{ type.type_id }}" {% if form.type == type.type_id|stringformat:"s" %}selected{% endif %}>{{ type.name }}</option>{% endfor %}</select>
+                        <ul class="map-select__list" id="trip-type-list" role="listbox" hidden></ul>
+                    </div>
                     {% if errors.type %}
                         <span class="field-error">{{ errors.type }}</span>
                     {% endif %}
                 </div>
 
                 <div class="form-group">
-                    <label for="trip-method-note">ТЕХНІКА ЛОВУ (введи вручну)</label>
+                    <label for="trip-method-note">ТЕХНІКА ЛОВУ (необов’язково)</label>
                     <input type="text" id="trip-method-note" name="method_note"
-                           maxlength="255" value="{{ form.method_note }}"
-                           placeholder="Наприклад: спінінгова ловля з човна">
+                           maxlength="255" value="{{ form.method_note }}">
                     {% if errors.method_note %}<span class="field-error">{{ errors.method_note }}</span>{% endif %}
                 </div>
             </div>
@@ -128,7 +127,7 @@
                     {% for catch_form in catches %}{% include 'catch_form.html' %}{% endfor %}
                 </div>
                 <template id="catch-template">{% include 'catch_form.html' with catch_form=catches.empty_form %}</template>
-                <button type="button" class="btn btn-outline" id="add-catch">+ Додати ще рибу</button>
+                <button type="button" class="btn btn-outline" id="add-catch"><span aria-hidden="true">＋</span> Додати улов</button>
             </section>
             <section class="trip-notes-section" aria-label="Нотатки до сесії">
             <div class="trip-section-heading"><span class="trip-section-icon">✎</span><div><h2>НОТАТКИ ДО СЕСІЇ</h2><p>Збережи деталі, які допоможуть наступного разу.</p></div></div>
@@ -142,21 +141,23 @@
             </div>
 
             <p class="form-hint">
-                Опиши умови риболовлі та спостереження. Приманку для кожного улову вкажи в його картці.
+                Опиши умови риболовлі та спостереження. Приманку в картці улову можна вказати за бажанням.
             </p>
             </section>
 
             <section class="trip-photo-section" aria-labelledby="trip-photo-title">
-                <div class="trip-section-heading"><span class="trip-section-icon">▧</span><div><h2 id="trip-photo-title">Фото сесії</h2><p>Додай знімок улову, водойми або свого рибальського дня.</p></div></div>
-                {% if trip.photo %}<div class="trip-current-photo"><img src="{{ trip.photo.url }}" alt="Фото риболовної сесії"><label class="trip-remove-photo"><input type="checkbox" name="remove_photo" value="1"><span aria-hidden="true">×</span> Видалити фото</label></div>{% endif %}
-                <label class="trip-photo-upload" for="trip-photo">
-                    <input type="file" id="trip-photo" name="photo" accept="image/*">
-                    <img id="trip-photo-preview" class="trip-photo-preview" alt="Попередній перегляд фото" hidden>
-                    <span class="trip-upload-icon">＋</span>
-                    <strong>Перетягни фото сюди або вибери файл</strong>
-                    <small>Файл зображення · без обмеження за розміром</small>
-                    <span class="trip-photo-filename" id="trip-photo-filename">Файл не вибрано</span>
-                </label>
+                <div class="trip-section-heading"><span class="trip-section-icon">▧</span><div><h2 id="trip-photo-title">Додай фото з риболовлі</h2></div></div>
+                {% if trip.photos.all %}<div class="trip-current-photos">{% for trip_photo in trip.photos.all %}<div class="trip-current-photo-item"><img src="{{ trip_photo.photo.url }}" alt="Фото риболовної сесії"><button class="trip-remove-photo" type="submit" form="delete-trip-photo-{{ trip_photo.photo_id }}" formnovalidate title="Видалити це фото" aria-label="Видалити фото сесії"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3m3 0-.8 13H6.8L6 7m4 4v5m4-5v5"/></svg>Видалити</button></div>{% endfor %}</div>{% endif %}
+                <div class="trip-photo-upload-control">
+                    <label class="trip-photo-upload" for="trip-photo">
+                        <input type="file" id="trip-photo" name="photos" accept="image/*" multiple>
+                        <span class="trip-upload-icon">＋</span>
+                        <strong>Додай фото з риболовлі</strong>
+                        <small>Обери одне або кілька фото, або перетягни їх сюди</small>
+                        <span class="trip-photo-filename" id="trip-photo-filename">Файл не вибрано</span>
+                    </label>
+                    <div id="trip-photo-previews" class="trip-photo-previews" aria-live="polite"></div>
+                </div>
                 <span id="trip-photo-error" class="field-error" role="alert" {% if not photo_error %}hidden{% endif %}>{{ photo_error }}</span>
             </section>
 
@@ -175,17 +176,72 @@
     const input = document.getElementById('trip-photo');
     const label = document.querySelector('.trip-photo-upload');
     const filename = document.getElementById('trip-photo-filename');
-    const preview = document.getElementById('trip-photo-preview');
+    const previews = document.getElementById('trip-photo-previews');
+    let previewUrls = [];
+    let pendingPhotos = [];
     if (!input || !label || !filename) return;
-    input.addEventListener('change', () => {
-        filename.textContent = input.files.length ? input.files[0].name : 'Файл не вибрано';
-        if (preview && input.files.length && input.files[0].type.startsWith('image/')) {
-            preview.src = URL.createObjectURL(input.files[0]);
-            preview.hidden = false;
-        } else if (preview) {
-            preview.hidden = true;
-            preview.removeAttribute('src');
+    const syncPendingPhotos = () => {
+        const transfer = new DataTransfer();
+        pendingPhotos.forEach(file => transfer.items.add(file));
+        input.files = transfer.files;
+    };
+    const sameFile = (first, second) => first.name === second.name
+        && first.size === second.size
+        && first.lastModified === second.lastModified;
+    const renderPreviews = () => {
+        previewUrls.forEach(url => URL.revokeObjectURL(url));
+        previewUrls = [];
+        previews?.replaceChildren();
+        filename.textContent = input.files.length === 0
+            ? 'Файл не вибрано'
+            : input.files.length === 1
+                ? input.files[0].name
+                : `Вибрано фото: ${input.files.length}`;
+        if (previews) {
+            Array.from(input.files).forEach((file, fileIndex) => {
+                const card = document.createElement('div');
+                card.className = 'trip-photo-preview-item';
+                if (file.type.startsWith('image/')) {
+                    const url = URL.createObjectURL(file);
+                    previewUrls.push(url);
+                    const image = document.createElement('img');
+                    image.src = url;
+                    image.alt = `Попередній перегляд: ${file.name}`;
+                    card.append(image);
+                }
+                const fileName = document.createElement('span');
+                fileName.className = 'trip-photo-preview-name';
+                fileName.textContent = file.name;
+                card.append(fileName);
+
+                const removeButton = document.createElement('button');
+                removeButton.type = 'button';
+                removeButton.className = 'trip-photo-preview-remove';
+                removeButton.setAttribute('aria-label', `Видалити фото ${file.name}`);
+                removeButton.title = 'Видалити це фото';
+                removeButton.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3m3 0-.8 13H6.8L6 7m4 4v5m4-5v5"/></svg>';
+                removeButton.addEventListener('click', () => {
+                    pendingPhotos = pendingPhotos.filter((selectedFile, index) => index !== fileIndex);
+                    syncPendingPhotos();
+                    renderPreviews();
+                });
+                card.append(removeButton);
+                previews.append(card);
+            });
         }
+    };
+    input.addEventListener('click', () => {
+        pendingPhotos = Array.from(input.files);
+    });
+    input.addEventListener('change', () => {
+        const newlySelected = Array.from(input.files);
+        newlySelected.forEach(file => {
+            if (!pendingPhotos.some(selectedFile => sameFile(selectedFile, file))) {
+                pendingPhotos.push(file);
+            }
+        });
+        syncPendingPhotos();
+        renderPreviews();
     });
     ['dragenter', 'dragover'].forEach(eventName => label.addEventListener(eventName, event => {
         event.preventDefault(); label.classList.add('is-dragging');
@@ -195,14 +251,20 @@
     }));
     label.addEventListener('drop', event => {
         if (event.dataTransfer.files.length) {
-            input.files = event.dataTransfer.files;
-            input.dispatchEvent(new Event('change', { bubbles: true }));
+            Array.from(event.dataTransfer.files).forEach(file => {
+                if (!pendingPhotos.some(selectedFile => sameFile(selectedFile, file))) {
+                    pendingPhotos.push(file);
+                }
+            });
+            syncPendingPhotos();
+            renderPreviews();
         }
     });
 })();
 </script>
 <script src="{% static 'js/journal-catches.js' %}?v={% now 'U' %}"></script>
 <script src="{% static 'js/journal-validation.js' %}?v={% now 'U' %}"></script>
+<script src="{% static 'js/region-picker.js' %}?v={% now 'U' %}"></script>
 {% if google_maps_api_key %}
 <script src="{% static 'js/map-core.js' %}?v={% now 'U' %}"></script>
 <script src="{% static 'js/map-water.js' %}?v={% now 'U' %}"></script>

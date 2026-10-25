@@ -14,7 +14,7 @@
 
 <header class="header">
     <div class="container navbar">
-        <a class="logo" href="{% if current_user %}{% url 'profile' %}{% else %}{% url 'home' %}{% endif %}">
+        <a class="logo" href="{% url 'home' %}">
             <img class="logo-icon" src="{% static 'images/icons/fish.png' %}" alt="">
             <span class="logo-text">Fish<span>Wise</span></span>
         </a>
@@ -65,6 +65,25 @@
 <main>
     {% block content %}{% endblock %}
 </main>
+
+<footer class="home-footer site-footer">
+    <div class="container home-footer__inner">
+        <a class="home-footer__brand" href="{% url 'home' %}"><span class="home-footer__dot" aria-hidden="true"></span>FishWise</a>
+        <p>© FishWise. Твій помічник у світі риболовлі.</p>
+    </div>
+</footer>
+
+<dialog class="site-confirm" id="site-confirm" aria-labelledby="site-confirm-title">
+    <div class="site-confirm__inner">
+        <span class="site-confirm__icon" aria-hidden="true">?</span>
+        <h2 id="site-confirm-title">Підтверди дію</h2>
+        <p class="site-confirm__message"></p>
+        <div class="site-confirm__actions">
+            <button type="button" class="site-confirm__cancel">Скасувати</button>
+            <button type="button" class="site-confirm__accept">Підтвердити</button>
+        </div>
+    </div>
+</dialog>
 
 {% block extra_js %}{% endblock %}
 <script src="{% static 'js/confirm.js' %}?v={% now 'U' %}"></script>

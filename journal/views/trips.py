@@ -7,7 +7,7 @@ from django.views.decorators.http import require_POST
 from catalog.models import FishSpecies, FishingTypes, WaterBodies
 from catalog.regions import region_choices
 from ..common import as_int, current_user
-from ..models import Catches, FishingTrips
+from ..models import Catches, FishingTripPhotos, FishingTrips
 from .trip_form import form_defaults, parse_form
 from ..catch_forms import CatchInlineFormSet
 from accounts.image_uploads import image_upload_error
@@ -22,7 +22,7 @@ def journal_view(request):
         FishingTrips.objects
         .filter(user_id=user.user_id)
         .select_related("water_body", "type", "method")
-        .prefetch_related("catches_set__fish", "catches_set__tackle")
+        .prefetch_related("catches_set__fish", "catches_set__tackle", "photos")
         .order_by("-created_at")
     )
     trip_count = catch_count = water_count = 0
@@ -57,8 +57,8 @@ def trip_form_view(request, trip=None):
             setattr(instance, field, value)
         catches = CatchInlineFormSet(request.POST, request.FILES, instance=instance, prefix="catches")
         catches_valid = catches.is_valid()
-        photo = request.FILES.get("photo")
-        photo_error = image_upload_error(photo)
+        uploaded_photos = request.FILES.getlist("photos")
+        photo_error = next((error for error in (image_upload_error(photo) for photo in uploaded_photos) if error), "")
 
         if not errors and catches_valid and not photo_error:
             with transaction.atomic():
@@ -68,13 +68,9 @@ def trip_form_view(request, trip=None):
                     # Legacy start_time is retained for old database compatibility,
                     # but it is no longer a user-entered session time.
                     instance.start_time = timezone.now()
-                if photo:
-                    if instance.photo:
-                        instance.photo.delete(save=False)
-                    instance.photo = photo
-                elif request.POST.get("remove_photo") and instance.photo:
-                    instance.photo.delete(save=False)
                 instance.save()
+                for uploaded_photo in uploaded_photos:
+                    FishingTripPhotos.objects.create(trip=instance, photo=uploaded_photo)
                 catches.save()
             return redirect("journal")
 
@@ -127,7 +123,30 @@ def delete_trip_view(request, trip_id):
 
     trip = FishingTrips.objects.filter(pk=trip_id, user_id=user.user_id).first()
     if trip:
+        for trip_photo in trip.photos.all():
+            trip_photo.photo.delete(save=False)
         Catches.objects.filter(trip_id=trip.trip_id).delete()
         trip.delete()
 
     return redirect("journal")
+
+
+@require_POST
+def delete_trip_photo_view(request, trip_id, photo_id):
+    user = current_user(request)
+    if not user:
+        return redirect("login")
+
+    trip = FishingTrips.objects.filter(pk=trip_id, user_id=user.user_id).first()
+    if not trip:
+        return redirect("journal")
+
+    trip_photo = FishingTripPhotos.objects.filter(
+        pk=photo_id,
+        trip_id=trip.trip_id,
+    ).first()
+    if trip_photo:
+        trip_photo.photo.delete(save=False)
+        trip_photo.delete()
+
+    return redirect("edit_trip", trip_id=trip.trip_id)

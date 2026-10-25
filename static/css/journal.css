@@ -224,7 +224,18 @@
 .journal-trips { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 16px; }
 .journal-trips .trip-card { min-width: 0; margin: 0; padding: 19px; border: 1px solid #eeedf3; border-radius: 16px; background: #fff; box-shadow: 0 4px 15px rgb(39 31 67 / 4%); }
 .journal-trips .trip-card--with-photo { overflow: hidden; padding: 0; }
-.trip-session-photo { display: block; width: 100%; max-width: none; height: 220px; margin: 0; border-radius: 16px 16px 0 0; object-fit: cover; }
+.journal-trips .trip-card--no-photo { overflow: hidden; padding: 0; }
+.trip-photo-placeholder { display: flex; height: 220px; flex-direction: column; align-items: center; justify-content: center; gap: 9px; border-bottom: 1px solid #e3eee7; background: radial-gradient(ellipse at 50% 0%, rgb(255 255 255 / 82%), transparent 65%), linear-gradient(135deg, #e9f8ef, #eef4ff); color: #24634b; text-decoration: none; transition: background .2s, color .2s; }
+.trip-photo-placeholder:hover { background: radial-gradient(ellipse at 50% 0%, #fff, transparent 70%), linear-gradient(135deg, #def4e6, #e5eeff); color: #0b7953; }
+.trip-photo-placeholder-icon { display: grid; width: 43px; height: 43px; place-items: center; border: 1px dashed #84c6a0; border-radius: 14px; background: rgb(255 255 255 / 75%); color: #17835c; font-size: 25px; }
+.trip-photo-placeholder strong { font-size: 14px; }
+.trip-photo-placeholder small { color: #82938a; font-size: 11px; }
+.trip-session-gallery { display: flex; flex-direction: column; gap: 7px; overflow: hidden; }
+.trip-session-cover { display: block; width: 100%; max-width: none; height: 220px; margin: 0; border-radius: 16px 16px 0 0; background: linear-gradient(135deg, #eaf7ef, #edf4ff); object-fit: cover; }
+.trip-session-thumbs { display: flex; gap: 7px; overflow-x: auto; padding: 0 12px 8px; scrollbar-color: #b8d8c5 transparent; scrollbar-width: thin; }
+.trip-session-thumb { flex: 0 0 92px; width: 92px; height: 62px; overflow: hidden; padding: 0; border: 2px solid transparent; border-radius: 9px; background: #fff; cursor: pointer; transition: border-color .16s, transform .16s; }
+.trip-session-thumb:hover { transform: translateY(-1px); border-color: #58ad81; }
+.trip-session-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .trip-card-body { padding: 19px; }
 .trip-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
 .journal-trips .trip-card h3 { color: #183d33; font-size: 16px; }
@@ -259,7 +270,9 @@
   .journal-stat { padding: 12px; }
   .journal-stat strong { font-size: 22px; }
   .journal-trips .trip-card { padding: 15px; }
-  .trip-session-photo { height: 200px; }
+  .trip-session-cover { height: 200px; }
+  .trip-session-thumb { flex-basis: 78px; width: 78px; height: 56px; }
+  .trip-photo-placeholder { height: 200px; }
   .trip-card-body { padding: 15px; }
 }
 
@@ -309,7 +322,23 @@
 .trip-photo-upload strong { font-size: 12px; }
 .trip-photo-upload small, .trip-photo-filename { color: #888b94; font-size: 10px; }
 .trip-photo-filename { color: #14805e; font-weight: 700; }
-.trip-photo-preview:not([hidden]) { display: block; width: min(100%, 390px); max-height: 190px; margin: 0 auto 8px; border-radius: 10px; object-fit: contain; }
+.trip-current-photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); gap: 12px; margin: 0 0 14px; }
+.trip-current-photo-item { overflow: hidden; border: 1px solid #e5ece8; border-radius: 11px; background: #fff; }
+.trip-current-photo-item > img { display: block; width: 100%; height: 105px; object-fit: cover; }
+.trip-photo-delete-form { display: none; }
+.trip-current-photo-item .trip-remove-photo { display: flex; width: 100%; align-items: center; justify-content: center; gap: 7px; margin: 0; padding: 8px 10px; border: 0; border-radius: 0; background: #fffafa; color: #b83e3e; font: inherit; font-size: 11px; font-weight: 700; cursor: pointer; }
+.trip-current-photo-item .trip-remove-photo:hover { background: linear-gradient(120deg, #fff0f0, #fff8f8); }
+.trip-current-photo-item .trip-remove-photo svg { width: 14px; height: 14px; }
+.trip-photo-previews { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; width: 100%; }
+.trip-photo-previews:empty { display: none; }
+.trip-photo-upload-control { display: grid; gap: 11px; }
+.trip-photo-previews:not(:empty) { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); justify-content: stretch; }
+.trip-photo-preview-item { position: relative; overflow: hidden; min-width: 0; border: 1px solid #e0ebe4; border-radius: 10px; background: #fff; }
+.trip-photo-preview-item img { display: block; width: 100%; height: 92px; object-fit: cover; }
+.trip-photo-preview-name { display: block; overflow: hidden; padding: 7px 32px 7px 9px; color: #607267; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.trip-photo-preview-remove { position: absolute; top: 6px; right: 6px; display: grid; width: 27px; height: 27px; place-items: center; border: 1px solid #f1d4d4; border-radius: 8px; background: #fff; color: #b83e3e; cursor: pointer; box-shadow: 0 2px 6px rgb(26 54 40 / 10%); }
+.trip-photo-preview-remove:hover { border-color: #d58a8a; background: #fff4f4; }
+.trip-photo-preview-remove svg { width: 15px; height: 15px; }
 .trip-current-photo { display: flex; align-items: center; gap: 14px; margin: 0 0 13px; }
 .trip-current-photo img { width: 110px; height: 76px; border-radius: 9px; object-fit: cover; }
 .trip-remove-photo { display: inline-flex; align-items: center; gap: 6px; padding: 7px 10px; border: 1px solid #f0d7d7; border-radius: 9px; background: #fffafa; color: #a64141; font-size: 11px; font-weight: 700; cursor: pointer; }
@@ -332,4 +361,136 @@
 @media (max-width: 520px) {
   .trip-form-card .catch-fields { grid-template-columns: 1fr; }
   .trip-form-card .catch-field--fish_name, .trip-form-card .catch-field--custom_tackle, .trip-form-card .catch-field--bait_note { grid-column: auto; }
+}
+
+/* Unified gradient treatment for session pages and controls */
+.trip-form-page {
+  padding-top: 45px;
+  background: radial-gradient(ellipse at 50% 0%, #e6f7ed 0, transparent 34%), linear-gradient(180deg, #f5faf7 0%, #f7f8fc 60%, #f8f7fc 100%);
+}
+.trip-form-heading { margin-bottom: 29px; }
+.trip-form-heading h1 {
+  font-size: clamp(38px, 4.2vw, 48px);
+  background: linear-gradient(100deg, #103e31, #14805a 72%, #229a78);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.trip-form-heading p { font-size: 15px; }
+.trip-back-link { padding: 7px 12px; border: 1px solid #d7eadf; border-radius: 999px; background: linear-gradient(120deg, #f1fcf5, #f0f6ff); }
+.trip-form-card .auth-form { gap: 22px; }
+.trip-water-section, .trip-form-card .trip-technique-row, .trip-form-card .trip-catches, .trip-notes-section, .trip-photo-section {
+  border-color: #e1eee6;
+  background: linear-gradient(145deg, #fff 0%, #fcfefd 76%, #f8fbff 100%);
+  box-shadow: 0 12px 28px rgb(21 74 49 / 6%);
+}
+.trip-section-icon { background: linear-gradient(140deg, #e0f7e8, #e5f0ff); color: #087d56; }
+.trip-form-card .trip-technique-row { gap: 14px 18px; }
+.trip-form-card .trip-catches { background: linear-gradient(145deg, #fff 0%, #f8fcf9 100%); }
+.trip-form-card .catch-editor { border-color: #e3eee7; background: linear-gradient(140deg, #fff, #fbfdfc); }
+.trip-form-card .catch-fish-icon { background: linear-gradient(145deg, #0d8b64, #28ad80); }
+.trip-form-card .trip-tag { border: 1px solid #d9ece1; background: linear-gradient(120deg, #edf9f1, #f1f6ff); color: #187052; }
+.trip-form-card .trip-map-controls .btn {
+  border: 0;
+  background: linear-gradient(115deg, #08724f, #11966b 70%, #24a980);
+  box-shadow: 0 6px 14px rgb(18 132 90 / 16%);
+}
+.trip-form-card .trip-map-controls .btn:hover { background: linear-gradient(115deg, #075d42, #0c805a 70%, #198e69); }
+.trip-form-card #trip-map { box-shadow: inset 0 0 0 1px rgb(23 111 76 / 5%), 0 5px 14px rgb(21 74 49 / 7%); }
+.trip-form-card #add-catch { border-color: #bde5cf; background: linear-gradient(120deg, #f0fbf4, #eff6ff); color: #11734e; }
+.trip-form-card #add-catch:hover { border-color: #77c59a; background: linear-gradient(120deg, #e5f8ec, #eaf2ff); }
+.trip-photo-upload { border-color: #a2d9b8; background: linear-gradient(135deg, #fbfffc, #f2f8ff); }
+.trip-photo-upload:hover, .trip-photo-upload.is-dragging { border-color: #15966a; background: linear-gradient(135deg, #effbf3, #edf5ff); }
+.trip-upload-icon { background: linear-gradient(140deg, #ddf6e6, #e6f0ff); color: #087c55; }
+.trip-save-button { border: 0; background: linear-gradient(115deg, #076e4b, #12956a 68%, #22a77d); box-shadow: 0 8px 18px rgb(15 128 84 / 19%); }
+.trip-save-button:hover { background: linear-gradient(115deg, #075b40, #0b805a 68%, #158f68); box-shadow: 0 11px 23px rgb(15 128 84 / 25%); }
+.journal-page { background: radial-gradient(ellipse at 50% 0%, #e8f8ef 0, transparent 28%), linear-gradient(180deg, #f5faf7, #f8f7fc 48%); }
+.journal-stat { border-color: #e5eee8; background: linear-gradient(145deg, #fff, #fbfdfc); }
+.journal-stat-icon { background: linear-gradient(140deg, #e0f7e8, #e5f0ff); }
+.journal-add { border-color: transparent; background: linear-gradient(115deg, #0b9469, #20b17c); box-shadow: 0 6px 16px rgb(16 153 105 / 20%); }
+.journal-add:hover { background: linear-gradient(115deg, #087a56, #169865); }
+.journal-trips .trip-card { border-color: #e5eee8; }
+.journal-trips .catch-row { background: linear-gradient(110deg, #effaf3, #f2f8ff); }
+
+@media (max-width: 650px) {
+  .trip-form-page { padding-top: 32px; }
+  .trip-form-heading h1 { font-size: 36px; }
+  .trip-form-heading p { font-size: 13px; }
+}
+
+/* Water, catch and datetime validation states */
+.trip-form-card select {
+  appearance: none;
+  padding-right: 42px !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23167858' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 10 5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+  cursor: pointer;
+}
+.trip-form-card select option { padding: 10px; background: #fff; color: #25453a; }
+.trip-water-section.has-error { border-color: #dc6767; background: linear-gradient(145deg, #fff, #fffafa); box-shadow: 0 0 0 3px rgb(220 83 83 / 9%), 0 10px 26px rgb(21 74 49 / 5%); }
+.trip-water-section.has-error .trip-section-icon { background: linear-gradient(135deg, #fff0f0, #ffe7e7); color: #bd3d3d; }
+.trip-water-section.has-error #trip-map { border: 2px solid #dc6767; box-shadow: 0 0 0 3px rgb(220 83 83 / 8%); }
+.trip-water-section.has-error .trip-map-controls select { border-color: #dc6767; }
+.trip-water-section #trip-water-error { display: block; margin-top: 8px; font-size: 12px; }
+.trip-water-section #trip-water-error[hidden] { display: none; }
+.trip-form-card input[type="datetime-local"]::-webkit-calendar-picker-indicator { cursor: pointer; filter: invert(39%) sepia(42%) saturate(743%) hue-rotate(102deg); }
+.trip-form-card input[type="datetime-local"]:focus { border-color: #1c9c70; box-shadow: 0 0 0 3px rgb(28 156 112 / 12%); }
+.trip-form-card input[type="datetime-local"]:invalid { border-color: #dc6767; }
+.trip-form-card .catch-remove-button { display: inline-flex; align-items: center; gap: 7px; padding: 7px 10px; border: 1px solid #f1d8d8; border-radius: 9px; background: linear-gradient(120deg, #fff8f8, #fff); color: #b83e3e; }
+.trip-form-card .catch-remove-button:hover { border-color: #e4a7a7; background: linear-gradient(120deg, #fff0f0, #fff8f8); }
+.catch-remove-button svg { width: 15px; height: 15px; flex: 0 0 15px; }
+.trip-form-card .catch-field input.input-error,
+.trip-form-card .catch-field select.input-error { border-color: #d64f4f; background-color: #fffafa; }
+.trip-form-card .catch-field input.input-error:focus,
+.trip-form-card .catch-field select.input-error:focus { box-shadow: 0 0 0 3px rgb(214 79 79 / 11%); }
+.trip-form-card .trip-map-select { width: 100%; min-width: 0; min-height: 48px; flex: 0 1 auto; }
+.trip-form-card .trip-map-controls .trip-map-select { width: auto; flex: 1 1 280px; }
+.trip-form-card .trip-map-select .map-select__input {
+  min-height: 38px;
+  padding: 8px 2px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #174b39;
+  font-size: 14px;
+}
+.trip-form-card .trip-map-select .map-select__input:focus { border: 0; outline: none; box-shadow: none; }
+.trip-form-card .trip-map-select .map-select__native {
+  position: absolute;
+  width: 1px;
+  min-width: 0;
+  height: 1px;
+  flex: 0 0 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.trip-form-card .trip-map-select.has-error { border-color: #d64f4f; background: linear-gradient(135deg, #fffafa, #fff4f4); box-shadow: 0 0 0 3px rgb(214 79 79 / 10%); }
+.trip-form-card .trip-map-select.has-error .map-select__pin,
+.trip-form-card .trip-map-select.has-error .map-select__toggle { color: #bd3d3d; }
+.trip-form-card .trip-map-select .map-select__list { z-index: 100; }
+.trip-form-card .fish-autocomplete { width: 100%; min-width: 0; min-height: 48px; padding-right: 6px; }
+.trip-form-card .fish-autocomplete .map-select__input {
+  min-height: 38px;
+  padding: 8px 2px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #174b39;
+  font-size: 14px;
+}
+.trip-form-card .fish-autocomplete .map-select__input:focus { border: 0; outline: none; box-shadow: none; }
+.trip-form-card .fish-autocomplete .map-select__list { z-index: 150; }
+.trip-form-card .fish-autocomplete.is-open { border-color: #9fd9be; box-shadow: 0 0 0 3px rgb(23 166 115 / 12%); }
+.trip-form-card .fish-autocomplete .map-select__input.input-error { border: 0; background: transparent; }
+.trip-form-card .fish-autocomplete:has(.map-select__input.input-error) { border-color: #d64f4f; background: linear-gradient(135deg, #fffafa, #fff4f4); }
+.trip-water-section.has-error #trip-region-picker { border-color: #d64f4f; }
+@media (max-width: 650px) {
+  .trip-form-card .trip-map-controls .trip-map-select { flex-basis: 100%; }
 }

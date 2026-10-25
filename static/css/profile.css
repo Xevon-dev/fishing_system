@@ -96,6 +96,12 @@
 .profile-photo-label { display: block; margin-bottom: 9px; color: #28483c; font-size: 12px; font-weight: 800; }
 .profile-photo-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; }
 .profile-photo-controls input[type="file"] { min-width: 200px; max-width: 100%; color: #616b66; font-size: 11px; }
+.profile-photo-controls input[type="file"] { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.profile-photo-choose { display: inline-flex; min-height: 38px; align-items: center; gap: 8px; padding: 8px 14px; border: 1px solid #cfe5d8; border-radius: 11px; background: linear-gradient(135deg, #f3fcf6, #f1f7ff); color: #176d4d; font-size: 12px; font-weight: 800; cursor: pointer; transition: .18s ease; }
+.profile-photo-choose:hover { border-color: #7db99b; background: #eaf8ef; }
+.profile-photo-choose span { display: grid; width: 22px; height: 22px; place-items: center; border-radius: 7px; background: #e1f4e8; font-size: 16px; }
+.profile-photo-filename { min-width: 130px; color: #78877f; font-size: 11px; }
+.profile-photo-form > small { font-size: 11px; }
 .profile-photo-form > small { display: block; margin-top: 8px; color: #858b87; font-size: 10px; }
 .profile-photo-form .profile-btn { min-height: 35px; padding: 8px 12px; border: 1px solid #dfe9e4; border-radius: 9px; background: #fff; color: #237253; font: inherit; font-size: 11px; font-weight: 700; cursor: pointer; }
 .profile-photo-form .profile-photo-save { border-color: #12835f; background: #12835f; color: #fff; }

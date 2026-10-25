@@ -1,5 +1,6 @@
 from django import forms
 from django.forms import BaseInlineFormSet, inlineformset_factory
+from django.utils import timezone
 import re
 
 from catalog.models import FishSpecies
@@ -12,16 +13,18 @@ class CatchForm(forms.ModelForm):
         required=False,
         max_length=100,
         widget=forms.TextInput(attrs={
-            "list": "fish-options",
             "autocomplete": "off",
             "placeholder": "Введи назву або обери зі списку",
+            "role": "combobox",
+            "aria-autocomplete": "list",
+            "aria-expanded": "false",
         }),
     )
     custom_tackle = forms.CharField(
         label="Оснастка",
         required=False,
         max_length=200,
-        widget=forms.TextInput(attrs={"placeholder": "Наприклад: фідерний монтаж із годівницею"}),
+        widget=forms.TextInput(),
     )
     caught_at = forms.DateTimeField(
         label="Дата й час улову", required=False,
@@ -38,12 +41,12 @@ class CatchForm(forms.ModelForm):
         labels = {
             "weight_kg": "Вага, кг",
             "quantity": "Кількість, шт.",
-            "bait_note": "На що зловив рибу",
+            "bait_note": "На що зловив рибу (необов’язково)",
         }
         widgets = {
             "weight_kg": forms.NumberInput(attrs={"min": "0.01", "step": "0.01", "max": "500"}),
             "quantity": forms.NumberInput(attrs={"min": "1", "step": "1", "max": "10000"}),
-            "bait_note": forms.TextInput(attrs={"placeholder": "Наприклад: опариш, кукурудза, воблер"}),
+            "bait_note": forms.TextInput(),
         }
 
     def __init__(self, *args, **kwargs):
@@ -109,6 +112,12 @@ class CatchForm(forms.ModelForm):
         if len(bait) > 500:
             raise forms.ValidationError("Максимум 500 символів.")
         return bait
+
+    def clean_caught_at(self):
+        caught_at = self.cleaned_data["caught_at"]
+        if caught_at and caught_at > timezone.now():
+            raise forms.ValidationError("Не можна вказати час улову з майбутнього.")
+        return caught_at
 
 
 class CatchFormSet(BaseInlineFormSet):

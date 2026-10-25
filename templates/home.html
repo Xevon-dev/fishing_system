@@ -52,7 +52,7 @@
                         <strong>{{ water_count_text }} водойм</strong>
                         <small>Доступні на карті</small>
                     </span>
-                    <a class="home-visual__badge-link" href="{% url 'water_bodies' %}">На карті</a>
+                    <a class="home-visual__badge-link" href="{% if current_user %}{% url 'water_bodies' %}{% else %}{% url 'register' %}{% endif %}">На карті</a>
                 </div>
             </figure>
         </div>
@@ -113,7 +113,7 @@
                     <h2>Не знаєш свого рівня?</h2>
                     <p>Відповідай на короткі запитання й отримай добірку можливостей для свого досвіду.</p>
                     <div class="home-level-cta__actions">
-                        <a class="home-button home-button--level" href="{% url 'fishing_test' %}">Пройти тест <span aria-hidden="true">↗</span></a>
+                        <a class="home-button home-button--level" href="{% if current_user %}{% url 'fishing_test' %}{% else %}{% url 'register' %}{% endif %}">{% if current_user %}Пройти тест{% else %}Зареєструватися{% endif %} <span aria-hidden="true">↗</span></a>
                         <a class="home-level-cta__more" href="#features">Дізнатися більше <span aria-hidden="true">↗</span></a>
                     </div>
                 </div>
@@ -122,12 +122,6 @@
         </div>
     </section>
 
-    <footer class="home-footer">
-        <div class="container home-footer__inner">
-            <a class="home-footer__brand" href="{% url 'home' %}"><span class="home-footer__dot" aria-hidden="true"></span>FishWise</a>
-            <p>© FishWise. Твій помічник у світі риболовлі.</p>
-        </div>
-    </footer>
 </div>
 {% endblock %}
 

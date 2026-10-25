@@ -37,3 +37,11 @@ function initProfileEdit() {
 }
 
 initProfileEdit();
+
+const profilePhotoInput = document.querySelector("#profile-photo-input");
+const profilePhotoFilename = document.querySelector("#profile-photo-filename");
+profilePhotoInput?.addEventListener("change", () => {
+  if (profilePhotoFilename) {
+    profilePhotoFilename.textContent = profilePhotoInput.files?.[0]?.name || "Файл не вибрано";
+  }
+});

@@ -17,6 +17,14 @@
     </header>
 
     <div class="tips-list">
+        <form class="tips-sort" method="get">
+            <label for="tips-sort-select">Сортувати:</label>
+            <select id="tips-sort-select" name="sort" onchange="this.form.submit()">
+                <option value="newest" {% if sort == "newest" %}selected{% endif %}>Найновіші</option>
+                <option value="popular" {% if sort == "popular" %}selected{% endif %}>Найпопулярніші</option>
+                <option value="worst" {% if sort == "worst" %}selected{% endif %}>Найгірші оцінки</option>
+            </select>
+        </form>
         {% if tips %}<p class="tips-count">Знайдено: <strong>{{ tips|length }} порад</strong></p>{% endif %}
         {% if tips %}
             {% for tip in tips %}
@@ -27,10 +35,29 @@
                             <strong>{{ tip.author.username }}</strong>
                             <time>{% if tip.created_at %}{{ tip.created_at|date:"d.m.Y" }}{% else %}Дата не вказана{% endif %}</time>
                         </div>
-                        <span class="tip-badge">{% if tip.fish %}{{ tip.fish.name }}{% else %}Порада рибалки{% endif %}</span>
+                        <div class="tip-fish-tags">
+                            <span class="tip-fish-tags-label">Стосується:</span>
+                            {% if tip.applies_to_all_fish %}<span class="tip-badge">Усі риби</span>{% else %}{% for fish in tip.fishes.all %}<span class="tip-badge">{{ fish.name }}</span>{% empty %}{% if tip.fish %}<span class="tip-badge">{{ tip.fish.name }}</span>{% else %}<span class="tip-badge">Не вказано</span>{% endif %}{% endfor %}{% endif %}
+                        </div>
                     </div>
+                    {% if tip.photo %}<img class="tip-card-photo" src="{{ tip.photo.url }}" alt="Фото до поради: {{ tip.title }}" loading="lazy">{% endif %}
                     <h2>{{ tip.title|default:"Порада рибалки" }}</h2>
                     <div class="tip-content">{{ tip.content|linebreaks }}</div>
+                    <div class="tip-card-actions">
+                        {% if current_user %}
+                            <form method="post" action="{% url 'toggle_tip_like' tip.tip_id %}">
+                                {% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}"><input type="hidden" name="reaction" value="like">
+                                <button class="tip-like-button {% if tip.user_liked %}is-liked{% endif %}" type="submit" aria-pressed="{{ tip.user_liked|yesno:'true,false' }}"><span aria-hidden="true">♥</span> {{ tip.likes_count }}</button>
+                            </form>
+                            <form method="post" action="{% url 'toggle_tip_like' tip.tip_id %}">
+                                {% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}"><input type="hidden" name="reaction" value="dislike">
+                                <button class="tip-dislike-button {% if tip.user_disliked %}is-disliked{% endif %}" type="submit" aria-pressed="{{ tip.user_disliked|yesno:'true,false' }}"><span aria-hidden="true">♥</span> {{ tip.dislikes_count }}</button>
+                            </form>
+                        {% else %}
+                            <a class="tip-like-button" href="{% url 'login' %}">♥ {{ tip.likes_count }}</a>
+                            <a class="tip-dislike-button" href="{% url 'login' %}">♥ {{ tip.dislikes_count }}</a>
+                        {% endif %}
+                    </div>
                     {% if current_user and tip.author_id == current_user.user_id %}
                         <a class="tip-edit-link"
                            href="{% url 'edit_tip' tip.tip_id %}">✏️ Редагувати</a>

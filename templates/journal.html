@@ -29,8 +29,18 @@
         <div class="journal-trips">
         {% if trips %}
             {% for trip in trips %}
-                <div class="trip-card{% if trip.photo %} trip-card--with-photo{% endif %}">
-                    {% if trip.photo %}<img class="trip-session-photo" src="{{ trip.photo.url }}" alt="Фото сесії на водоймі {{ trip.water_body.name }}" loading="lazy">{% endif %}
+                <div class="trip-card{% if trip.photos.all %} trip-card--with-photo{% else %} trip-card--no-photo{% endif %}">
+                    {% if trip.photos.all %}<div class="trip-session-gallery">
+                        {% for trip_photo in trip.photos.all %}
+                            {% if forloop.first %}
+                                <img class="trip-session-cover" src="{{ trip_photo.photo.url }}" alt="Фото сесії на водоймі {{ trip.water_body.name }}" loading="lazy">
+                            {% else %}
+                                {% if forloop.counter == 2 %}<div class="trip-session-thumbs" aria-label="Інші фото сесії">{% endif %}
+                                <button class="trip-session-thumb" type="button" aria-label="Переглянути інше фото сесії"><img src="{{ trip_photo.photo.url }}" alt="Мініатюра фото сесії" loading="lazy"></button>
+                                {% if forloop.last %}</div>{% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>{% else %}<a class="trip-photo-placeholder" href="{% url 'edit_trip' trip.trip_id %}"><span class="trip-photo-placeholder-icon" aria-hidden="true">＋</span><strong>Додати зображення</strong><small>Додай фото з риболовлі до цієї сесії</small></a>{% endif %}
                     <div class="trip-card-body">
                     <div class="trip-card-top">
                         <div><h3>{{ trip.water_body.name }}</h3>
@@ -85,4 +95,21 @@
 </section>
 {% endblock %}
 
-{% block extra_js %}{% endblock %}
+{% block extra_js %}
+<script>
+document.querySelectorAll('.trip-session-gallery').forEach((gallery) => {
+    const cover = gallery.querySelector('.trip-session-cover');
+    if (!cover) return;
+    gallery.querySelectorAll('.trip-session-thumb img').forEach((thumbnail) => {
+        thumbnail.closest('button').addEventListener('click', () => {
+            const currentSrc = cover.src;
+            const currentAlt = cover.alt;
+            cover.src = thumbnail.src;
+            cover.alt = thumbnail.alt;
+            thumbnail.src = currentSrc;
+            thumbnail.alt = currentAlt;
+        });
+    });
+});
+</script>
+{% endblock %}
