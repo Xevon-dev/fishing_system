@@ -14,7 +14,7 @@
 2. Встанови потрібні пакети:
 
    ```powershell
-   python -m pip install Django==5.2.18 mysqlclient==2.3.0 Pillow==13.0.0 python-dotenv==1.2.4 requests==2.34.2
+   python -m pip install -r requirements.txt
    ```
 
 3. Створи базу даних MySQL 8.4.11 і файл `.env` у головній папці проєкту:
