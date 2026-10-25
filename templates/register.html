@@ -77,7 +77,7 @@
                         <div class="form-group">
                             <label for="password">ПАРОЛЬ</label>
                             <div class="auth-field auth-field--password">
-                                <input type="password" id="password" name="password"
+                            <input type="password" id="password" name="password1"
                                        autocomplete="new-password"
                                        class="{% if errors.password %}input-error{% endif %}">
                                 <button type="button" class="auth-eye" data-password-toggle="password" aria-label="Показати пароль">
@@ -104,7 +104,7 @@
                         <div class="form-group">
                             <label for="confirm_password">ПІДТВЕРДЖЕННЯ</label>
                             <div class="auth-field auth-field--password">
-                                <input type="password" id="confirm_password" name="confirm_password"
+                            <input type="password" id="confirm_password" name="password2"
                                        placeholder="Повторіть пароль" autocomplete="new-password"
                                        class="{% if errors.confirm_password %}input-error{% endif %}">
                                 <button type="button" class="auth-eye" data-password-toggle="confirm_password" aria-label="Показати пароль">

@@ -3,6 +3,7 @@ import re
 from django.contrib.auth.hashers import check_password
 from django.shortcuts import redirect, render
 from django.views.decorators.cache import never_cache
+from django.views.decorators.http import require_POST
 
 from ..models import Users
 from ..session import login_user, logout_user
@@ -44,6 +45,7 @@ def login_view(request):
     return render(request, "login.html", {"errors": errors, "login": login_value})
 
 
+@require_POST
 def logout_view(request):
     logout_user(request)
     return redirect("home")

@@ -336,7 +336,10 @@
                     {% endif %}
 
                     <div class="profile-upgrade__account">
-                        <a class="profile-upgrade__action" href="{% url 'logout' %}" data-confirm="Вийти з акаунту?">Вийти з акаунту</a>
+                        <form method="post" action="{% url 'logout' %}" data-confirm="Вийти з акаунту?">
+                            {% csrf_token %}
+                            <button type="submit" class="profile-upgrade__action">Вийти з акаунту</button>
+                        </form>
 
                         <form method="post" action="{% url 'delete_account' %}" data-confirm="Точно видалити акаунт? Це не можна скасувати!">
                             {% csrf_token %}
