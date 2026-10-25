@@ -176,7 +176,11 @@
 .tip-like-button { display: inline-flex; align-items: center; gap: 7px; min-height: 36px; padding: 7px 12px; border: 1px solid #e5e9ee; border-radius: 999px; background: #fff; color: #59646a; font: inherit; font-size: 12px; font-weight: 700; text-decoration: none; cursor: pointer; transition: .16s ease; }
 .tip-like-button:hover, .tip-like-button.is-liked { border-color: #f2cbd0; background: #fff4f5; color: #c7485a; }
 .tip-dislike-button { display: inline-flex; align-items: center; gap: 7px; min-height: 36px; padding: 7px 12px; border: 1px solid #e5e9ee; border-radius: 999px; background: #fff; color: #59646a; font: inherit; font-size: 12px; font-weight: 700; text-decoration: none; cursor: pointer; transition: .16s ease; }
-.tip-dislike-button span { display: inline-block; transform: rotate(180deg); }
+.tip-dislike-button svg { transform: rotate(180deg); }
+.tip-like-button svg, .tip-dislike-button svg { width: 17px; height: 17px; flex: 0 0 17px; fill: currentColor; }
+.tip-reaction-form { margin: 0; }
+.tip-reaction-form button:disabled { opacity: .65; cursor: wait; }
+.tip-reaction-error { flex-basis: 100%; margin: 0; color: #a64141; font-size: 12px; }
 .tip-dislike-button:hover, .tip-dislike-button.is-disliked { border-color: #d9dce8; background: #f2f3f8; color: #4f5874; }
 .tip-like-count { color: #858c91; font-size: 12px; }
 

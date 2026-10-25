@@ -1,39 +1,63 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Статистика — FishWise{% endblock %}
+{% block title %}Статистика риболовлі — FishWise{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/auth.css' %}?v={% now 'U' %}">
+<link rel="stylesheet" href="{% static 'css/stats.css' %}?v={% now 'U' %}">
 {% endblock %}
 
 {% block content %}
-<section class="auth-section">
-    <div class="auth-heading">
-        <h1>Статистика риболовлі</h1>
-        <p>Підсумки твоїх сесій та уловів</p>
-    </div>
+<section class="stats-page">
+    <div class="stats-shell">
+        <a class="stats-back" href="{% url 'profile' %}">← До профілю</a>
+        <header class="stats-hero">
+            <span class="stats-kicker"><i></i> Твій рибальський шлях</span>
+            <h1>Статистика риболовлі</h1>
+            <p>Підсумки твоїх виїздів, уловів і найбільших трофеїв.</p>
+        </header>
 
-    <div class="auth-card">
-        <p><strong>Сесій:</strong> {{ total_trips }}</p>
-        <p><strong>Уловів:</strong> {{ total_catches }}</p>
-        <p><strong>Загальна вага:</strong> {{ total_weight }} кг</p>
+        <section class="stats-overview" aria-label="Загальна статистика">
+            <article class="stats-metric"><span class="stats-metric__label">Кількість сесій</span><strong>{{ total_trips }}</strong><small>рибальських виїздів</small></article>
+            <article class="stats-metric"><span class="stats-metric__label">Всього уловів</span><strong>{{ total_catches }}</strong><small>за всі сесії</small></article>
+            <article class="stats-metric"><span class="stats-metric__label">Загальна вага</span><strong>{{ total_weight|floatformat:2 }}<small class="stats-unit"> кг</small></strong><small>усіх зафіксованих уловів</small></article>
+            <article class="stats-metric stats-metric--highlight"><span class="stats-metric__label">Результативність</span><strong>{{ success_rate }}<small class="stats-unit">%</small></strong><small>{{ successful_trips }} сесій із зафіксованим уловом</small></article>
+        </section>
 
-        <h2 class="mt-16">Найчастіша риба</h2>
-        {% if top_fish %}
-            {% for row in top_fish %}
-                <div class="login-feature">
-                    <strong>{{ row.fish__name|default:"Без назви" }}</strong>
-                    <p>Разів: {{ row.total }}</p>
+        <section class="trophies-section">
+            <div class="trophies-heading">
+                <div><span class="stats-kicker"><i></i> Особисті рекорди</span><h2>Найбільші трофеї</h2><p>Найважча риба кожного виду. Натисни на картку, щоб перейти до сесії.</p></div>
+                <span class="trophy-total">{{ trophy_count }} видів</span>
+            </div>
+
+            {% if trophies %}
+                <div class="trophy-grid">
+                    {% for catch in trophies %}
+                        <a class="trophy-card" href="{% url 'edit_trip' catch.trip.trip_id %}">
+                            <span class="trophy-card__top"><span class="trophy-card__species">{{ catch.fish.name }}</span><span class="trophy-card__arrow" aria-hidden="true">↗</span></span>
+                            <strong class="trophy-card__weight">{{ catch.weight_kg|floatformat:2 }} <small>кг</small></strong>
+                            <span class="trophy-card__details">
+                                <span><b aria-hidden="true">⌖</b> {{ catch.trip.water_body.name }}</span>
+                                <span><b aria-hidden="true">◷</b> {% if catch.caught_at %}{{ catch.caught_at|date:"d.m.Y H:i" }}{% else %}{{ catch.trip.created_at|date:"d.m.Y" }}{% endif %}</span>
+                                {% if catch.trip.type or catch.trip.method %}<span><b aria-hidden="true">⌁</b> {% if catch.trip.type %}{{ catch.trip.type.name }}{% endif %}{% if catch.trip.type and catch.trip.method %} · {% endif %}{% if catch.trip.method %}{{ catch.trip.method.name }}{% endif %}</span>{% endif %}
+                            </span>
+                            <span class="trophy-card__link">Перейти до сесії <span aria-hidden="true">→</span></span>
+                        </a>
+                    {% endfor %}
                 </div>
-            {% endfor %}
-        {% else %}
-            <p class="level-description">Даних поки немає.</p>
-        {% endif %}
+            {% else %}
+                <div class="trophies-empty"><span aria-hidden="true">♧</span><strong>Трофеїв поки немає</strong><p>Додай улов із видом риби та вагою — найбільший екземпляр кожного виду з’явиться тут.</p><a href="{% url 'add_trip' %}">Додати рибальську сесію →</a></div>
+            {% endif %}
+        </section>
 
-        <p class="mt-16">
-            <a class="btn btn-outline" href="{% url 'profile' %}">← До профілю</a>
-        </p>
+        {% if top_fish %}
+            <section class="frequent-fish">
+                <div class="trophies-heading"><div><span class="stats-kicker"><i></i> Твій улов</span><h2>Найчастіша риба</h2></div></div>
+                <div class="frequent-fish__list">
+                    {% for row in top_fish %}<div><strong>{{ row.fish__name|default:"Без назви" }}</strong><span>{{ row.total }} {% if row.total == 1 %}раз{% else %}разів{% endif %}</span></div>{% endfor %}
+                </div>
+            </section>
+        {% endif %}
     </div>
 </section>
 {% endblock %}

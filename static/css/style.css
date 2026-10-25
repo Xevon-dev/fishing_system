@@ -86,6 +86,7 @@ img {
 .nav-links a:hover {
   color: var(--blue);
 }
+.nav-links a[aria-current="page"] { color: #08764f; }
 .nav-actions {
   gap: 14px;
 }

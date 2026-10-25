@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, render
 from django.db.models import Count, Exists, OuterRef, Q
+from django.http import JsonResponse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
@@ -91,6 +92,8 @@ def tips_list_view(request):
 def toggle_tip_like_view(request, tip_id):
     user = current_user(request)
     if not user:
+        if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            return JsonResponse({"error": "Увійдіть, щоб оцінювати поради."}, status=401)
         return redirect("login")
     is_like = request.POST.get("reaction") == "like"
     reaction = TipLike.objects.filter(tip_id=tip_id, user=user).first()
@@ -102,6 +105,17 @@ def toggle_tip_like_view(request, tip_id):
             user=user,
             defaults={"is_like": is_like},
         )
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        reactions = TipLike.objects.filter(tip_id=tip_id)
+        return JsonResponse({
+            "likes": reactions.filter(is_like=True).count(),
+            "dislikes": reactions.filter(is_like=False).count(),
+            "reaction": (
+                "like" if reactions.filter(user=user, is_like=True).exists()
+                else "dislike" if reactions.filter(user=user, is_like=False).exists()
+                else None
+            ),
+        })
     return redirect(request.POST.get("next") or "tips_list")
 
 

@@ -1,0 +1,58 @@
+.stats-page { padding: 28px 24px 64px; background: radial-gradient(ellipse at 90% 0, #e7fff4 0, transparent 32%), linear-gradient(150deg, #f7f9fc, #fbfaff); }
+.stats-shell { width: min(1180px, 100%); margin: 0 auto; }
+.stats-back { display: inline-flex; align-items: center; margin: 0 0 18px; padding: 8px 13px; border: 1px solid #e1e8e7; border-radius: 999px; background: #fff; color: #5d7569; font-size: 12px; font-weight: 700; transition: .18s ease; }
+.stats-back:hover { border-color: #b9dfca; color: #08764f; transform: translateX(-2px); }
+.stats-hero { padding: 27px 32px; border: 1px solid #e7ecea; border-radius: 18px; background: linear-gradient(110deg, #fff 55%, #edfff6); box-shadow: 0 9px 25px rgb(31 67 51 / 5%); }
+.stats-kicker { display: inline-flex; align-items: center; gap: 7px; color: #16815b; font-size: 11px; font-weight: 800; }
+.stats-kicker i { width: 7px; height: 7px; border-radius: 50%; background: #25ad79; box-shadow: 0 0 0 4px #e5f7ed; }
+.stats-hero h1 { margin: 11px 0 5px; color: #123f32; font-family: Georgia, "Times New Roman", serif; font-size: clamp(28px, 4vw, 38px); letter-spacing: -.035em; }
+.stats-hero p, .trophies-heading p { margin: 0; color: #78847e; font-size: 13px; line-height: 1.6; }
+.stats-overview { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 15px; margin: 18px 0 38px; }
+.stats-metric { display: flex; min-height: 132px; flex-direction: column; align-items: flex-start; padding: 19px 20px; border: 1px solid #eceef2; border-radius: 16px; background: #fff; box-shadow: 0 8px 24px rgb(28 41 56 / 5%); }
+.stats-metric__label { color: #64766d; font-size: 12px; font-weight: 700; }
+.stats-metric strong { margin: 8px 0 3px; color: #103d30; font-size: clamp(27px, 3vw, 36px); line-height: 1; letter-spacing: -.04em; }
+.stats-metric > small { color: #8a9690; font-size: 10px; }
+.stats-metric strong .stats-unit { color: #587469; font-size: 13px; letter-spacing: 0; }
+.stats-metric--highlight { border-color: transparent; background: linear-gradient(145deg, #103e31, #087952); box-shadow: 0 13px 25px rgb(9 91 61 / 22%); }
+.stats-metric--highlight .stats-metric__label, .stats-metric--highlight > small { color: #c3e5d2; }
+.stats-metric--highlight strong, .stats-metric--highlight strong .stats-unit { color: #fff; }
+.trophies-section, .frequent-fish { margin-top: 0; }
+.trophies-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; margin-bottom: 17px; }
+.trophies-heading h2 { margin: 8px 0 5px; color: #123f32; font-family: Georgia, "Times New Roman", serif; font-size: 24px; letter-spacing: -.025em; }
+.trophies-heading p { font-size: 12px; }
+.trophy-total { padding: 7px 11px; border: 1px solid #d8eee1; border-radius: 999px; background: #f0fbf4; color: #167653; font-size: 11px; font-weight: 800; white-space: nowrap; }
+.trophy-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.trophy-card { display: flex; min-width: 0; flex-direction: column; padding: 18px; border: 1px solid #e6ebee; border-radius: 16px; background: #fff; box-shadow: 0 8px 24px rgb(28 41 56 / 5%); transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+.trophy-card:hover { transform: translateY(-3px); border-color: #c7e6d4; box-shadow: 0 14px 28px rgb(25 81 54 / 10%); }
+.trophy-card__top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.trophy-card__species { overflow: hidden; color: #244a3b; font-size: 16px; font-weight: 800; text-overflow: ellipsis; white-space: nowrap; }
+.trophy-card__arrow { display: grid; width: 27px; height: 27px; flex: 0 0 27px; place-items: center; border-radius: 9px; background: #eff8f2; color: #16815b; font-size: 15px; }
+.trophy-card__weight { margin: 15px 0 13px; color: #103d30; font-size: 31px; line-height: 1; letter-spacing: -.04em; }
+.trophy-card__weight small { color: #527466; font-size: 14px; letter-spacing: 0; }
+.trophy-card__details { display: grid; gap: 7px; margin-top: auto; padding-top: 12px; border-top: 1px solid #eef1ef; }
+.trophy-card__details > span { overflow: hidden; color: #697870; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.trophy-card__details b { display: inline-block; width: 16px; color: #16815b; text-align: center; }
+.trophy-card__link { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; color: #16815b; font-size: 11px; font-weight: 800; }
+.trophies-empty { display: grid; justify-items: center; padding: 38px 20px; border: 1px dashed #cfe3d7; border-radius: 17px; background: #fbfefc; text-align: center; }
+.trophies-empty > span { display: grid; width: 48px; height: 48px; place-items: center; border-radius: 15px; background: #eaf7ef; color: #13805a; font-size: 25px; }
+.trophies-empty strong { margin-top: 12px; color: #244a3b; font-size: 15px; }
+.trophies-empty p { max-width: 430px; margin: 6px 0 13px; color: #7b8981; font-size: 12px; line-height: 1.6; }
+.trophies-empty a { color: #08764f; font-size: 12px; font-weight: 800; }
+.frequent-fish { margin-top: 35px; }
+.frequent-fish__list { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+.frequent-fish__list > div { display: flex; justify-content: space-between; gap: 8px; padding: 13px; border: 1px solid #e8ecee; border-radius: 12px; background: #fff; }
+.frequent-fish__list strong { overflow: hidden; color: #375449; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.frequent-fish__list span { color: #84928b; font-size: 10px; white-space: nowrap; }
+.stats-hero p, .trophies-heading p { font-size: 14px; }
+.stats-metric__label { font-size: 13px; }
+.stats-metric > small { font-size: 11px; }
+.trophy-card__species { font-size: 17px; }
+.trophy-card__weight { font-size: 33px; }
+.trophy-card__details { gap: 9px; }
+.trophy-card__details > span { font-size: 13px; line-height: 1.5; }
+.trophy-card__details b { width: 19px; }
+.trophy-card__link { font-size: 12px; }
+.frequent-fish__list strong { font-size: 12px; }
+.frequent-fish__list span { font-size: 11px; }
+@media (max-width: 900px) { .stats-overview { grid-template-columns: repeat(2, minmax(0, 1fr)); } .trophy-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .frequent-fish__list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .stats-page { padding: 20px 14px 42px; } .stats-hero { padding: 21px 18px; } .stats-overview { gap: 10px; margin-bottom: 30px; } .stats-metric { min-height: 112px; padding: 14px; } .stats-metric__label { font-size: 11px; } .stats-metric strong { font-size: 29px; } .trophies-heading h2 { font-size: 21px; } .trophy-grid { grid-template-columns: 1fr; gap: 10px; } .trophy-card { padding: 16px; } .trophies-heading { align-items: flex-start; } .frequent-fish__list { grid-template-columns: 1fr; } }
