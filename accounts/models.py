@@ -23,6 +23,14 @@ class Users(models.Model):
         db_table = 'users'
 
     @property
+    def is_authenticated(self):
+        return True
+
+    @property
+    def is_anonymous(self):
+        return False
+
+    @property
     def is_beginner(self):
         return bool(self.level and self.level.name == 'Початківець')
 

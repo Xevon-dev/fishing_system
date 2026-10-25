@@ -17,17 +17,13 @@
    python -m pip install -r requirements.txt
    ```
 
-3. Створи базу даних MySQL 8.4.11 і файл `.env` у головній папці проєкту:
+3. Створи базу даних MySQL 8.4.11. Скопіюй приклад змінних у `.env`:
 
-   ```dotenv
-   DB_NAME=fishing_system
-   DB_USER=ім'я_користувача
-   DB_PASSWORD=пароль
-   DB_HOST=127.0.0.1
-   DB_PORT=3306
+   ```powershell
+   Copy-Item .env.example .env
    ```
 
-   Ключі Google Maps, Weather і OpenRouter можна додати за потреби.
+   Відкрий `.env` і заповни дані бази та `SECRET_KEY`. Ключі Google Maps, Weather і OpenRouter можна додати за потреби.
 
 4. Виконай міграції та запусти сайт:
 

@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -10,12 +11,14 @@ from ..forms import GenericFishingTripForm
 from ..models import Catches, FishingTrips
 
 
-class SessionOwnerRequiredMixin:
+class SessionOwnerRequiredMixin(LoginRequiredMixin):
+    login_url = "login"
 
     def dispatch(self, request, *args, **kwargs):
         self.owner = current_user(request)
         if not self.owner:
             return redirect("login")
+        request.user = self.owner
         return super().dispatch(request, *args, **kwargs)
 
 

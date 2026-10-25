@@ -1,6 +1,7 @@
 import unittest
 
 from django.urls import resolve, reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
 from .forms import GenericFishingTripForm
@@ -10,11 +11,15 @@ from .views.generic_trips import (
     FishingTripDetailView,
     FishingTripListView,
     FishingTripUpdateView,
+    SessionOwnerRequiredMixin,
 )
 from .views.tips import TipsDetailView, TipsListView
 
 
 class GenericViewRouteTests(unittest.TestCase):
+    def test_session_owner_mixin_uses_django_login_required_mixin(self):
+        self.assertTrue(issubclass(SessionOwnerRequiredMixin, LoginRequiredMixin))
+
     def test_fishing_trip_crud_routes_use_generic_views(self):
         expected = {
             "trip_records": (FishingTripListView, ListView),
