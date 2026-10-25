@@ -50,7 +50,7 @@
                         </div>
                     </div>
                     {% if tip.photo %}<img class="tip-card-photo" src="{{ tip.photo.url }}" alt="Фото до поради: {{ tip.title }}" loading="lazy">{% endif %}
-                    <h2>{{ tip.title|default:"Порада рибалки" }}</h2>
+                    <h2><a href="{% url 'tip_detail' tip.pk %}">{{ tip.title|default:"Порада рибалки" }}</a></h2>
                     <div class="tip-content">{{ tip.content|linebreaks }}</div>
                     <div class="tip-card-actions">
                         {% if current_user %}

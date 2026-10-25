@@ -14,15 +14,29 @@ from .views import (
     tips_list_view,
     toggle_tip_like_view,
 )
+from .views.generic_trips import (
+    FishingTripCreateView,
+    FishingTripDeleteView,
+    FishingTripDetailView,
+    FishingTripListView,
+    FishingTripUpdateView,
+)
+from .views.tips import TipsDetailView
 
 urlpatterns = [
     path("tips/", tips_list_view, name="tips_list"),
+    path("tips/<int:pk>/", TipsDetailView.as_view(), name="tip_detail"),
     path("tips/add/", add_tip_view, name="add_tip"),
     path("tips/<int:tip_id>/edit/", edit_tip_view, name="edit_tip"),
     path("tips/<int:tip_id>/delete/", delete_tip_view, name="delete_tip"),
     path("tips/<int:tip_id>/photo/delete/", delete_tip_photo_view, name="delete_tip_photo"),
     path("tips/<int:tip_id>/like/", toggle_tip_like_view, name="toggle_tip_like"),
     path("journal/", journal_view, name="journal"),
+    path("journal/records/", FishingTripListView.as_view(), name="trip_records"),
+    path("journal/records/add/", FishingTripCreateView.as_view(), name="trip_record_add"),
+    path("journal/records/<int:pk>/", FishingTripDetailView.as_view(), name="trip_record_detail"),
+    path("journal/records/<int:pk>/edit/", FishingTripUpdateView.as_view(), name="trip_record_edit"),
+    path("journal/records/<int:pk>/delete/", FishingTripDeleteView.as_view(), name="trip_record_delete"),
     path("journal/add/", add_trip_view, name="add_trip"),
     path("journal/<int:trip_id>/edit/", edit_trip_view, name="edit_trip"),
     path("journal/<int:trip_id>/delete/", delete_trip_view, name="delete_trip"),

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Деталі риболовної сесії — Золота Рибка{% endblock %}
+
+{% block content %}
+<section class="container" style="padding: 2rem 0;">
+    <h1>{{ trip.water_body.name }}</h1>
+    <p>Дата створення: {{ trip.created_at|date:"d.m.Y H:i" }}</p>
+    {% if trip.type %}<p>Тип: {{ trip.type.name }}</p>{% endif %}
+    {% if trip.method_note %}<p>Техніка: {{ trip.method_note }}</p>{% endif %}
+    {% if trip.note %}<p>{{ trip.note|linebreaks }}</p>{% endif %}
+
+    <h2>Улови</h2>
+    <ul>
+        {% for catch in trip.catches_set.all %}
+            <li>{% firstof catch.custom_fish_name catch.fish.name "Риба" %}{% if catch.weight_kg %} — {{ catch.weight_kg }} кг{% endif %}{% if catch.quantity %}, {{ catch.quantity }} шт.{% endif %}</li>
+        {% empty %}
+            <li>Улови не додані.</li>
+        {% endfor %}
+    </ul>
+
+    {% for photo in trip.photos.all %}
+        <p><img src="{{ photo.photo.url }}" alt="Фото риболовної сесії" style="max-width: 100%; height: auto;"></p>
+    {% endfor %}
+
+    <p>
+        <a class="btn btn-primary" href="{% url 'trip_record_edit' trip.pk %}">Редагувати</a>
+        <a href="{% url 'trip_records' %}">До списку сесій</a>
+    </p>
+    <form method="post" action="{% url 'trip_record_delete' trip.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Видалити сесію</button>
+    </form>
+</section>
+{% endblock %}

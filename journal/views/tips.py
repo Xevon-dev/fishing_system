@@ -3,6 +3,7 @@ from django.db.models import Count, Exists, OuterRef, Q
 from django.http import JsonResponse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
+from django.views.generic import DetailView, ListView
 
 from catalog.models import FishSpecies
 from accounts.image_uploads import image_upload_error
@@ -62,30 +63,51 @@ def validate_tip(title, content, fish_ids=(), photo=None, applies_to_all_fish=Fa
     return errors, selected_fishes, applies_to_all_fish
 
 
-def tips_list_view(request):
-    user = current_user(request)
-    tips = Tips.objects.select_related("fish", "author").prefetch_related("fishes").annotate(
-        likes_count=Count("likes", filter=Q(likes__is_like=True), distinct=True),
-        dislikes_count=Count("likes", filter=Q(likes__is_like=False), distinct=True),
-    )
-    if user:
-        user_reactions = TipLike.objects.filter(tip_id=OuterRef("pk"), user=user)
-        tips = tips.annotate(
-            user_liked=Exists(user_reactions.filter(is_like=True)),
-            user_disliked=Exists(user_reactions.filter(is_like=False)),
+class TipsListView(ListView):
+    model = Tips
+    template_name = "tips_list.html"
+    context_object_name = "tips"
+
+    def get_queryset(self):
+        user = current_user(self.request)
+        tips = Tips.objects.select_related("fish", "author").prefetch_related("fishes").annotate(
+            likes_count=Count("likes", filter=Q(likes__is_like=True), distinct=True),
+            dislikes_count=Count("likes", filter=Q(likes__is_like=False), distinct=True),
         )
-    else:
-        no_reaction = Exists(TipLike.objects.none())
-        tips = tips.annotate(user_liked=no_reaction, user_disliked=no_reaction)
-    sort = request.GET.get("sort", "newest")
-    if sort == "popular":
-        tips = tips.order_by("-likes_count", "dislikes_count", "-tip_id")
-    elif sort == "worst":
-        tips = tips.order_by("-dislikes_count", "likes_count", "tip_id")
-    else:
-        sort = "newest"
-        tips = tips.order_by("-tip_id")
-    return render(request, "tips_list.html", {"tips": tips, "sort": sort})
+        if user:
+            user_reactions = TipLike.objects.filter(tip_id=OuterRef("pk"), user=user)
+            tips = tips.annotate(
+                user_liked=Exists(user_reactions.filter(is_like=True)),
+                user_disliked=Exists(user_reactions.filter(is_like=False)),
+            )
+        else:
+            no_reaction = Exists(TipLike.objects.none())
+            tips = tips.annotate(user_liked=no_reaction, user_disliked=no_reaction)
+
+        sort = self.request.GET.get("sort", "newest")
+        if sort == "popular":
+            return tips.order_by("-likes_count", "dislikes_count", "-tip_id")
+        if sort == "worst":
+            return tips.order_by("-dislikes_count", "likes_count", "tip_id")
+        return tips.order_by("-tip_id")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        sort = self.request.GET.get("sort", "newest")
+        context["sort"] = sort if sort in {"newest", "popular", "worst"} else "newest"
+        return context
+
+
+tips_list_view = TipsListView.as_view()
+
+
+class TipsDetailView(DetailView):
+    model = Tips
+    template_name = "journal/tip_detail.html"
+    context_object_name = "tip"
+
+    def get_queryset(self):
+        return Tips.objects.select_related("author", "fish").prefetch_related("fishes")
 
 
 @require_POST

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if object %}Редагувати{% else %}Створити{% endif %} запис сесії — Золота Рибка{% endblock %}
+
+{% block content %}
+<section class="container" style="padding: 2rem 0; max-width: 760px;">
+    <h1>{% if object %}Редагувати сесію{% else %}Створити сесію{% endif %}</h1>
+    <form method="post" class="auth-form">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Зберегти</button>
+        <a href="{% url 'trip_records' %}">Скасувати</a>
+    </form>
+</section>
+{% endblock %}

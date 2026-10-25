@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Видалити сесію — Золота Рибка{% endblock %}
+
+{% block content %}
+<section class="container" style="padding: 2rem 0; max-width: 760px;">
+    <h1>Видалити риболовну сесію?</h1>
+    <p>Сесію на водоймі «{{ object.water_body.name }}» буде видалено разом з уловами та фото.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Так, видалити</button>
+        <a href="{% url 'trip_record_detail' object.pk %}">Скасувати</a>
+    </form>
+</section>
+{% endblock %}
