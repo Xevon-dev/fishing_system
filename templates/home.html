@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}FishWise — Твоя риболовля{% endblock %}
+{% block title %}Золота Рибка — Твоя риболовля{% endblock %}
+
+{% block header_class %} header--home{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/home.css' %}?v={% now 'U' %}">
@@ -31,7 +33,7 @@
                 <a class="home-button home-button--quiet" href="{% url 'login' %}">Увійти</a>
                 </div>
 
-                <div class="home-hero__notes" aria-label="Що є у FishWise">
+                <div class="home-hero__notes" aria-label="Що є у Золотій Рибці">
                     <span><i class="home-check" aria-hidden="true"></i> Водойми та їхні деталі</span>
                     <span><i class="home-check" aria-hidden="true"></i> Улови з часом і вагою</span>
                 </div>
@@ -60,7 +62,7 @@
                     <p class="home-kicker">ПЛАНУЙ ВИЇЗД. ФІКСУЙ УЛОВ.</p>
                     <h2>Спіймай свою золоту рибку</h2>
                 </div>
-                <p class="home-section-heading__aside">Водойми, поради й журнал риболовлі — у FishWise.</p>
+                <p class="home-section-heading__aside">Водойми, поради й журнал риболовлі — у Золотій Рибці.</p>
             </header>
 
             <div class="home-feature-grid">

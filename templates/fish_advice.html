@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Енциклопедія рибака — FishWise{% endblock %}
+{% block title %}Енциклопедія рибака — Золота Рибка{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/auth.css' %}?v={% now 'U' %}">
@@ -11,7 +11,7 @@
 {% block content %}
 <section class="fish-encyclopedia container">
     <header class="fish-encyclopedia__heading">
-        <p class="fish-encyclopedia__eyebrow"><span></span> FishWise · довідник риб</p>
+        <p class="fish-encyclopedia__eyebrow"><span></span> Золота Рибка · довідник риб</p>
         <h1>Енциклопедія рибака</h1>
         <p>Дізнавайся більше про рибу, її звички та особливості лову.</p>
     </header>
@@ -41,7 +41,7 @@
                         <div class="fish-card__tags">
                             {% for category in fish.categories.all %}<span>{{ category.name }}</span>{% endfor %}
                         </div>
-                        <div class="fish-card__media-caption"><span>FishWise</span><span>Довідник риб</span></div>
+                        <div class="fish-card__media-caption"><span>Золота Рибка</span><span>Довідник риб</span></div>
                     </div>
                     <div class="fish-card__body">
                         <div class="fish-card__title-row">

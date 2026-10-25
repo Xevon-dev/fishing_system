@@ -57,6 +57,7 @@ def email_error(email, exclude_user_id=None):
     if (
         len(domain) > 253
         or len(labels) < 2
+        or any(label.startswith("xn--") for label in labels)
         or any(
             not label or label.startswith("-") or label.endswith("-")
             for label in labels

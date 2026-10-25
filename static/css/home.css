@@ -28,16 +28,19 @@
 }
 .header .navbar { width: min(1320px, calc(100% - 64px)); min-height: 78px; gap: 24px; margin-inline: auto; }
 .logo { font-size: 28px; letter-spacing: -.06em; }
-.header .logo-text { color: var(--home-ink); }
-.header .logo-text span { color: #28725d; }
+.header .logo-text { color: #b68b2e; }
+.header .logo-text span { color: #176b46; }
 .logo-icon { border-radius: 11px; filter: hue-rotate(-28deg) saturate(.88); }
 .nav-links { gap: clamp(15px, 2.1vw, 31px); }
-.nav-links a { position: relative; color: #53665d; font-size: 14px; transition: color .2s ease, transform .2s ease; }
-.nav-links a::after { position: absolute; right: 0; bottom: -7px; left: 0; height: 2px; border-radius: 2px; background: linear-gradient(90deg, var(--home-green), var(--home-orange)); content: ""; transform: scaleX(0); transform-origin: left; transition: transform .28s cubic-bezier(.2,.75,.25,1); }
+.nav-links a { position: relative; color: #53665d; font-size: 14px; transition: color .22s ease, transform .28s cubic-bezier(.2,.75,.25,1), text-shadow .22s ease; }
+.nav-links a::after { position: absolute; right: 0; bottom: -7px; left: 0; height: 2px; border-radius: 2px; background: #08764f; content: ""; transform: scaleX(0); transform-origin: center; transition: transform .28s cubic-bezier(.2,.75,.25,1); }
 .nav-links a:hover::after { transform: scaleX(1); }
-.nav-links a:hover { color: var(--home-green); transform: translateY(-1px); }
+.nav-links a:hover { color: #08764f; text-shadow: none; transform: translateY(-1px); }
+.nav-links a:active { transform: translateY(0) scale(.97); }
 .nav-links a.is-active { color: var(--home-green); }
-.nav-links a.is-active::after { transform: scaleX(1); background: var(--home-green); }
+.nav-links a.is-active::after { transform: scaleX(0); background: #08764f; }
+.nav-links a.is-active:hover::after,
+.nav-links a.is-active:focus-visible::after { transform: scaleX(1); }
 .nav-actions { gap: 11px; }
 .nav-actions .login-link,
 .nav-actions .btn-primary {
@@ -68,6 +71,8 @@
   transition: transform .7s ease;
 }
 .nav-actions .login-link:hover::after, .nav-actions .btn-primary:hover::after { transform: translateX(130%); }
+.header .nav-links a:focus-visible,
+.header .nav-actions a:focus-visible { outline: 3px solid #28725d66; outline-offset: 4px; }
 
 /* Hero */
 .home-hero {

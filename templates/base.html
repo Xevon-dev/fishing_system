@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}FishWise{% endblock %}</title>
+    <title>{% block title %}Золота Рибка{% endblock %}</title>
 
     <link rel="icon" href="{% static 'images/icons/fish.png' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}?v={% now 'U' %}">
@@ -12,11 +12,11 @@
 </head>
 <body>
 
-<header class="header">
+<header class="header{% block header_class %}{% endblock %}">
     <div class="container navbar">
-        <a class="logo" href="{% url 'home' %}">
+        <a class="logo" href="{% if request.resolver_match.url_name == 'profile' %}{% url 'profile' %}{% else %}{% url 'home' %}{% endif %}">
             <img class="logo-icon" src="{% static 'images/icons/fish.png' %}" alt="">
-            <span class="logo-text">Fish<span>Wise</span></span>
+            <span class="logo-text">Золота <span>Рибка</span></span>
         </a>
 
         <nav class="nav-links">
@@ -66,8 +66,8 @@
 
 <footer class="home-footer site-footer">
     <div class="container home-footer__inner">
-        <a class="home-footer__brand" href="{% url 'home' %}"><span class="home-footer__dot" aria-hidden="true"></span>FishWise</a>
-        <p>© FishWise. Твій помічник у світі риболовлі.</p>
+        <a class="home-footer__brand" href="{% if request.resolver_match.url_name == 'profile' %}{% url 'profile' %}{% else %}{% url 'home' %}{% endif %}"><span class="home-footer__dot" aria-hidden="true"></span><span class="brand-name">Золота <span>Рибка</span></span></a>
+        <p>© Золота Рибка. Твій помічник у світі риболовлі.</p>
     </div>
 </footer>
 

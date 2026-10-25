@@ -4,6 +4,7 @@ from django.contrib.auth.hashers import check_password, make_password
 from django.shortcuts import redirect, render
 
 from ..session import current_user
+from ..validators import password_strength_error
 
 
 def password_view(request):
@@ -30,11 +31,12 @@ def password_view(request):
         elif not check_password(fields["current_password"], user.password_hash):
             errors["current_password"] = "Невірний поточний пароль"
 
-        if not fields["new_password"]:
-            errors["new_password"] = "Введіть новий пароль"
-        elif len(fields["new_password"]) < 6:
-            errors["new_password"] = "Мінімум 6 символів"
-        elif fields["new_password"] == fields["current_password"]:
+        message = password_strength_error(
+            fields["new_password"], username=user.username, email=user.email
+        )
+        if message:
+            errors["new_password"] = message
+        elif check_password(fields["new_password"], user.password_hash):
             errors["new_password"] = "Новий пароль такий самий, як старий"
 
         if not fields["confirm_password"]:
@@ -45,6 +47,10 @@ def password_view(request):
         if not errors:
             user.password_hash = make_password(fields["new_password"])
             user.save(update_fields=["password_hash"])
+            return redirect("profile")
+
+        if request.POST.get("return_to_profile") == "1":
+            request.session["profile_password_errors"] = errors
             return redirect("profile")
 
     return render(request, "password.html", {

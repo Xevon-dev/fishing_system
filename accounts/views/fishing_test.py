@@ -57,10 +57,10 @@ def fishing_test_view(request):
             ranks = list(LEVEL_NAMES.values())
             current_rank = ranks.index(user.level.name) if user.level and user.level.name in ranks else -1
             can_upgrade = user.level and user.level.name in {"Початківець", "Середній"}
-            if can_upgrade and ranks.index(LEVEL_NAMES[level]) > current_rank:
+            if can_upgrade and ranks.index(LEVEL_NAMES[level]) != current_rank:
                 user.level, _ = Levels.objects.get_or_create(name=LEVEL_NAMES[level])
                 user.save(update_fields=["level"])
-                context["upgraded"] = True
+                context["level_changed"] = True
             context["saved_level"] = user.level.name if user.level else "Не обрано"
             context["current_user"] = user
     context.update({

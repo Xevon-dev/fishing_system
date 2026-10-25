@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{% if tip %}Редагувати пораду{% else %}Додати пораду{% endif %} — FishWise{% endblock %}
+{% block title %}{% if tip %}Редагувати пораду{% else %}Додати пораду{% endif %} — Золота Рибка{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/auth.css' %}?v={% now 'U' %}">
@@ -11,7 +11,7 @@
 {% block content %}
 <section class="tip-compose-page">
     <header class="tip-compose-heading">
-        <span class="tip-compose-badge"><span aria-hidden="true"></span> Спільнота FishWise · Публікація поради</span>
+        <span class="tip-compose-badge"><span aria-hidden="true"></span> Спільнота Золота Рибка · Публікація поради</span>
         <h1>{% if tip %}Редагувати пораду{% else %}Додати власну пораду{% endif %}</h1>
         <p>Поділись практичним досвідом, який допоможе іншим рибалкам на водоймі.</p>
     </header>
@@ -103,7 +103,7 @@
                         <li><span>1</span><p><strong>Будь конкретним.</strong> Опиши ситуацію, умови та що саме спрацювало.</p></li>
                         <li><span>2</span><p><strong>Поділись деталями.</strong> Вкажи приманку, снасть або техніку, якщо це важливо.</p></li>
                         <li><span>3</span><p><strong>Пиши своїми словами.</strong> Особистий досвід найкраще допомагає іншим.</p></li>
-                        <li><span>4</span><p><strong>Перевір текст.</strong> Після публікації пораду побачить спільнота FishWise.</p></li>
+                        <li><span>4</span><p><strong>Перевір текст.</strong> Після публікації пораду побачить спільнота Золота Рибка.</p></li>
                     </ul>
                 </section>
                 <div class="tip-aside-note"><span aria-hidden="true">✓</span><p><strong>Перевірка перед публікацією</strong><br>Порада проходить автоматичну перевірку, щоб залишатися корисною та безпечною для спільноти.</p></div>

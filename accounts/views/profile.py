@@ -1,11 +1,10 @@
-from django.contrib.auth.hashers import check_password, make_password
 from django.db.models import Max, Sum
 from django.shortcuts import redirect, render
 
 from journal.models import Catches, FishingTrips, Tips
 from ..models import Users
 from ..session import current_user
-from ..validators import email_error, password_strength_error, username_error
+from ..validators import email_error, username_error
 from ..image_uploads import image_upload_error
 
 
@@ -61,7 +60,11 @@ def profile_view(request):
     if not user:
         return redirect("login")
 
-    return render(request, "profile.html", profile_context(user))
+    context = profile_context(user)
+    context["edit_form"] = request.session.pop("profile_edit_form", None)
+    context["edit_errors"] = request.session.pop("profile_edit_errors", None)
+    context["password_errors"] = request.session.pop("profile_password_errors", None)
+    return render(request, "profile.html", context)
 
 
 def edit_errors_for(user, form):
@@ -76,26 +79,6 @@ def edit_errors_for(user, form):
         if message:
             errors["email"] = message
 
-    password_fields = (
-        form["current_password"] or
-        form["new_password"] or
-        form["confirm_password"]
-    )
-    if password_fields:
-        if not form["current_password"]:
-            errors["current_password"] = "Введіть поточний пароль"
-        elif not check_password(form["current_password"], user.password_hash):
-            errors["current_password"] = "Невірний поточний пароль"
-
-        message = password_strength_error(form["new_password"])
-        if message:
-            errors["new_password"] = message
-
-        if not form["confirm_password"]:
-            errors["confirm_password"] = "Підтвердіть новий пароль"
-        elif form["confirm_password"] != form["new_password"]:
-            errors["confirm_password"] = "Паролі не збігаються"
-
     return errors
 
 
@@ -107,9 +90,6 @@ def profile_edit_view(request):
     form = {
         "username": user.username,
         "email": user.email,
-        "current_password": "",
-        "new_password": "",
-        "confirm_password": "",
     }
 
     if request.method != "POST":
@@ -124,12 +104,14 @@ def profile_edit_view(request):
     errors = edit_errors_for(user, form)
 
     if errors:
-        context = profile_context(user)
-        context.update({
-            "edit_form": form,
-            "edit_errors": errors,
-        })
-        return render(request, "profile.html", context)
+        # Preserve only non-sensitive fields. Passwords must never be stored in
+        # the session, even temporarily, when using Post/Redirect/Get.
+        request.session["profile_edit_form"] = {
+            "username": form["username"],
+            "email": form["email"],
+        }
+        request.session["profile_edit_errors"] = errors
+        return redirect("profile")
 
     fields = ["username"]
     user.username = form["username"]
@@ -137,10 +119,6 @@ def profile_edit_view(request):
     if form["email"] != user.email:
         user.email = form["email"]
         fields.append("email")
-
-    if form["new_password"]:
-        user.password_hash = make_password(form["new_password"])
-        fields.append("password_hash")
 
     user.save(update_fields=fields)
 

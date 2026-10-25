@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Тест рівня рибалки — FishWise{% endblock %}
+{% block title %}Тест рівня рибалки — Золота Рибка{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/test.css' %}?v={% now 'U' %}">
@@ -28,7 +28,7 @@
                     </div>
 
                     {% if current_user %}
-                        <p>{% if upgraded %}Рівень підвищено! Нові функції вже доступні.{% else %}Твій поточний рівень збережено.{% endif %}</p>
+                        <p>{% if level_changed %}Рівень профілю змінено за результатом тесту. Доступні функції оновлено.{% else %}Твій поточний рівень збережено.{% endif %}</p>
                         <p>Рівень профілю: {{ saved_level }}</p>
                         <a class="btn btn-primary" href="{% url 'profile' %}">Повернутися до профілю →</a>
                     {% else %}

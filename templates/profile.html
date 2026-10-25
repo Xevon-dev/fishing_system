@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Мій профіль — FishWise{% endblock %}
+{% block title %}Мій профіль — Золота Рибка{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/auth.css' %}?v={% now 'U' %}">
@@ -22,7 +22,7 @@
     <div class="profile-shell">
         <div class="profile-hero">
             <h1>Мій профіль</h1>
-            <p>Дані рибака, риболовні сесії та твій рівень у FishWise.</p>
+            <p>Дані рибака, риболовні сесії та твій рівень у Золотій Рибці.</p>
         </div>
 
         <div class="profile-layout">
@@ -54,13 +54,21 @@
                             </span>
                         </div>
 
-                        <button type="button" class="profile-edit-btn" data-profile-edit>
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <path d="M4.5 19.5h4L19 9a2.6 2.6 0 0 0-3.7-3.7L4.8 15.8Z"/>
-                                <path d="m14.4 6.3 3.3 3.3"/>
-                            </svg>
-                            Редагувати профіль
-                        </button>
+                        <div class="profile-hero-actions">
+                            <button type="button" class="profile-edit-btn" data-profile-edit>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M4.5 19.5h4L19 9a2.6 2.6 0 0 0-3.7-3.7L4.8 15.8Z"/>
+                                    <path d="m14.4 6.3 3.3 3.3"/>
+                                </svg>
+                                Редагувати профіль
+                            </button>
+                            <button type="button" class="profile-edit-btn" data-profile-password>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 1 1 8 0v3M12 14v3"/>
+                                </svg>
+                                Змінити пароль
+                            </button>
+                        </div>
                     </div>
 
                     <form class="profile-photo-form" method="post" enctype="multipart/form-data" action="{% url 'profile_photo' %}">
@@ -339,7 +347,7 @@
             </aside>
         </div>
 
-        <dialog class="profile-dialog" id="profile-edit"{% if edit_errors %} data-open="1"{% endif %}>
+        <dialog class="profile-dialog" id="profile-edit" data-cancel-url="{% url 'profile' %}"{% if edit_errors %} data-open="1"{% endif %}>
             <form class="profile-dialog__inner" method="post" action="{% url 'profile_edit' %}">
                 {% csrf_token %}
 
@@ -356,45 +364,69 @@
                     <div class="profile-dialog__row">
                         <label class="profile-input">
                             <span>Ім'я</span>
-                            <input type="text" name="username" autocomplete="username" required value="{% if edit_form %}{{ edit_form.username }}{% else %}{{ profile_user.username }}{% endif %}">
+                            <input type="text" name="username" autocomplete="username" required value="{% if edit_form %}{{ edit_form.username }}{% else %}{{ profile_user.username }}{% endif %}"{% if edit_errors.username %} class="input-error" aria-invalid="true"{% endif %}>
                             {% if edit_errors.username %}<em>{{ edit_errors.username }}</em>{% endif %}
                         </label>
 
                         <label class="profile-input">
                             <span>Email</span>
-                            <input type="email" name="email" autocomplete="email" required value="{% if edit_form %}{{ edit_form.email }}{% else %}{{ profile_user.email }}{% endif %}">
+                            <input type="email" name="email" autocomplete="email" required value="{% if edit_form %}{{ edit_form.email }}{% else %}{{ profile_user.email }}{% endif %}"{% if edit_errors.email %} class="input-error" aria-invalid="true"{% endif %}>
                             {% if edit_errors.email %}<em>{{ edit_errors.email }}</em>{% endif %}
                         </label>
                     </div>
 
-                    <p class="profile-dialog__hint">Пароль змінюйте лише за потреби — інакше залиште поля порожніми.</p>
-
-                    <div class="profile-dialog__row profile-dialog__row--single">
-                        <label class="profile-input">
-                            <span>Поточний пароль</span>
-                            <input type="password" name="current_password" autocomplete="current-password">
-                            {% if edit_errors.current_password %}<em>{{ edit_errors.current_password }}</em>{% endif %}
-                        </label>
-                    </div>
-
-                    <div class="profile-dialog__row">
-                        <label class="profile-input">
-                            <span>Новий пароль</span>
-                            <input type="password" name="new_password" autocomplete="new-password">
-                            {% if edit_errors.new_password %}<em>{{ edit_errors.new_password }}</em>{% endif %}
-                        </label>
-
-                        <label class="profile-input">
-                            <span>Підтвердження пароля</span>
-                            <input type="password" name="confirm_password" autocomplete="new-password">
-                            {% if edit_errors.confirm_password %}<em>{{ edit_errors.confirm_password }}</em>{% endif %}
-                        </label>
-                    </div>
                 </div>
 
                 <div class="profile-dialog__actions">
                     <button type="button" class="profile-btn" data-profile-close>Скасувати</button>
                     <button type="submit" class="profile-btn profile-btn--primary">Зберегти зміни</button>
+                </div>
+            </form>
+        </dialog>
+
+        <dialog class="profile-dialog" id="profile-password" data-cancel-url="{% url 'profile' %}"{% if password_errors %} data-open="1"{% endif %}>
+            <form class="profile-dialog__inner" method="post" action="{% url 'password' %}">
+                {% csrf_token %}
+                <input type="hidden" name="return_to_profile" value="1">
+                <div class="profile-dialog__head">
+                    <h2>Змінити пароль</h2>
+                    <button type="button" class="profile-dialog__close" data-profile-close aria-label="Закрити">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M6.4 6.4 17.6 17.6M17.6 6.4 6.4 17.6"/></svg>
+                    </button>
+                </div>
+                <div class="profile-dialog__body">
+                    <div class="profile-dialog__row profile-dialog__row--single">
+                        <label class="profile-input">
+                            <span>Поточний пароль</span>
+                            <div class="profile-password-field">
+                                <input id="profile-current-password" type="password" name="current_password" autocomplete="current-password" required{% if password_errors.current_password %} class="input-error" aria-invalid="true"{% endif %}>
+                                <button type="button" class="auth-eye" data-password-toggle="profile-current-password" aria-label="Показати пароль"><svg class="auth-eye__on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.6 12S6.2 5.6 12 5.6 21.4 12 21.4 12 17.8 18.4 12 18.4 2.6 12 2.6 12Z"/><circle cx="12" cy="12" r="3"/></svg><svg class="auth-eye__off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 3.2 20.8 21"/><path d="M10.7 6.1A9.9 9.9 0 0 1 12 6c5.8 0 9.4 6 9.4 6a17.6 17.6 0 0 1-2.4 3M6.5 7.7A17.4 17.4 0 0 0 2.6 12S6.2 18 12 18a9.7 9.7 0 0 0 3.9-.8"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg></button>
+                            </div>
+                            {% if password_errors.current_password %}<em>{{ password_errors.current_password }}</em>{% endif %}
+                        </label>
+                    </div>
+                    <div class="profile-dialog__row">
+                        <label class="profile-input">
+                            <span>Новий пароль</span>
+                            <div class="profile-password-field">
+                                <input id="profile-new-password" type="password" name="new_password" autocomplete="new-password" required{% if password_errors.new_password %} class="input-error" aria-invalid="true"{% endif %}>
+                                <button type="button" class="auth-eye" data-password-toggle="profile-new-password" aria-label="Показати пароль"><svg class="auth-eye__on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.6 12S6.2 5.6 12 5.6 21.4 12 21.4 12 17.8 18.4 12 18.4 2.6 12 2.6 12Z"/><circle cx="12" cy="12" r="3"/></svg><svg class="auth-eye__off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 3.2 20.8 21"/><path d="M10.7 6.1A9.9 9.9 0 0 1 12 6c5.8 0 9.4 6 9.4 6a17.6 17.6 0 0 1-2.4 3M6.5 7.7A17.4 17.4 0 0 0 2.6 12S6.2 18 12 18a9.7 9.7 0 0 0 3.9-.8"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg></button>
+                            </div>
+                            {% if password_errors.new_password %}<em>{{ password_errors.new_password }}</em>{% endif %}
+                        </label>
+                        <label class="profile-input">
+                            <span>Підтвердження пароля</span>
+                            <div class="profile-password-field">
+                                <input id="profile-confirm-password" type="password" name="confirm_password" autocomplete="new-password" required{% if password_errors.confirm_password %} class="input-error" aria-invalid="true"{% endif %}>
+                                <button type="button" class="auth-eye" data-password-toggle="profile-confirm-password" aria-label="Показати пароль"><svg class="auth-eye__on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.6 12S6.2 5.6 12 5.6 21.4 12 21.4 12 17.8 18.4 12 18.4 2.6 12 2.6 12Z"/><circle cx="12" cy="12" r="3"/></svg><svg class="auth-eye__off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 3.2 20.8 21"/><path d="M10.7 6.1A9.9 9.9 0 0 1 12 6c5.8 0 9.4 6 9.4 6a17.6 17.6 0 0 1-2.4 3M6.5 7.7A17.4 17.4 0 0 0 2.6 12S6.2 18 12 18a9.7 9.7 0 0 0 3.9-.8"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg></button>
+                            </div>
+                            {% if password_errors.confirm_password %}<em>{{ password_errors.confirm_password }}</em>{% endif %}
+                        </label>
+                    </div>
+                </div>
+                <div class="profile-dialog__actions">
+                    <button type="button" class="profile-btn" data-profile-close>Скасувати</button>
+                    <button type="submit" class="profile-btn profile-btn--primary">Змінити пароль</button>
                 </div>
             </form>
         </dialog>
@@ -404,5 +436,6 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'js/auth.js' %}?v={% now 'U' %}"></script>
 <script src="{% static 'js/profile.js' %}?v={% now 'U' %}"></script>
 {% endblock %}
