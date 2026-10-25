@@ -3,6 +3,7 @@ from django.urls import path
 from .views import (
     add_tip_view,
     add_trip_view,
+    delete_tip_view,
     delete_trip_view,
     delete_trip_photo_view,
     edit_tip_view,
@@ -18,6 +19,7 @@ urlpatterns = [
     path("tips/", tips_list_view, name="tips_list"),
     path("tips/add/", add_tip_view, name="add_tip"),
     path("tips/<int:tip_id>/edit/", edit_tip_view, name="edit_tip"),
+    path("tips/<int:tip_id>/delete/", delete_tip_view, name="delete_tip"),
     path("tips/<int:tip_id>/photo/delete/", delete_tip_photo_view, name="delete_tip_photo"),
     path("tips/<int:tip_id>/like/", toggle_tip_like_view, name="toggle_tip_like"),
     path("journal/", journal_view, name="journal"),

@@ -288,6 +288,14 @@
   border-color: #cfe8db;
   background: #f7fcf9;
 }
+.profile-trip__link {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  min-width: 0;
+  flex: 1;
+  color: inherit;
+}
 .profile-trip__icon {
   width: 32px;
   height: 32px;
@@ -335,6 +343,31 @@
   align-self: center;
   color: #b9c7bf;
   font-size: 14px;
+}
+.profile-trip form {
+  flex: 0 0 auto;
+  align-self: center;
+}
+.profile-trip__remove {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid #f2dee0;
+  border-radius: 9px;
+  background: #fff;
+  color: #b4554d;
+  cursor: pointer;
+}
+.profile-trip__remove svg {
+  width: 15px;
+  height: 15px;
+}
+.profile-trip__remove:hover {
+  border-color: #d98b84;
+  background: #fdf1f0;
+  color: #c8372b;
 }
 .profile-more {
   display: inline-block;

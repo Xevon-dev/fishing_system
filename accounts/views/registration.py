@@ -22,7 +22,7 @@ def register_view(request):
 
     if request.method == "POST":
         form["username"] = request.POST.get("username", "").strip()
-        form["email"] = request.POST.get("email", "").strip()
+        form["email"] = request.POST.get("email", "").strip().lower()
         form["fishing_level"] = request.POST.get("fishing_level", "")
         password = request.POST.get("password", "")
         confirm_password = request.POST.get("confirm_password", "")
@@ -34,7 +34,7 @@ def register_view(request):
             if message:
                 errors[field] = message
 
-        errors.update(password_errors(password, confirm_password))
+        errors.update(password_errors(password, confirm_password, form["username"], form["email"]))
 
         if form["fishing_level"] not in LEVEL_NAMES:
             errors["fishing_level"] = "Оберіть рівень риболовлі"

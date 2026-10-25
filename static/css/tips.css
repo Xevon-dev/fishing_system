@@ -63,7 +63,17 @@
 }
 
 .tips-sort { display: flex; align-items: center; justify-content: flex-end; gap: 9px; margin: 0 0 14px; color: #68756e; font-size: 13px; }
-.tips-sort select { min-height: 38px; padding: 7px 34px 7px 12px; border: 1px solid #dce9e1; border-radius: 10px; background: #fff; color: #285440; font: inherit; cursor: pointer; }
+.tips-sort .map-select { min-width: 0; width: 220px; min-height: 42px; padding: 3px 4px 3px 12px; border-color: #dce9e1; background: linear-gradient(135deg, #ffffff 0%, #f7fdfa 100%); color: #285440; }
+.tips-sort .map-select:hover { border-color: #9fd9be; }
+.tips-sort .map-select__input { font-size: 13px; font-weight: 700; color: #285440; cursor: pointer; }
+.tips-sort .tips-sort-select.is-open { border-color: #9fd9be; box-shadow: 0 0 0 3px rgba(23, 166, 115, 0.12); }
+.tips-sort .tips-sort-select .map-select__list { z-index: 90; }
+.tips-sort .tips-sort-select .map-select__option--none { display: none; }
+
+@media (max-width: 620px) {
+    .tips-sort { flex-wrap: wrap; justify-content: flex-start; }
+    .tips-sort .map-select { width: 100%; }
+}
 
 .tip-card {
     --tip-accent: #16866a;
@@ -161,9 +171,17 @@
     margin-top: 8px;
 }
 
+.tip-owner-actions {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-top: 12px;
+}
+.tip-owner-actions form {
+  margin: 0;
+}
 .tip-edit-link {
     display: inline-block;
-    margin-top: 12px;
     color: #087e68;
     font-size: 12px;
     font-weight: 700;
@@ -171,6 +189,14 @@
 }
 
 .tip-edit-link:hover { text-decoration: underline; }
+.tip-delete-link {
+  color: #b4554d;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.tip-delete-link:hover { color: #c8372b; }
 .tip-card-actions { display: flex; align-items: center; gap: 11px; margin-top: 14px; }
 .tip-card-actions form { margin: 0; }
 .tip-like-button { display: inline-flex; align-items: center; gap: 7px; min-height: 36px; padding: 7px 12px; border: 1px solid #e5e9ee; border-radius: 999px; background: #fff; color: #59646a; font: inherit; font-size: 12px; font-weight: 700; text-decoration: none; cursor: pointer; transition: .16s ease; }

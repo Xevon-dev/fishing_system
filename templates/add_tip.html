@@ -21,6 +21,7 @@
     {% else %}
         <div class="tip-compose-layout">
             {% if tip.photo %}<form id="delete-tip-photo" class="tip-photo-delete-form" method="post" action="{% url 'delete_tip_photo' tip.tip_id %}" data-confirm="Видалити фото до цієї поради?">{% csrf_token %}</form>{% endif %}
+            {% if tip %}<form id="delete-tip-form" class="tip-photo-delete-form" method="post" action="{% url 'delete_tip' tip.tip_id %}" data-confirm="Видалити цю пораду? Скасувати це буде неможливо.">{% csrf_token %}</form>{% endif %}
             <form method="post" class="tip-compose-form auth-form" enctype="multipart/form-data" novalidate>
                 {% csrf_token %}
                 <div class="tip-form-topline"><span class="tip-form-icon" aria-hidden="true">✎</span><div><strong>Нова порада</strong><small>Поля з позначкою * обов’язкові</small></div></div>
@@ -60,7 +61,6 @@
                         <span>Пиши просто й конкретно — як пояснював би товаришу на березі.</span>
                     </div>
                     <textarea id="tip-content" name="content" rows="8" maxlength="2000" minlength="20" required
-                              placeholder="Опиши умови, снасті, приманку або прийом, який спрацював…"
                               class="{% if errors.content %}input-error{% endif %}">{{ content }}</textarea>
                     {% if errors.content %}<span class="field-error" role="alert">{{ errors.content }}</span>{% endif %}
                 </div>
@@ -84,7 +84,15 @@
 
                 <div class="tip-form-footer">
                     <p>Заповни форму та поділись досвідом зі спільнотою.</p>
-                    <button type="submit" class="auth-submit tip-publish-button">{% if tip %}Зберегти зміни{% else %}Опублікувати пораду{% endif %}<span aria-hidden="true">→</span></button>
+                    <div class="tip-form-actions">
+                        <button type="submit" class="auth-submit tip-publish-button">{% if tip %}Зберегти зміни{% else %}Опублікувати пораду{% endif %}<span aria-hidden="true">→</span></button>
+                        {% if tip %}
+                            <button type="submit" form="delete-tip-form" class="tip-compose-delete">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3m3 0-.8 13H6.8L6 7m4 4v5m4-5v5"/></svg>
+                                Видалити пораду
+                            </button>
+                        {% endif %}
+                    </div>
                 </div>
             </form>
 

@@ -70,7 +70,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const options = [...list.querySelectorAll("[data-fish-option]")];
     let visibleCount = 0;
     options.forEach((option) => {
-      const visible = !needle || option.textContent.trim().toLocaleLowerCase("uk").includes(needle);
+      const alwaysVisible = option.classList.contains("map-select__option--none");
+      const visible = alwaysVisible || !needle || option.textContent.trim().toLocaleLowerCase("uk").includes(needle);
       option.hidden = !visible;
       option.classList.remove("is-active");
       visibleCount += Number(visible);

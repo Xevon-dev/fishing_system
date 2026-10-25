@@ -126,6 +126,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const fields = [fish, customTackle, weight, quantity, caughtAt, bait];
       if (!fields.some((field) => field?.value?.trim())) return;
 
+      if (fish?.value.trim() === "Ще нічого не спіймав") return;
+
       if (!fish?.value.trim()) invalidate(fish, "Введи або обери вид риби.");
       else if (fish.value.trim().length > 100 || !/[\p{L}]/u.test(fish.value) || /[^\p{L}\p{N}\s'’().-]/u.test(fish.value)) {
         invalidate(fish, "Вкажи коректну назву риби (до 100 символів).");

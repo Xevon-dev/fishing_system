@@ -17,7 +17,7 @@ def username_view(request):
     if request.method == "POST":
         username = request.POST.get("username", "").strip()
 
-        message = username_error(username)
+        message = username_error(username, exclude_user_id=user.user_id)
         if message:
             errors["username"] = message
 

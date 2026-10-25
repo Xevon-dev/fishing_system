@@ -179,6 +179,14 @@
   line-height: 1.55;
   overflow-wrap: anywhere;
 }
+.form-hint {
+  display: block;
+  margin-top: 5px;
+  color: #8a978f;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.5;
+}
 .level-card {
   background: var(--navy);
   color: #fff;

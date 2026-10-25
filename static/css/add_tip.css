@@ -93,6 +93,29 @@
 .tip-publish-button:hover { background: #096645; }
 .tip-publish-button:disabled { opacity: .7; cursor: wait; }
 .tip-publish-button span { font-size: 15px; }
+.tip-form-actions { display: flex; flex: 0 0 auto; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 10px; }
+.tip-compose-delete {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border: 1px solid #f1d5d2;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #fff, #fff7f6);
+  color: #b4433b;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color .16s, background .16s, color .16s, box-shadow .16s;
+}
+.tip-compose-delete svg { width: 16px; height: 16px; flex: 0 0 16px; }
+.tip-compose-delete:hover { border-color: #e2a49e; background: linear-gradient(180deg, #fff4f3, #ffeceb); color: #9d2f27; box-shadow: 0 6px 14px rgb(180 67 59 / 12%); }
+.tip-compose-delete:focus-visible { outline: 3px solid rgb(214 79 79 / 22%); outline-offset: 2px; }
+.tip-compose-delete:active { box-shadow: inset 0 2px 4px rgb(180 67 59 / 10%); }
 .tip-compose-aside { display: grid; gap: 12px; }
 .tip-aside-card { padding: 18px 16px; border: 1px solid #e7eeea; border-radius: 16px; background: #fff; box-shadow: 0 6px 20px rgb(26 59 45 / 4%); }
 .tip-aside-card h2 { display: flex; align-items: center; gap: 8px; margin: 0 0 15px; color: #344b40; font-size: 12px; }
@@ -199,4 +222,7 @@
     .tip-compose-heading > p { font-size: 13px; }
     .tip-compose-form input[type="text"], .tip-compose-form select { font-size: 14px; }
     .tip-compose-form textarea { min-height: 190px; font-size: 14px; }
+    .tip-form-actions { width: 100%; flex-direction: column; }
+    .tip-form-actions .tip-publish-button,
+    .tip-form-actions .tip-compose-delete { width: 100%; }
 }

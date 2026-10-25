@@ -5,6 +5,7 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/auth.css' %}?v={% now 'U' %}">
+<link rel="stylesheet" href="{% static 'css/map.css' %}?v={% now 'U' %}">
 <link rel="stylesheet" href="{% static 'css/tips.css' %}?v={% now 'U' %}">
 {% endblock %}
 
@@ -18,12 +19,20 @@
 
     <div class="tips-list">
         <form class="tips-sort" method="get">
-            <label for="tips-sort-select">Сортувати:</label>
-            <select id="tips-sort-select" name="sort" onchange="this.form.submit()">
-                <option value="newest" {% if sort == "newest" %}selected{% endif %}>Найновіші</option>
-                <option value="popular" {% if sort == "popular" %}selected{% endif %}>Найпопулярніші</option>
-                <option value="worst" {% if sort == "worst" %}selected{% endif %}>Найгірші оцінки</option>
-            </select>
+            <label for="tips-sort-input">Сортувати:</label>
+            <div class="map-select tips-sort-select" id="tips-sort-picker">
+                <input type="text" id="tips-sort-input" class="map-select__input" placeholder="Виберіть порядок"
+                       autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="tips-sort-list">
+                <button type="button" class="map-select__toggle" id="tips-sort-toggle" aria-label="Розгорнути список сортування">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 9.5 6 6 6-6"/></svg>
+                </button>
+                <select id="tips-sort-select" name="sort" class="map-select__native" tabindex="-1" onchange="this.form.submit()">
+                    <option value="newest" {% if sort == "newest" %}selected{% endif %}>Найновіші</option>
+                    <option value="popular" {% if sort == "popular" %}selected{% endif %}>Найпопулярніші</option>
+                    <option value="worst" {% if sort == "worst" %}selected{% endif %}>Найгірші оцінки</option>
+                </select>
+                <ul class="map-select__list" id="tips-sort-list" role="listbox" hidden></ul>
+            </div>
         </form>
         {% if tips %}<p class="tips-count">Знайдено: <strong>{{ tips|length }} порад</strong></p>{% endif %}
         {% if tips %}
@@ -59,8 +68,15 @@
                         {% endif %}
                     </div>
                     {% if current_user and tip.author_id == current_user.user_id %}
-                        <a class="tip-edit-link"
-                           href="{% url 'edit_tip' tip.tip_id %}">✏️ Редагувати</a>
+                        <div class="tip-owner-actions">
+                            <a class="tip-edit-link"
+                               href="{% url 'edit_tip' tip.tip_id %}">✏️ Редагувати</a>
+                            <form method="post" action="{% url 'delete_tip' tip.tip_id %}" data-confirm="Видалити цю пораду? Скасувати це буде неможливо.">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                <button type="submit" class="tip-delete-link">Видалити</button>
+                            </form>
+                        </div>
                     {% endif %}
                 </article>
             {% endfor %}
@@ -72,5 +88,6 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'js/region-picker.js' %}?v={% now 'U' %}"></script>
 <script src="{% static 'js/tips-reactions.js' %}?v={% now 'U' %}"></script>
 {% endblock %}

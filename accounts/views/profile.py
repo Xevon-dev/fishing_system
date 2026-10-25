@@ -5,7 +5,7 @@ from django.shortcuts import redirect, render
 from journal.models import Catches, FishingTrips, Tips
 from ..models import Users
 from ..session import current_user
-from ..validators import email_error, username_error
+from ..validators import email_error, password_strength_error, username_error
 from ..image_uploads import image_upload_error
 
 
@@ -62,12 +62,12 @@ def profile_view(request):
 def edit_errors_for(user, form):
     errors = {}
 
-    message = username_error(form["username"])
+    message = username_error(form["username"], exclude_user_id=user.user_id)
     if message:
         errors["username"] = message
 
     if form["email"] != user.email:
-        message = email_error(form["email"])
+        message = email_error(form["email"], exclude_user_id=user.user_id)
         if message:
             errors["email"] = message
 
@@ -82,12 +82,9 @@ def edit_errors_for(user, form):
         elif not check_password(form["current_password"], user.password_hash):
             errors["current_password"] = "Невірний поточний пароль"
 
-        if not form["new_password"]:
-            errors["new_password"] = "Введіть новий пароль"
-        elif len(form["new_password"]) < 6:
-            errors["new_password"] = "Мінімум 6 символів"
-        elif form["new_password"] == form["current_password"]:
-            errors["new_password"] = "Новий пароль має відрізнятися від поточного"
+        message = password_strength_error(form["new_password"])
+        if message:
+            errors["new_password"] = message
 
         if not form["confirm_password"]:
             errors["confirm_password"] = "Підтвердіть новий пароль"

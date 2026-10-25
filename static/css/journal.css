@@ -487,6 +487,18 @@
 }
 .trip-form-card .fish-autocomplete .map-select__input:focus { border: 0; outline: none; box-shadow: none; }
 .trip-form-card .fish-autocomplete .map-select__list { z-index: 150; }
+.trip-form-card .fish-autocomplete .map-select__option--none {
+  margin-top: 5px;
+  padding-top: 9px;
+  border-top: 1px solid #eef2f6;
+  color: #5b6d64;
+  font-style: italic;
+}
+.trip-form-card .fish-autocomplete .map-select__option--none:hover,
+.trip-form-card .fish-autocomplete .map-select__option--none.is-active {
+  background: linear-gradient(135deg, #eef4f0 0%, #e2ece7 100%);
+  color: #2c3a33;
+}
 .trip-form-card .fish-autocomplete.is-open { border-color: #9fd9be; box-shadow: 0 0 0 3px rgb(23 166 115 / 12%); }
 .trip-form-card .fish-autocomplete .map-select__input.input-error { border: 0; background: transparent; }
 .trip-form-card .fish-autocomplete:has(.map-select__input.input-error) { border-color: #d64f4f; background: linear-gradient(135deg, #fffafa, #fff4f4); }

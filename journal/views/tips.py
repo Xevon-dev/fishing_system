@@ -239,6 +239,25 @@ def edit_tip_view(request, tip_id):
 
 
 @require_POST
+def delete_tip_view(request, tip_id):
+    user = current_user(request)
+    if not user:
+        return redirect("login")
+
+    tip = Tips.objects.filter(pk=tip_id, author_id=user.user_id).first()
+    if not tip:
+        return redirect("tips_list")
+
+    next_url = request.POST.get("next") or ""
+    tip.delete()
+
+    if next_url and next_url.startswith("/") and not next_url.startswith("//"):
+        return redirect(next_url)
+
+    return redirect("tips_list")
+
+
+@require_POST
 def delete_tip_photo_view(request, tip_id):
     user = current_user(request)
     if not user:

@@ -7,6 +7,9 @@ from catalog.models import FishSpecies
 from .models import Catches, FishingTrips
 
 
+CUSTOM_NO_CATCH_TEXT = "Ще нічого не спіймав"
+
+
 class CatchForm(forms.ModelForm):
     fish_name = forms.CharField(
         label="Вид риби",
@@ -132,6 +135,8 @@ class CatchFormSet(BaseInlineFormSet):
                 "caught_at", "bait_note",
             ))
             if not populated:
+                continue
+            if data.get("fish_name", "").strip() == CUSTOM_NO_CATCH_TEXT:
                 continue
             if not data.get("fish_name", "").strip():
                 form.add_error("fish_name", "Вкажи або обери вид риби.")

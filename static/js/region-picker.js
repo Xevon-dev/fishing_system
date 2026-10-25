@@ -185,3 +185,10 @@ initRegionPicker({
   toggleId: "#trip-type-toggle",
   listId: "#trip-type-list",
 });
+initRegionPicker({
+  pickerId: "#tips-sort-picker",
+  selectId: "#tips-sort-select",
+  inputId: "#tips-sort-input",
+  toggleId: "#tips-sort-toggle",
+  listId: "#tips-sort-list",
+});
