@@ -37,7 +37,6 @@
             {% else %}
                 <a href="{% url 'catalog:home' %}">Головна</a>
                 <a href="{% url 'catalog:home' %}#features">Можливості</a>
-                <a href="{% url 'catalog:fish_advice' %}"{% if request.resolver_match.url_name == 'fish_advice' %} aria-current="page"{% endif %}>Енциклопедія рибака</a>
             {% endif %}
             {% endblock %}
         </nav>

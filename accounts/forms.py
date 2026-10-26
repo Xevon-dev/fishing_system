@@ -25,6 +25,9 @@ class RegistrationForm(UserCreationForm):
         fields = ("username", "email")
 
     def __init__(self, *args, **kwargs):
+        self.existing_google_user = kwargs.pop("existing_google_user", None)
+        if self.existing_google_user is not None:
+            kwargs["instance"] = self.existing_google_user
         # The existing profile model is not Django's AbstractUser and does
         # not define USERNAME_FIELD, so initialize its ModelForm directly.
         ModelForm.__init__(self, *args, **kwargs)
@@ -37,14 +40,18 @@ class RegistrationForm(UserCreationForm):
 
     def clean_username(self):
         username = self.cleaned_data["username"].strip()
-        message = username_error(username)
+        exclude_user_id = self.existing_google_user.user_id if self.existing_google_user else None
+        message = username_error(username, exclude_user_id=exclude_user_id)
         if message:
             raise forms.ValidationError(message)
         return username
 
     def clean_email(self):
         email = self.cleaned_data["email"].strip().lower()
-        message = email_error(email)
+        if self.existing_google_user and email != self.existing_google_user.email.lower():
+            raise forms.ValidationError("Вкажіть email, підтверджений через Google.")
+        exclude_user_id = self.existing_google_user.user_id if self.existing_google_user else None
+        message = email_error(email, exclude_user_id=exclude_user_id)
         if message:
             raise forms.ValidationError(message)
         return email
@@ -68,12 +75,14 @@ class RegistrationForm(UserCreationForm):
         return None
 
     def save(self, commit=True):
-        user = ModelForm.save(self, commit=False)
+        user = self.existing_google_user or ModelForm.save(self, commit=False)
+        if self.existing_google_user:
+            user.username = self.cleaned_data["username"].strip()
+            user.email = self.cleaned_data["email"].strip().lower()
         level_name = LEVEL_NAMES[self.cleaned_data["fishing_level"]]
         user.level, _ = Levels.objects.get_or_create(name=level_name)
         user.password_hash = make_password(self.cleaned_data["password1"])
         user.created_at = timezone.now()
         if commit:
             user.save()
-            self.save_m2m()
         return user

@@ -1,6 +1,5 @@
-from django.contrib.auth.hashers import make_password
-from django.core.exceptions import PermissionDenied
-from django.utils import timezone
+from django.contrib.auth.hashers import is_password_usable
+from social_core.exceptions import AuthForbidden
 
 from .models import Users
 from .session import login_user
@@ -10,17 +9,18 @@ def sync_custom_user(backend, user, response, details, strategy, **kwargs):
 
     email = (details.get('email') or getattr(user, 'email', '')).strip().lower()
     if not email:
-        raise PermissionDenied('Google did not provide an email address.')
+        raise AuthForbidden(backend, 'Google did not provide an email address.')
 
     custom_user = Users.objects.filter(email__iexact=email).first()
     if custom_user is None:
-        username = (details.get('username') or details.get('fullname') or email.split('@', 1)[0])
-        username = username.strip()[:45] or email.split('@', 1)[0][:45]
-        custom_user = Users.objects.create(
-            username=username,
-            email=email,
-            password_hash=make_password(None),
-            created_at=timezone.now(),
-        )
+        strategy.request.session["google_registration_required"] = True
+        raise AuthForbidden(backend, 'Спершу створіть обліковий запис на сайті.')
+
+    if not is_password_usable(custom_user.password_hash):
+        strategy.request.session["google_registration_required"] = True
+        strategy.request.session["google_registration_user_id"] = custom_user.user_id
+        raise AuthForbidden(backend, 'Спершу завершіть реєстрацію на сайті.')
 
     login_user(strategy.request, custom_user)
+    if custom_user.level_id is None:
+        strategy.request.session["google_level_required"] = True

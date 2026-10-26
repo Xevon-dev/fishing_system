@@ -3,6 +3,7 @@ from django.urls import path
 from .views import (
     delete_account_view,
     fishing_test_view,
+    google_level_view,
     login_view,
     logout_view,
     password_view,
@@ -26,4 +27,5 @@ urlpatterns = [
     path("profile/name/", username_view, name="username"),
     path("profile/delete/", delete_account_view, name="delete_account"),
     path("fishing-test/", fishing_test_view, name="fishing_test"),
+    path("google/choose-level/", google_level_view, name="google_level"),
 ]

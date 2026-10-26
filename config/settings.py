@@ -154,6 +154,7 @@ AUTHENTICATION_BACKENDS = (
 )
 LOGIN_REDIRECT_URL = '/accounts/profile/'
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = LOGIN_REDIRECT_URL
+SOCIAL_AUTH_LOGIN_ERROR_URL = '/accounts/register/'
 
 ALLOWED_HOSTS = ['zolotarybka.com', 'localhost', '127.0.0.1']
 

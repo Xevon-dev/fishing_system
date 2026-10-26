@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Оберіть рівень риболовлі — Золота Рибка{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}?v={% now 'U' %}">
+{% endblock %}
+
+{% block nav_links %}{% endblock %}
+
+{% block content %}
+<section class="auth-section auth-page google-onboarding">
+    <div class="google-onboarding__card">
+        <span class="auth-badge"><span class="auth-badge__dot"></span>Ще один крок</span>
+        <h1>Оберіть свій рівень риболовлі</h1>
+        <p>Акаунт Google підключено. Оберіть рівень, щоб ми могли підібрати для вас відповідні поради та матеріали.</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="google-onboarding__levels">
+                {% for key, name in levels.items %}
+                <label class="google-onboarding__level">
+                    <input type="radio" name="fishing_level" value="{{ key }}" required>
+                    <span>{{ name }}</span>
+                </label>
+                {% endfor %}
+            </div>
+            {% if error %}<p class="google-onboarding__error" role="alert">{{ error }}</p>{% endif %}
+            <button class="auth-submit" type="submit">Продовжити до профілю <span aria-hidden="true">→</span></button>
+        </form>
+    </div>
+</section>
+{% endblock %}
