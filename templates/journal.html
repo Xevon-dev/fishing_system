@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static journal_tags %}
 
 {% block title %}Риболовні сесії — Золота Рибка{% endblock %}
 
@@ -65,7 +65,7 @@
                     {% endif %}
 
                     {% for catch in trip.catches_set.all %}
-                        <div class="catch-row"><span class="catch-fish-icon">♧</span><div><strong>{% firstof catch.custom_fish_name catch.fish.name "Риба" %}</strong><small>{% if catch.quantity %}{{ catch.quantity }} шт.{% else %}1 шт.{% endif %}{% if catch.tackle %} · {{ catch.tackle.name }}{% endif %}{% if catch.tackle_note %} · {{ catch.tackle_note }}{% endif %}{% if catch.bait_note %} · На що: {{ catch.bait_note }}{% endif %}</small></div><b>{% if catch.weight_kg %}{{ catch.weight_kg|floatformat:1 }} кг{% else %}Вага не вказана{% endif %}</b></div>
+                        <div class="catch-row"><span class="catch-fish-icon">♧</span><div><strong>{% catch_display_name catch %}</strong><small>{% if catch.quantity %}{{ catch.quantity }} шт.{% else %}1 шт.{% endif %}{% if catch.tackle %} · {{ catch.tackle.name }}{% endif %}{% if catch.tackle_note %} · {{ catch.tackle_note }}{% endif %}{% if catch.bait_note %} · На що: {{ catch.bait_note }}{% endif %}</small></div><b>{% if catch.weight_kg %}{{ catch.weight_kg|floatformat:1 }} кг{% else %}Вага не вказана{% endif %}</b></div>
                     {% empty %}
                         <p class="trip-no-catch">Улов ще не додано</p>
                     {% endfor %}
