@@ -25,6 +25,9 @@ class WaterBodies(models.Model):
     class Meta:
         db_table = 'water_bodies'
 
+    def __str__(self):
+        return self.name
+
 
 class FishSpecies(models.Model):
     fish_id = models.AutoField(primary_key=True)

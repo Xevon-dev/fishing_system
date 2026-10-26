@@ -9,6 +9,9 @@ class Levels(models.Model):
     class Meta:
         db_table = 'levels'
 
+    def __str__(self):
+        return self.name
+
 
 class Users(models.Model):
     user_id = models.AutoField(primary_key=True)
@@ -34,6 +37,9 @@ class Users(models.Model):
     def is_beginner(self):
         return bool(self.level and self.level.name == 'Початківець')
 
+    def __str__(self):
+        return self.username
+
 
 class TestQuestions(models.Model):
     question_id = models.AutoField(primary_key=True)
@@ -43,6 +49,9 @@ class TestQuestions(models.Model):
     class Meta:
         db_table = 'test_questions'
         ordering = ('position', 'question_id')
+
+    def __str__(self):
+        return self.text
 
 
 class TestAnswers(models.Model):
@@ -59,3 +68,6 @@ class TestAnswers(models.Model):
     class Meta:
         db_table = 'test_answers'
         ordering = ('position', 'answer_id')
+
+    def __str__(self):
+        return self.text

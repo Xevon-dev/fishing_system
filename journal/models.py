@@ -39,6 +39,9 @@ class FishingTrips(models.Model):
     def get_absolute_url(self):
         return reverse("journal:trip_record_detail", kwargs={"pk": self.pk})
 
+    def __str__(self):
+        return f"Сесія #{self.pk}"
+
 
 class FishingTripPhotos(models.Model):
     photo_id = models.AutoField(primary_key=True)
@@ -51,6 +54,9 @@ class FishingTripPhotos(models.Model):
 
     class Meta:
         db_table = "fishing_trip_photos"
+
+    def __str__(self):
+        return f"Фото сесії #{self.trip_id}"
 
 
 class Catches(models.Model):
@@ -85,6 +91,10 @@ class Catches(models.Model):
     class Meta:
         db_table = 'catches'
 
+    def __str__(self):
+        fish_name = self.custom_fish_name or (self.fish.name if self.fish_id else "Улов")
+        return f"{fish_name} (сесія #{self.trip_id})"
+
 
 class Tips(models.Model):
     tip_id = models.AutoField(primary_key=True)
@@ -109,12 +119,18 @@ class Tips(models.Model):
     class Meta:
         db_table = 'tips'
 
+    def __str__(self):
+        return self.title
+
 
 class TipLike(models.Model):
     id = models.AutoField(primary_key=True)
     tip = models.ForeignKey(Tips, on_delete=models.CASCADE, related_name="likes")
     user = models.ForeignKey('accounts.Users', on_delete=models.CASCADE, related_name="tip_likes")
-    is_like = models.BooleanField(default=True)
+    is_like = models.BooleanField(
+        default=True,
+        choices=((True, "Подобається"), (False, "Не подобається")),
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -122,3 +138,7 @@ class TipLike(models.Model):
         constraints = [
             models.UniqueConstraint(fields=("tip", "user"), name="unique_tip_like_per_user"),
         ]
+
+    def __str__(self):
+        reaction = "Вподобання" if self.is_like else "Не вподобання"
+        return f"{reaction} до поради #{self.tip_id}"
