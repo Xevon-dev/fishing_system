@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 # Create your models here.
 
@@ -34,6 +35,9 @@ class FishingTrips(models.Model):
 
     class Meta:
         db_table = 'fishing_trips'
+
+    def get_absolute_url(self):
+        return reverse("trip_record_detail", kwargs={"pk": self.pk})
 
 
 class FishingTripPhotos(models.Model):

@@ -26,6 +26,7 @@ class FishingTripListView(SessionOwnerRequiredMixin, ListView):
     model = FishingTrips
     template_name = "journal/trip_list.html"
     context_object_name = "trips"
+    paginate_by = 20
 
     def get_queryset(self):
         return (

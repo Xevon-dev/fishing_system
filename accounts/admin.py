@@ -27,4 +27,13 @@ class TestAnswersInline(admin.TabularInline):
 @admin.register(TestQuestions)
 class TestQuestionsAdmin(admin.ModelAdmin):
     list_display = ("question_id", "text", "position")
+    search_fields = ("text",)
     inlines = (TestAnswersInline,)
+
+
+@admin.register(TestAnswers)
+class TestAnswersAdmin(admin.ModelAdmin):
+    list_display = ("answer_id", "question", "text", "points", "position")
+    list_select_related = ("question",)
+    list_filter = ("question",)
+    search_fields = ("text", "question__text")

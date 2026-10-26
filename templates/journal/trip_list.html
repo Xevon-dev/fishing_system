@@ -16,6 +16,13 @@
     {% empty %}
         <p>У тебе ще немає сесій.</p>
     {% endfor %}
+    {% if is_paginated %}
+        <nav aria-label="Сторінки списку сесій" style="display: flex; gap: 1rem; align-items: center;">
+            {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">← Назад</a>{% endif %}
+            <span>Сторінка {{ page_obj.number }} з {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Далі →</a>{% endif %}
+        </nav>
+    {% endif %}
     <p><a href="{% url 'journal' %}">Повернутися до журналу</a></p>
 </section>
 {% endblock %}
