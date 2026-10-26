@@ -12,3 +12,5 @@ media/*
 !media/fish/*.png
 .vscode/
 static/data/
+cert.crt
+cert.key
