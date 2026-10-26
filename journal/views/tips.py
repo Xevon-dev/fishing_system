@@ -8,6 +8,7 @@ from django.views.generic import DetailView, ListView
 from catalog.models import FishSpecies
 from accounts.image_uploads import image_upload_error
 from ..common import current_user
+from ..forms import TipsSortForm
 from ..models import TipLike, Tips
 from ..tip_check import MAX_LENGTH, check_tip
 
@@ -84,7 +85,12 @@ class TipsListView(ListView):
             no_reaction = Exists(TipLike.objects.none())
             tips = tips.annotate(user_liked=no_reaction, user_disliked=no_reaction)
 
-        sort = self.request.GET.get("sort", "newest")
+        self.sort_form = TipsSortForm(self.request.GET)
+        if self.sort_form.is_valid():
+            sort = self.sort_form.cleaned_data.get("sort") or "newest"
+        else:
+            sort = "newest"
+        self.sort = sort
         if sort == "popular":
             return tips.order_by("-likes_count", "dislikes_count", "-tip_id")
         if sort == "worst":
@@ -93,8 +99,7 @@ class TipsListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        sort = self.request.GET.get("sort", "newest")
-        context["sort"] = sort if sort in {"newest", "popular", "worst"} else "newest"
+        context["sort"] = getattr(self, "sort", "newest")
         return context
 
 

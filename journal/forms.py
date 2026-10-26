@@ -21,3 +21,14 @@ class GenericFishingTripForm(forms.ModelForm):
         widgets = {
             "note": forms.Textarea(attrs={"rows": 4}),
         }
+
+
+class TipsSortForm(forms.Form):
+    sort = forms.ChoiceField(
+        required=False,
+        choices=(
+            ("newest", "Найновіші"),
+            ("popular", "Найпопулярніші"),
+            ("worst", "Найгірші оцінки"),
+        ),
+    )
