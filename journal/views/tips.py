@@ -27,7 +27,7 @@ def validate_tip(title, content, fish_ids=(), photo=None, applies_to_all_fish=Fa
     if not content:
         errors["content"] = "Введіть текст поради"
     elif len(content) < 20:
-        errors["content"] = "Опиши пораду детальніше — щонайменше 20 символів."
+        errors["content"] = "Опиши пораду детальніше – щонайменше 20 символів."
     elif len(content) > MAX_LENGTH:
         errors["content"] = f"Максимум {MAX_LENGTH} символів."
 

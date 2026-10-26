@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Статистика риболовлі — Золота Рибка{% endblock %}
+{% block title %}Статистика риболовлі – Золота Рибка{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/auth.css' %}?v={% now 'U' %}">
@@ -47,7 +47,7 @@
                     {% endfor %}
                 </div>
             {% else %}
-                <div class="trophies-empty"><span aria-hidden="true">♧</span><strong>Трофеїв поки немає</strong><p>Додай улов із видом риби та вагою — найбільший екземпляр кожного виду з’явиться тут.</p><a href="{% url 'journal:add_trip' %}">Додати рибальську сесію →</a></div>
+                <div class="trophies-empty"><span aria-hidden="true">♧</span><strong>Трофеїв поки немає</strong><p>Додай улов із видом риби та вагою – найбільший екземпляр кожного виду з’явиться тут.</p><a href="{% url 'journal:add_trip' %}">Додати рибальську сесію →</a></div>
             {% endif %}
         </section>
 

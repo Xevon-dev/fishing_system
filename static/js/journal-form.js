@@ -22,8 +22,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (placeholder) {
       placeholder.textContent = hasType
-        ? "— не вказано —"
-        : "— спочатку обери тип —";
+        ? "– не вказано –"
+        : "– спочатку обери тип –";
     }
 
     const selected = method.options[method.selectedIndex];

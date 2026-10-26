@@ -156,11 +156,16 @@ img {
   transition: 0.2s;
 }
 .btn-primary {
-  background: var(--teal);
+  background: linear-gradient(120deg, #08764f 0%, #10a47c 52%, #087e9b 100%);
+  background-size: 180% 180%;
   color: #fff;
+  box-shadow: 0 6px 16px rgb(8 118 79 / 16%);
+  transition: background-position .35s ease, box-shadow .25s ease, transform .25s ease;
 }
 .btn-primary:hover {
-  background: #007e77;
+  background-position: 100% 50%;
+  box-shadow: 0 9px 22px rgb(8 118 79 / 26%);
+  transform: translateY(-2px);
 }
 .header .nav-actions .profile-nav-btn {
   position: relative;
@@ -229,6 +234,10 @@ img {
 .site-footer .home-footer__brand .brand-name { color: #b68b2e; }
 .site-footer .home-footer__brand .brand-name span { color: #176b46; }
 .site-footer .home-footer__inner p { margin: 0; color: #78877f; font-size: 12px; }
+.home-footer__links { display: flex; align-items: center; justify-content: flex-end; gap: 22px; }
+.home-footer__contact { color: #176b46; font-size: 14px; font-weight: 800; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; transition: color .2s ease; }
+.home-footer__contact:hover { color: #0b8a5b; text-decoration-thickness: 2px; }
+.home-footer__contact:focus-visible { outline: 3px solid #7de0ae; outline-offset: 3px; }
 .site-confirm { width: min(440px, calc(100% - 32px)); padding: 0; border: 1px solid #deeee5; border-radius: 22px; background: #fff; color: #23483a; box-shadow: 0 28px 80px rgb(7 39 27 / 28%); }
 .site-confirm::backdrop { background: rgb(8 31 24 / 48%); backdrop-filter: blur(3px); }
 .site-confirm__inner { display: grid; justify-items: center; padding: 30px 28px 24px; text-align: center; }
@@ -294,5 +303,6 @@ img {
     width: 100%;
   }
   .site-footer .home-footer__inner { flex-direction: column; text-align: center; }
+  .home-footer__links { flex-direction: column; gap: 9px; }
   .site-confirm__inner { padding: 26px 20px 20px; }
 }

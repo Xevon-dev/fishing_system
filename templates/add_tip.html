@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{% if tip %}Редагувати пораду{% else %}Додати пораду{% endif %} — Золота Рибка{% endblock %}
+{% block title %}{% if tip %}Редагувати пораду{% else %}Додати пораду{% endif %} – Золота Рибка{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/auth.css' %}?v={% now 'U' %}">
@@ -58,7 +58,7 @@
                     <div class="tip-editor-toolbar" role="toolbar" aria-label="Форматування тексту">
                         <button type="button" data-insert="bullet" title="Додати пункт списку">• Список</button>
                         <button type="button" data-insert="number" title="Додати нумерований пункт">1. Нумерація</button>
-                        <span>Пиши просто й конкретно — як пояснював би товаришу на березі.</span>
+                        <span>Пиши просто й конкретно – як пояснював би товаришу на березі.</span>
                     </div>
                     <textarea id="tip-content" name="content" rows="8" maxlength="2000" minlength="20" required
                               class="{% if errors.content %}input-error{% endif %}">{{ content }}</textarea>

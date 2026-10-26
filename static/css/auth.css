@@ -353,7 +353,7 @@
   margin-top: 16px;
 }
 
-/* Сесія у профілі — клікабельна, веде на редагування */
+/* Сесія у профілі – клікабельна, веде на редагування */
 .level-card a:not(.btn) {
   color: #6fd7ea;
 }
@@ -399,7 +399,7 @@
   color: var(--muted);
 }
 
-/* Сторінка профілю — накопичувальні картки, як у великих системах */
+/* Сторінка профілю – накопичувальні картки, як у великих системах */
 .profile-page {
   min-height: calc(100vh - 94px);
   background: #f4f9fb;
@@ -610,10 +610,13 @@
   color: #0d6b4a;
 }
 .header .btn-primary {
-  background: #0d6b4a;
+  background: linear-gradient(120deg, #0d6b4a, #12966a 55%, #087e9b);
+  background-size: 180% 180%;
+  box-shadow: 0 7px 18px rgba(13, 107, 74, 0.2);
 }
 .header .btn-primary:hover {
-  background: #0f7d58;
+  background-position: 100% 50%;
+  box-shadow: 0 10px 24px rgba(13, 107, 74, 0.3);
 }
 
 .auth-section.auth-page {
@@ -699,7 +702,7 @@ main {
   display: flex;
   flex-direction: column;
   border: 1px solid #ecebf5;
-  background: #fff;
+  background: linear-gradient(145deg, #fff 0%, #fff 58%, #f4fbf7 100%);
   box-shadow: 0 20px 50px rgba(16, 56, 45, 0.06);
 }
 .auth-page .auth-tabs {
@@ -865,16 +868,20 @@ main {
   padding: 0 18px;
   border: 0;
   border-radius: 10px;
-  background: #0d6b4a;
+  background: linear-gradient(115deg, #0b6849 0%, #11875f 48%, #0a7890 100%);
+  background-size: 180% 180%;
   color: #fff;
   font-family: inherit;
   font-size: 12px;
   font-weight: 800;
   cursor: pointer;
-  transition: 0.2s;
+  box-shadow: 0 7px 18px rgba(13, 107, 74, 0.19);
+  transition: background-position 0.35s ease, box-shadow 0.25s ease, transform 0.25s ease;
 }
 .auth-page .auth-submit:hover {
-  background: #0f7d58;
+  background-position: 100% 50%;
+  box-shadow: 0 10px 23px rgba(13, 107, 74, 0.28);
+  transform: translateY(-1px);
 }
 .auth-page .auth-submit span {
   font-size: 14px;
@@ -884,27 +891,40 @@ main {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 12px;
   width: 100%;
-  min-height: 42px;
-  padding: 0 18px;
-  border: 1px solid #d7dfda;
-  border-radius: 10px;
+  min-height: 48px;
+  padding: 0 20px;
+  border: 1px solid #dce5df;
+  border-radius: 12px;
   background: #fff;
-  color: #26352d;
-  font-size: 12px;
+  color: #273b32;
+  font-size: 12.5px;
   font-weight: 800;
   text-decoration: none;
-  transition: background 0.2s, border-color 0.2s;
+  box-shadow: 0 3px 10px rgba(24, 62, 43, 0.04);
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 .google-login:hover {
-  border-color: #aebbb3;
-  background: #f7f9f7;
+  transform: translateY(-2px);
+  border-color: #b8d7c5;
+  background: #fbfefc;
+  box-shadow: 0 9px 22px rgba(24, 94, 59, 0.11);
+}
+.google-login:active {
+  transform: translateY(0) scale(0.99);
+}
+.google-login:focus-visible {
+  outline: 3px solid rgba(31, 138, 95, 0.22);
+  outline-offset: 3px;
 }
 .google-login__mark {
-  color: #4285f4;
-  font-size: 16px;
-  font-weight: 900;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .google-login { transition: none; }
 }
 .auth-switch {
   display: flex;
@@ -924,7 +944,10 @@ main {
 .auth-page .level-card {
   position: relative;
   overflow: hidden;
-  background: #0d3c2f;
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(40, 160, 112, 0.2), transparent 42%),
+    radial-gradient(ellipse at 0% 100%, rgba(16, 120, 136, 0.16), transparent 46%),
+    linear-gradient(135deg, #0d4938 0%, #0d3c2f 52%, #092f2d 100%);
   color: #fff;
   box-shadow: 0 20px 50px rgba(13, 60, 47, 0.18);
 }
@@ -967,17 +990,17 @@ main {
   padding: 9px 11px;
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.045);
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.035));
   cursor: pointer;
   transition: 0.2s;
 }
 .auth-page .level-option:hover {
   border-color: rgba(255, 255, 255, 0.16);
-  background: rgba(255, 255, 255, 0.07);
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.055));
 }
 .auth-page .level-option:has(input:checked) {
   border-color: #63dfa3;
-  background: rgba(99, 223, 163, 0.09);
+  background: linear-gradient(115deg, rgba(99, 223, 163, 0.18), rgba(25, 125, 91, 0.11));
 }
 .auth-page .level-option:has(input:focus-visible) {
   outline: 2px solid #63dfa3;
@@ -1054,7 +1077,7 @@ main {
   padding: 10px 12px;
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.045);
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.035));
 }
 .auth-page .level-test strong {
   color: #e9f5ee;
@@ -1072,7 +1095,7 @@ main {
   align-items: center;
   padding: 9px 14px;
   border-radius: 9px;
-  background: #b9f3d2;
+  background: linear-gradient(115deg, #c7f6d8, #a8edc6 58%, #a8e8e8);
   color: #0d3c2f;
   font-size: 10px;
   font-weight: 800;
@@ -1081,7 +1104,8 @@ main {
   transition: 0.2s;
 }
 .auth-page .level-card a.test-button:hover {
-  background: #cdf8df;
+  background: linear-gradient(115deg, #ddfbe7, #baf4d1 58%, #b6f0ef);
+  transform: translateY(-1px);
   color: #0d3c2f;
 }
 .auth-page .level-options-error .level-option {
@@ -1109,6 +1133,13 @@ main {
 .home-footer__inner p {
   margin: 0;
   color: #b9cdc0;
+}
+.home-footer__contact {
+  color: #08764f;
+  font-size: 12px;
+}
+.home-footer__contact:hover {
+  color: #075b3b;
 }
 .home-footer__brand {
   display: inline-flex;

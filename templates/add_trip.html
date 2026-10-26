@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{% if trip %}Редагувати сесію{% else %}Додати сесію{% endif %} — Золота Рибка{% endblock %}
+{% block title %}{% if trip %}Редагувати сесію{% else %}Додати сесію{% endif %} – Золота Рибка{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/auth.css' %}?v={% now 'U' %}">
@@ -39,9 +39,9 @@
                 <div class="trip-map-controls">
                     <div class="map-select trip-map-select{% if errors.water_body_id %} has-error{% endif %}" id="trip-region-picker">
                         <svg class="map-select__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 21s-6.2-5.7-6.2-10.3A6.2 6.2 0 0 1 12 4.5a6.2 6.2 0 0 1 6.2 6.2C18.2 15.3 12 21 12 21Z"/><circle cx="12" cy="10.5" r="2.3"/></svg>
-                        <input type="text" id="trip-region-input" class="map-select__input" placeholder="— оберіть область —" autocomplete="off" spellcheck="false" role="combobox" aria-label="Область" aria-autocomplete="list" aria-expanded="false" aria-controls="trip-region-list" {% if errors.water_body_id %}aria-invalid="true"{% endif %}>
+                        <input type="text" id="trip-region-input" class="map-select__input" placeholder="– оберіть область –" autocomplete="off" spellcheck="false" role="combobox" aria-label="Область" aria-autocomplete="list" aria-expanded="false" aria-controls="trip-region-list" {% if errors.water_body_id %}aria-invalid="true"{% endif %}>
                         <button type="button" class="map-select__toggle" id="trip-region-toggle" aria-label="Показати список областей"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 9.5 6 6 6-6"/></svg></button>
-                        <select id="trip-region" class="map-select__native" aria-label="Область" tabindex="-1"><option value="">— оберіть область —</option>{% for region in regions %}<option value="{{ region.region_slug }}">{{ region.region }}</option>{% endfor %}</select>
+                        <select id="trip-region" class="map-select__native" aria-label="Область" tabindex="-1"><option value="">– оберіть область –</option>{% for region in regions %}<option value="{{ region.region_slug }}">{{ region.region }}</option>{% endfor %}</select>
                         <ul class="map-select__list" id="trip-region-list" role="listbox" hidden></ul>
                     </div>
                     <button
@@ -101,9 +101,9 @@
                     <label for="trip-type-input">ТИП РИБОЛОВЛІ</label>
                     <div class="map-select trip-map-select{% if errors.type %} has-error{% endif %}" id="trip-type-picker">
                         <svg class="map-select__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 8.5c2.1-2.3 6.9-2.3 9 0-2.1 2.3-6.9 2.3-9 0Z"/><path d="M14 8.5h4.8l2.2 2v3.8h-2"/><circle cx="8" cy="14.5" r="2"/><circle cx="17" cy="14.5" r="2"/><path d="M10 14.5h5"/></svg>
-                        <input type="text" id="trip-type-input" class="map-select__input" placeholder="— оберіть тип риболовлі —" autocomplete="off" spellcheck="false" role="combobox" aria-label="Тип риболовлі" aria-autocomplete="list" aria-expanded="false" aria-controls="trip-type-list" {% if errors.type %}aria-invalid="true"{% endif %}>
+                        <input type="text" id="trip-type-input" class="map-select__input" placeholder="– оберіть тип риболовлі –" autocomplete="off" spellcheck="false" role="combobox" aria-label="Тип риболовлі" aria-autocomplete="list" aria-expanded="false" aria-controls="trip-type-list" {% if errors.type %}aria-invalid="true"{% endif %}>
                         <button type="button" class="map-select__toggle" id="trip-type-toggle" aria-label="Показати типи риболовлі"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 9.5 6 6 6-6"/></svg></button>
-                        <select id="trip-type" name="type" class="map-select__native" tabindex="-1" required><option value="">— оберіть тип риболовлі —</option>{% for type in types %}<option value="{{ type.type_id }}" {% if form.type == type.type_id|stringformat:"s" %}selected{% endif %}>{{ type.name }}</option>{% endfor %}</select>
+                        <select id="trip-type" name="type" class="map-select__native" tabindex="-1" required><option value="">– оберіть тип риболовлі –</option>{% for type in types %}<option value="{{ type.type_id }}" {% if form.type == type.type_id|stringformat:"s" %}selected{% endif %}>{{ type.name }}</option>{% endfor %}</select>
                         <ul class="map-select__list" id="trip-type-list" role="listbox" hidden></ul>
                     </div>
                     {% if errors.type %}
@@ -121,7 +121,7 @@
 
             <section class="trip-catches" aria-label="Улови сесії">
                 <div class="trip-section-heading"><span class="trip-section-icon">♧</span><div><h2>Що зловив</h2><p>Додай види риби, вагу та час улову.</p></div></div>
-                <p class="form-hint">Додай окремий запис для кожного виду риби. Якщо нічого не зловив — залиш список порожнім.</p>
+                <p class="form-hint">Додай окремий запис для кожного виду риби. Якщо нічого не зловив – залиш список порожнім.</p>
                 {{ catches.management_form }}
                 {{ catches.non_form_errors }}
                 <div id="catch-rows">

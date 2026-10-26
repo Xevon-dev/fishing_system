@@ -137,7 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const selectedFish = fishInputs.filter((input) => input.checked);
     if (titleValue.length < 10) fail(title, "Назва має містити щонайменше 10 символів.");
     else if (titleValue.length > 200) fail(title, "Максимум 200 символів.");
-    if (contentValue.length < 20) fail(content, "Додай трохи більше деталей — щонайменше 20 символів.");
+    if (contentValue.length < 20) fail(content, "Додай трохи більше деталей – щонайменше 20 символів.");
     else if (contentValue.length > 2000) fail(content, "Максимум 2 000 символів.");
     if (selectedFish.length < 1) {
       const firstFish = selectedFish[0] || fishInputs[0];

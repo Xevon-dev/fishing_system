@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Мій профіль — Золота Рибка{% endblock %}
+{% block title %}Мій профіль – Золота Рибка{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/auth.css' %}?v={% now 'U' %}">
@@ -92,7 +92,7 @@
                         </div>
                         <div class="profile-field">
                             <span>Email</span>
-                            <strong>{{ profile_user.email|default:"—" }}</strong>
+                            <strong>{{ profile_user.email|default:"–" }}</strong>
                         </div>
                         <div class="profile-field">
                             <span>Рівень</span>
@@ -100,7 +100,7 @@
                         </div>
                         <div class="profile-field">
                             <span>Дата реєстрації</span>
-                            <strong>{{ profile_user.created_at|date:"d.m.Y"|default:"—" }}</strong>
+                            <strong>{{ profile_user.created_at|date:"d.m.Y"|default:"–" }}</strong>
                         </div>
                     </div>
 
@@ -241,7 +241,7 @@
                                     </svg>
                                 </span>
                                 <strong>Порад поки немає</strong>
-                                <p>Поділись досвідом із початківцями — твоя порада з'явиться тут.</p>
+                                <p>Поділись досвідом із початківцями – твоя порада з'явиться тут.</p>
                                 <a class="profile-btn profile-btn--primary" href="{% url 'journal:add_tip' %}">Додати пораду</a>
                             </div>
                         {% endif %}
@@ -297,7 +297,7 @@
                     </span>
 
                     <h2>Готові підвищити категорію?</h2>
-                    <p>Пройдіть короткий тест про свій досвід — і дізнаєтеся, який рівень рибака вам відповідає.</p>
+                    <p>Пройдіть короткий тест про свій досвід – і дізнаєтеся, який рівень рибака вам відповідає.</p>
 
                     <ul class="profile-upgrade__list">
                         <li>

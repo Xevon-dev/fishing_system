@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!visibleCount) {
       const empty = document.createElement("li");
       empty.className = "map-select__empty";
-      empty.textContent = "Немає збігів — можна залишити власну назву риби";
+      empty.textContent = "Немає збігів – можна залишити власну назву риби";
       list.append(empty);
     }
     list.hidden = false;

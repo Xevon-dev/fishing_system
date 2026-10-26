@@ -43,16 +43,16 @@ class FishSpeciesAdmin(admin.ModelAdmin):
 
     @admin.display(description="опис")
     def description_preview(self, obj):
-        return Truncator(obj.description or "—").chars(70)
+        return Truncator(obj.description or "–").chars(70)
 
     @admin.display(description="порада")
     def advice_preview(self, obj):
-        return Truncator(obj.advice or "—").chars(60)
+        return Truncator(obj.advice or "–").chars(60)
 
     @admin.display(description="Вікіпедія")
     def wikipedia_link(self, obj):
         if not obj.wikipedia:
-            return "—"
+            return "–"
         return format_html(
             '<a href="{}" target="_blank" rel="noopener noreferrer">відкрити</a>',
             obj.wikipedia,
@@ -68,7 +68,7 @@ class FishingTypesAdmin(admin.ModelAdmin):
     @admin.display(description="відео")
     def video(self, obj):
         if not obj.video_url:
-            return "—"
+            return "–"
         return format_html('<a href="{}" target="_blank">дивитись</a>', obj.video_url)
 
 
@@ -81,7 +81,7 @@ class FishingMethodsAdmin(admin.ModelAdmin):
     @admin.display(description="відео")
     def video(self, obj):
         if not obj.video_url:
-            return "—"
+            return "–"
         return format_html('<a href="{}" target="_blank">дивитись</a>', obj.video_url)
 
 
@@ -95,7 +95,7 @@ class TackleAdmin(admin.ModelAdmin):
     @admin.display(description="магазин")
     def link(self, obj):
         if not obj.url:
-            return "—"
+            return "–"
         return format_html(
             '<a href="{}" target="_blank" rel="noopener">відкрити</a>', obj.url
         )
@@ -111,7 +111,7 @@ class TackleSetsAdmin(admin.ModelAdmin):
     @admin.display(description="магазин")
     def link(self, obj):
         if not obj.url:
-            return "—"
+            return "–"
         return format_html(
             '<a href="{}" target="_blank" rel="noopener">відкрити</a>', obj.url
         )

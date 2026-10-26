@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Карта водойм — Золота Рибка{% endblock %}
+{% block title %}Карта водойм – Золота Рибка{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/auth.css' %}?v={% now 'U' %}">
@@ -29,7 +29,7 @@
             type="text"
             id="region-input"
             class="map-select__input"
-            placeholder="— обери область —"
+            placeholder="– обери область –"
             autocomplete="off"
             spellcheck="false"
             role="combobox"
@@ -44,7 +44,7 @@
             </svg>
           </button>
           <select id="water-region" class="map-select__native" aria-label="Область" tabindex="-1">
-            <option value="">— обери область —</option>
+            <option value="">– обери область –</option>
             {% for region in regions %}
               <option value="{{ region.region_slug }}">{{ region.region }}</option>
             {% endfor %}
@@ -103,7 +103,7 @@
             Прогноз кльову
           </h2>
           <div class="map-card__body" id="advice-info" data-advice-url="{% url 'catalog:advice' %}">
-            <p class="map-card__empty">Натисни на карту — і тут з'явиться прогноз кльову.</p>
+            <p class="map-card__empty">Натисни на карту – і тут з'явиться прогноз кльову.</p>
           </div>
         </section>
 
@@ -123,7 +123,7 @@
             </div>
           </div>
           <div class="map-card__body" id="weather-info" data-weather-url="{% url 'catalog:weather' %}">
-            <p class="map-card__empty">Натисни на водойму на карті — і тут з'явиться погода в цій точці.</p>
+            <p class="map-card__empty">Натисни на водойму на карті – і тут з'явиться погода в цій точці.</p>
           </div>
         </section>
 

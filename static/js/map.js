@@ -1,7 +1,7 @@
 ﻿/**
  * Карта водойм: ініціалізація, вибір області, кліки по карті.
- * Спільне з формою сесії — у map-core.js,
- * картки — у map-water.js, map-weather.js, map-advice.js
+ * Спільне з формою сесії – у map-core.js,
+ * картки – у map-water.js, map-weather.js, map-advice.js
  */
 function initMap() {
   const mapElement = document.querySelector("#map");

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static journal_tags %}
 
-{% block title %}Риболовні сесії — Золота Рибка{% endblock %}
+{% block title %}Риболовні сесії – Золота Рибка{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/auth.css' %}?v={% now 'U' %}">
@@ -14,7 +14,7 @@
         <header class="journal-hero">
             <p class="journal-kicker">Твоя рибальська історія</p>
             <h1>Риболовні сесії</h1>
-            <p>Зберігай виїзди, улови та улюблені водойми — кожна сесія допомагає краще зрозуміти, що працює.</p>
+            <p>Зберігай виїзди, улови та улюблені водойми – кожна сесія допомагає краще зрозуміти, що працює.</p>
             <a class="journal-add" href="{% url 'journal:add_trip' %}"><span aria-hidden="true">＋</span> Додати сесію</a>
         </header>
 
