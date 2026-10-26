@@ -2,6 +2,7 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 from decouple import config
+from django.urls import reverse_lazy
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -152,9 +153,10 @@ AUTHENTICATION_BACKENDS = (
     'social_core.backends.google.GoogleOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 )
-LOGIN_REDIRECT_URL = '/accounts/profile/'
+LOGIN_URL = reverse_lazy('accounts:login')
+LOGIN_REDIRECT_URL = reverse_lazy('accounts:profile')
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = LOGIN_REDIRECT_URL
-SOCIAL_AUTH_LOGIN_ERROR_URL = '/accounts/register/'
+SOCIAL_AUTH_LOGIN_ERROR_URL = reverse_lazy('accounts:register')
 
 ALLOWED_HOSTS = ['zolotarybka.com', 'localhost', '127.0.0.1']
 

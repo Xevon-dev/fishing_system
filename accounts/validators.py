@@ -1,5 +1,7 @@
 import re
 
+from django.core.exceptions import ValidationError
+
 from .models import Users
 
 LOCAL_RE = re.compile(r"[a-z0-9._%+-]+")
@@ -90,6 +92,13 @@ def password_strength_error(password, username="", email=""):
     if email and email.partition("@")[0] in password.lower():
         return "Пароль не повинен містити адресу вашої пошти"
     return None
+
+
+def validate_password_strength(password, username="", email=""):
+    """Перевіряє пароль за чинними правилами реєстрації сайту."""
+    message = password_strength_error(password, username, email)
+    if message:
+        raise ValidationError(message, code="weak_password")
 
 
 def password_errors(password, confirm_password, username="", email=""):

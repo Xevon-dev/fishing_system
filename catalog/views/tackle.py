@@ -1,5 +1,6 @@
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import redirect
 from django.db.models import Q
+from django.views.generic import DetailView, ListView
 
 from accounts.session import current_user
 
@@ -31,15 +32,7 @@ TACKLE_ALIASES = {
 }
 
 
-def tackle_view(request, fish_id=None):
-    user = current_user(request)
-
-    if not user:
-        return redirect("accounts:login")
-
-    if not user.is_beginner:
-        return redirect("catalog:methods")
-
+def tackle_fish_queryset():
     types_with_tackle = set(
         Tackle.objects.filter(type__isnull=False).values_list("type__name", flat=True)
     )
@@ -49,22 +42,17 @@ def tackle_view(request, fish_id=None):
         if target in types_with_tackle:
             shown_types.add(alias)
 
-    fish_list = (
+    return (
         FishSpecies.objects
         .filter(fishingtypes__name__in=shown_types)
         .distinct()
         .order_by("name")
     )
 
-    fish = None
+
+def tackle_groups(fish, tier):
     groups = []
-    tier = request.GET.get("tier", TACKLE_TIERS[0])
-
-    if tier not in TACKLE_TIERS:
-        tier = TACKLE_TIERS[0]
-
-    if fish_id:
-        fish = get_object_or_404(FishSpecies, pk=fish_id)
+    if fish is not None:
         types = list(FishingTypes.objects.filter(fish=fish))
 
         wanted = {fishing_type.name for fishing_type in types}
@@ -132,10 +120,60 @@ def tackle_view(request, fish_id=None):
                 "sets": fresh_sets[:TACKLE_LIMIT],
             })
 
-    return render(request, "tackle.html", {
-        "fish_list": fish_list,
-        "fish": fish,
-        "groups": groups,
-        "tiers": TACKLE_TIERS,
-        "tier": tier,
-    })
+    return groups
+
+
+class BeginnerTackleMixin:
+    template_name = "tackle.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        user = current_user(request)
+        if not user:
+            return redirect("accounts:login")
+        if not user.is_beginner:
+            return redirect("catalog:methods")
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        fish = context.get("fish")
+        tier = self.request.GET.get("tier", TACKLE_TIERS[0])
+        if tier not in TACKLE_TIERS:
+            tier = TACKLE_TIERS[0]
+        if "fish_list" not in context:
+            context["fish_list"] = tackle_fish_queryset()
+        context.update({
+            "fish": fish,
+            "groups": tackle_groups(fish, tier),
+            "tiers": TACKLE_TIERS,
+            "tier": tier,
+        })
+        return context
+
+    def post(self, request, *args, **kwargs):
+        # Як і раніше, POST лише показує підбір, не змінюючи даних.
+        return self.get(request, *args, **kwargs)
+
+
+class FishTackleListView(BeginnerTackleMixin, ListView):
+    model = FishSpecies
+    context_object_name = "fish_list"
+
+    def get_queryset(self):
+        return tackle_fish_queryset()
+
+
+class FishTackleDetailView(BeginnerTackleMixin, DetailView):
+    model = FishSpecies
+    context_object_name = "fish"
+    pk_url_kwarg = "fish_id"
+
+    def get_object(self, queryset=None):
+        # Старий маршрут з fish_id=0 показував підбір без вибраної риби.
+        if self.kwargs[self.pk_url_kwarg] == 0:
+            return None
+        return super().get_object(queryset)
+
+
+tackle_view = FishTackleListView.as_view()
+tackle_fish_view = FishTackleDetailView.as_view()

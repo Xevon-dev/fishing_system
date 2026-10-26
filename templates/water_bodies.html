@@ -69,6 +69,7 @@
       <div class="map-frame">
         {% if google_maps_api_key %}
         <div id="map"
+             data-page-url="{% url 'catalog:water_bodies' %}"
              data-focus-id="{{ focus_water.water_body_id|default:'' }}"
              data-focus-region="{{ focus_water.region_slug|default:'' }}"></div>
         {% else %}

@@ -6,7 +6,7 @@ from django.utils import timezone
 
 from .levels import LEVEL_NAMES
 from .models import Levels, Users
-from .validators import email_error, password_strength_error, username_error
+from .validators import email_error, username_error, validate_password_strength
 
 
 class RegistrationForm(UserCreationForm):
@@ -60,13 +60,14 @@ class RegistrationForm(UserCreationForm):
         cleaned_data = super().clean()
         password = cleaned_data.get("password1")
         if password:
-            message = password_strength_error(
-                password,
-                cleaned_data.get("username", ""),
-                cleaned_data.get("email", ""),
-            )
-            if message:
-                self.add_error("password1", message)
+            try:
+                validate_password_strength(
+                    password,
+                    cleaned_data.get("username", ""),
+                    cleaned_data.get("email", ""),
+                )
+            except forms.ValidationError as error:
+                self.add_error("password1", error)
         return cleaned_data
 
     def validate_password_for_user(self, user, password_field_name="password2"):

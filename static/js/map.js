@@ -82,7 +82,7 @@ function initMap() {
 
     selectWater(feature, bounds.getCenter());
     status.textContent = "Показано водойму: " + feature.getProperty("name");
-    history.replaceState(null, "", "/map/?region=" + region.value + "&water=" + waterId);
+    history.replaceState(null, "", mapElement.dataset.pageUrl + "?region=" + region.value + "&water=" + waterId);
   }
 
   const fromUrl = new URLSearchParams(location.search).get("region");
@@ -117,7 +117,7 @@ function initMap() {
     const geojson = await loadRegionLayer(map, region, button, status);
 
     if (geojson) {
-      history.replaceState(null, "", "/map/?region=" + region.value);
+      history.replaceState(null, "", mapElement.dataset.pageUrl + "?region=" + region.value);
     }
   });
 

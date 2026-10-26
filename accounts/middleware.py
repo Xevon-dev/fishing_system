@@ -1,3 +1,6 @@
+from urllib.parse import urlsplit
+
+from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth.hashers import is_password_usable
 from django.shortcuts import redirect
@@ -7,6 +10,8 @@ from .session import current_user
 
 
 class SessionUserMiddleware:
+    public_views = {"catalog:home", "accounts:login", "accounts:register", "social_complete"}
+    public_namespaces = {"social", "admin"}
 
     def __init__(self, get_response):
         self.get_response = get_response
@@ -18,6 +23,13 @@ class SessionUserMiddleware:
         elif not request.user.is_authenticated:
             request.user = AnonymousUser()
         return self.get_response(request)
+
+    def is_asset_request(self, request):
+        for asset_url in (settings.STATIC_URL, settings.MEDIA_URL):
+            path = urlsplit(asset_url or "").path
+            if path and request.path_info.startswith("/" + path.strip("/") + "/"):
+                return True
+        return False
 
     def process_view(self, request, view_func, view_args, view_kwargs):
         if request.session.get("google_level_required"):
@@ -33,18 +45,19 @@ class SessionUserMiddleware:
             allowed_views = {"accounts:google_level", "accounts:logout"}
             if request.resolver_match and request.resolver_match.view_name in allowed_views:
                 return None
-            if "/static/" in request.path or "/media/" in request.path:
+            if self.is_asset_request(request):
                 return None
             return redirect(reverse("accounts:google_level"))
 
         if getattr(request, "_fishwise_current_user", None) is not None:
             return None
 
-        if request.resolver_match and request.resolver_match.view_name == "catalog:home":
+        match = request.resolver_match
+        if match and (
+            match.view_name in self.public_views
+            or self.public_namespaces.intersection(match.namespaces)
+        ):
             return None
-        public_paths = ("/accounts/login/", "/accounts/register/", "/social-auth/", "/admin/")
-        if request.path.startswith(public_paths):
-            return None
-        if "/static/" in request.path or "/media/" in request.path:
+        if self.is_asset_request(request):
             return None
         return redirect(reverse("accounts:login"))

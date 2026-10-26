@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render
-from django.views.decorators.http import require_GET
+from django.views.generic import DetailView, ListView
 
 from ..models import WaterBodies
 from ..regions import region_choices
@@ -44,33 +44,47 @@ def build_geojson_feature(water_body):
     }
 
 
-@require_GET
-def water_bodies_geojson(request, region):
-    water_bodies = WaterBodies.objects.filter(region_slug=region).values(*WATER_FIELDS)
+class WaterBodiesGeoJSONListView(ListView):
+    model = WaterBodies
+    http_method_names = ["get"]
 
-    features = []
-    for water_body in water_bodies:
-        feature = build_geojson_feature(water_body)
-        if feature:
-            features.append(feature)
+    def get_queryset(self):
+        return WaterBodies.objects.filter(region_slug=self.kwargs["region"]).values(*WATER_FIELDS)
 
-    return JsonResponse({
-        "type": "FeatureCollection",
-        "features": features,
-    })
+    def render_to_response(self, context, **response_kwargs):
+        features = []
+        for water_body in context["object_list"]:
+            feature = build_geojson_feature(water_body)
+            if feature:
+                features.append(feature)
+        return JsonResponse({
+            "type": "FeatureCollection",
+            "features": features,
+        }, **response_kwargs)
 
 
-@require_GET
-def water_body_geojson(request, water_body_id):
-    water_body = (
-        WaterBodies.objects
-        .filter(pk=water_body_id)
-        .values(*WATER_FIELDS)
-        .first()
-    )
-    feature = build_geojson_feature(water_body) if water_body else None
+class WaterBodyGeoJSONDetailView(DetailView):
+    model = WaterBodies
+    pk_url_kwarg = "water_body_id"
+    http_method_names = ["get"]
 
-    return JsonResponse({
-        "type": "FeatureCollection",
-        "features": [feature] if feature else [],
-    })
+    def get_queryset(self):
+        return WaterBodies.objects.values(*WATER_FIELDS)
+
+    def get_object(self, queryset=None):
+        if queryset is None:
+            queryset = self.get_queryset()
+        # Карта очікує порожню колекцію, а не 404, якщо водойми вже немає.
+        return queryset.filter(pk=self.kwargs[self.pk_url_kwarg]).first()
+
+    def render_to_response(self, context, **response_kwargs):
+        water_body = context["object"]
+        feature = build_geojson_feature(water_body) if water_body else None
+        return JsonResponse({
+            "type": "FeatureCollection",
+            "features": [feature] if feature else [],
+        }, **response_kwargs)
+
+
+water_bodies_geojson = WaterBodiesGeoJSONListView.as_view()
+water_body_geojson = WaterBodyGeoJSONDetailView.as_view()

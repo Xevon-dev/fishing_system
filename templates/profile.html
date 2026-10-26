@@ -223,7 +223,7 @@
 
                                         <form method="post" action="{% url 'journal:delete_tip' tip.tip_id %}" data-confirm="Видалити цю пораду? Скасувати це буде неможливо.">
                                             {% csrf_token %}
-                                            <input type="hidden" name="next" value="/accounts/profile/">
+                                            <input type="hidden" name="next" value="{% url 'accounts:profile' %}">
                                             <button type="submit" class="profile-trip__remove" title="Видалити пораду" aria-label="Видалити пораду">
                                                 <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3m3 0-.8 13H6.8L6 7m4 4v5m4-5v5"/></svg>
                                             </button>

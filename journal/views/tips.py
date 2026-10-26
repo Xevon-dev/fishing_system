@@ -156,7 +156,7 @@ def toggle_tip_like_view(request, tip_id):
                 else None
             ),
         })
-    return redirect(request.POST.get("next") or "tips_list")
+    return redirect(request.POST.get("next") or "journal:tips_list")
 
 
 def add_tip_view(request):
