@@ -10,7 +10,7 @@ from ..validators import password_strength_error
 def password_view(request):
     user = current_user(request)
     if not user:
-        return redirect("login")
+        return redirect("accounts:login")
 
     errors = {}
     fields = {
@@ -47,11 +47,11 @@ def password_view(request):
         if not errors:
             user.password_hash = make_password(fields["new_password"])
             user.save(update_fields=["password_hash"])
-            return redirect("profile")
+            return redirect("accounts:profile")
 
         if request.POST.get("return_to_profile") == "1":
             request.session["profile_password_errors"] = errors
-            return redirect("profile")
+            return redirect("accounts:profile")
 
     return render(request, "password.html", {
         "errors": errors,

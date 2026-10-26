@@ -28,7 +28,7 @@
             <div class="fish-chips">
                 {% for item in fish_list %}
                     <a class="fish-chip{% if fish and fish.fish_id == item.fish_id %} is-active{% endif %}"
-                       href="{% url 'tackle_fish' item.fish_id %}"{% if fish and fish.fish_id == item.fish_id %} aria-current="page"{% endif %}>
+                       href="{% url 'catalog:tackle_fish' item.fish_id %}"{% if fish and fish.fish_id == item.fish_id %} aria-current="page"{% endif %}>
                         {{ item.name }}
                     </a>
                 {% endfor %}
@@ -49,7 +49,7 @@
                     <div class="tier-tabs">
                         {% for value in tiers %}
                             <a class="tier-tab{% if value == tier %} is-active{% endif %}"
-                               href="{% url 'tackle_fish' fish.fish_id %}?tier={{ value|urlencode }}"
+                               href="{% url 'catalog:tackle_fish' fish.fish_id %}?tier={{ value|urlencode }}"
                                {% if value == tier %}aria-current="page"{% endif %}>
                                 {{ value|capfirst }}
                             </a>

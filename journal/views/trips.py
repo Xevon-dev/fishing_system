@@ -16,7 +16,7 @@ from accounts.image_uploads import image_upload_error
 def journal_view(request):
     user = current_user(request)
     if not user:
-        return redirect("login")
+        return redirect("accounts:login")
 
     trips = (
         FishingTrips.objects
@@ -48,7 +48,7 @@ def journal_view(request):
 def trip_form_view(request, trip=None):
     user = current_user(request)
     if not user:
-        return redirect("login")
+        return redirect("accounts:login")
 
     if request.method == "POST":
         form, errors, values = parse_form(request.POST, trip)
@@ -72,7 +72,7 @@ def trip_form_view(request, trip=None):
                 for uploaded_photo in uploaded_photos:
                     FishingTripPhotos.objects.create(trip=instance, photo=uploaded_photo)
                 catches.save()
-            return redirect("journal")
+            return redirect("journal:journal")
 
         selected_water = values["water_body"]
     else:
@@ -106,11 +106,11 @@ def add_trip_view(request):
 def edit_trip_view(request, trip_id):
     user = current_user(request)
     if not user:
-        return redirect("login")
+        return redirect("accounts:login")
 
     trip = FishingTrips.objects.filter(pk=trip_id, user_id=user.user_id).first()
     if not trip:
-        return redirect("journal")
+        return redirect("journal:journal")
 
     return trip_form_view(request, trip)
 
@@ -119,7 +119,7 @@ def edit_trip_view(request, trip_id):
 def delete_trip_view(request, trip_id):
     user = current_user(request)
     if not user:
-        return redirect("login")
+        return redirect("accounts:login")
 
     trip = FishingTrips.objects.filter(pk=trip_id, user_id=user.user_id).first()
     if trip:
@@ -128,18 +128,18 @@ def delete_trip_view(request, trip_id):
         Catches.objects.filter(trip_id=trip.trip_id).delete()
         trip.delete()
 
-    return redirect("journal")
+    return redirect("journal:journal")
 
 
 @require_POST
 def delete_trip_photo_view(request, trip_id, photo_id):
     user = current_user(request)
     if not user:
-        return redirect("login")
+        return redirect("accounts:login")
 
     trip = FishingTrips.objects.filter(pk=trip_id, user_id=user.user_id).first()
     if not trip:
-        return redirect("journal")
+        return redirect("journal:journal")
 
     trip_photo = FishingTripPhotos.objects.filter(
         pk=photo_id,
@@ -149,4 +149,4 @@ def delete_trip_photo_view(request, trip_id, photo_id):
         trip_photo.photo.delete(save=False)
         trip_photo.delete()
 
-    return redirect("edit_trip", trip_id=trip.trip_id)
+    return redirect("journal:edit_trip", trip_id=trip.trip_id)

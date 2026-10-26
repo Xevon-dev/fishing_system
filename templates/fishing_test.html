@@ -30,10 +30,10 @@
                     {% if current_user %}
                         <p>{% if level_changed %}Рівень профілю змінено за результатом тесту. Доступні функції оновлено.{% else %}Твій поточний рівень збережено.{% endif %}</p>
                         <p>Рівень профілю: {{ saved_level }}</p>
-                        <a class="btn btn-primary" href="{% url 'profile' %}">Повернутися до профілю →</a>
+                        <a class="btn btn-primary" href="{% url 'accounts:profile' %}">Повернутися до профілю →</a>
                     {% else %}
                         <a class="btn btn-primary"
-                           href="{% url 'register' %}?fishing_level={{ level }}">
+                           href="{% url 'accounts:register' %}?fishing_level={{ level }}">
                             Повернутися до реєстрації →
                         </a>
                     {% endif %}

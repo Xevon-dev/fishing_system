@@ -10,13 +10,13 @@
 {% endblock %}
 
 {% block nav_links %}
-<a class="is-active" href="{% url 'home' %}#home">Головна</a>
-<a href="{% url 'home' %}#features">Можливості</a>
+<a class="is-active" href="{% url 'catalog:home' %}#home">Головна</a>
+<a href="{% url 'catalog:home' %}#features">Можливості</a>
 {% endblock %}
 
 {% block nav_actions %}
-<a class="login-link" href="{% url 'login' %}">Увійти</a>
-<a class="btn btn-primary" href="{% url 'register' %}">Реєстрація</a>
+<a class="login-link" href="{% url 'accounts:login' %}">Увійти</a>
+<a class="btn btn-primary" href="{% url 'accounts:register' %}">Реєстрація</a>
 {% endblock %}
 
 {% block content %}
@@ -29,8 +29,8 @@
                 <p class="home-hero__lead">Карта водойм, поради та журнал риболовлі — все потрібне перед очима.</p>
 
                 <div class="home-hero__actions">
-                <a class="home-button home-button--primary" href="{% url 'register' %}">Зареєструватися <span aria-hidden="true">↗</span></a>
-                <a class="home-button home-button--quiet" href="{% url 'login' %}">Увійти</a>
+                <a class="home-button home-button--primary" href="{% url 'accounts:register' %}">Зареєструватися <span aria-hidden="true">↗</span></a>
+                <a class="home-button home-button--quiet" href="{% url 'accounts:login' %}">Увійти</a>
                 </div>
 
                 <div class="home-hero__notes" aria-label="Що є у Золотій Рибці">
@@ -49,7 +49,7 @@
                         <strong>{{ water_count_text }} водойм</strong>
                         <small>Доступні на карті</small>
                     </span>
-                    <a class="home-visual__badge-link" href="{% url 'register' %}">На карті</a>
+                    <a class="home-visual__badge-link" href="{% url 'accounts:register' %}">На карті</a>
                 </div>
             </figure>
         </div>
@@ -66,7 +66,7 @@
             </header>
 
             <div class="home-feature-grid">
-                <a class="home-feature-card home-feature-card--map home-reveal" href="{% url 'register' %}">
+                <a class="home-feature-card home-feature-card--map home-reveal" href="{% url 'accounts:register' %}">
                     <span class="home-feature-card__top"><span>01</span><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></i></span>
                     <h3>Карта водойм</h3>
                     <p>Переглянь водойми й обери місце для риболовлі.</p>
@@ -77,7 +77,7 @@
                     <span class="home-feature-card__art" aria-hidden="true"><span></span><i></i><b></b></span>
                 </a>
 
-                <a class="home-feature-card home-feature-card--advice home-reveal" href="{% url 'register' %}">
+                <a class="home-feature-card home-feature-card--advice home-reveal" href="{% url 'accounts:register' %}">
                     <span class="home-feature-card__top"><span>02</span><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 7v14M12 7C9 4 5.5 4 3 5v14c2.5-1 6-1 9 2m0-14c3-3 6.5-3 9-2v14c-2.5-1-6-1-9 2"/></svg></i></span>
                     <h3>Поради та снасті</h3>
                     <p>Види риб, техніки та поради щодо снастей.</p>
@@ -88,7 +88,7 @@
                     <span class="home-feature-card__art home-feature-card__art--rings" aria-hidden="true"><i></i><b></b></span>
                 </a>
 
-                <a class="home-feature-card home-feature-card--journal home-reveal" href="{% url 'register' %}">
+                <a class="home-feature-card home-feature-card--journal home-reveal" href="{% url 'accounts:register' %}">
                     <span class="home-feature-card__top"><span>03</span><i aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4M8 3v2M16 3v2"/></svg></i></span>
                     <h3>Журнал уловів</h3>
                     <p>Записуй кожну рибу, її вагу та час улову.</p>
@@ -110,7 +110,7 @@
                     <h2>Не знаєш свого рівня?</h2>
                     <p>Відповідай на короткі запитання й отримай добірку можливостей для свого досвіду.</p>
                     <div class="home-level-cta__actions">
-                        <a class="home-button home-button--level" href="{% url 'register' %}">Зареєструватися <span aria-hidden="true">↗</span></a>
+                        <a class="home-button home-button--level" href="{% url 'accounts:register' %}">Зареєструватися <span aria-hidden="true">↗</span></a>
                         <a class="home-level-cta__more" href="#features">Дізнатися більше <span aria-hidden="true">↗</span></a>
                     </div>
                 </div>

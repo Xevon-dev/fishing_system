@@ -35,10 +35,10 @@ def tackle_view(request, fish_id=None):
     user = current_user(request)
 
     if not user:
-        return redirect("login")
+        return redirect("accounts:login")
 
     if not user.is_beginner:
-        return redirect("methods")
+        return redirect("catalog:methods")
 
     types_with_tackle = set(
         Tackle.objects.filter(type__isnull=False).values_list("type__name", flat=True)

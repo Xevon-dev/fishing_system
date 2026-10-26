@@ -55,7 +55,7 @@
           id="water-layer-btn"
           class="map-show"
           type="button"
-          data-geojson-url="{% url 'water_bodies_geojson' region='__REGION__' %}"
+          data-geojson-url="{% url 'catalog:water_bodies_geojson' region='__REGION__' %}"
         >
           Показати водойми
         </button>
@@ -102,7 +102,7 @@
             </svg>
             Прогноз кльову
           </h2>
-          <div class="map-card__body" id="advice-info" data-advice-url="{% url 'advice' %}">
+          <div class="map-card__body" id="advice-info" data-advice-url="{% url 'catalog:advice' %}">
             <p class="map-card__empty">Натисни на карту — і тут з'явиться прогноз кльову.</p>
           </div>
         </section>
@@ -122,7 +122,7 @@
               <button type="button" class="weather-tab" data-weather-tab="all">3 дні</button>
             </div>
           </div>
-          <div class="map-card__body" id="weather-info" data-weather-url="{% url 'weather' %}">
+          <div class="map-card__body" id="weather-info" data-weather-url="{% url 'catalog:weather' %}">
             <p class="map-card__empty">Натисни на водойму на карті — і тут з'явиться погода в цій точці.</p>
           </div>
         </section>

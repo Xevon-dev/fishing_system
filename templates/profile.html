@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block nav_actions %}
-<a class="btn btn-primary profile-nav-btn" href="{% url 'profile' %}">
+<a class="btn btn-primary profile-nav-btn" href="{% url 'accounts:profile' %}">
     <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
         <circle cx="12" cy="8.4" r="3.6"/><path d="M4.8 20a7.2 7.2 0 0 1 14.4 0"/>
     </svg>
@@ -71,7 +71,7 @@
                         </div>
                     </div>
 
-                    <form class="profile-photo-form" method="post" enctype="multipart/form-data" action="{% url 'profile_photo' %}">
+                    <form class="profile-photo-form" method="post" enctype="multipart/form-data" action="{% url 'accounts:profile_photo' %}">
                         {% csrf_token %}
                         <label class="profile-photo-label" for="profile-photo-input">Фото профілю</label>
                         <div class="profile-photo-controls">
@@ -105,7 +105,7 @@
                     </div>
 
                     <div class="profile-actions">
-                        <a class="profile-btn profile-btn--primary" href="{% url 'add_trip' %}">
+                        <a class="profile-btn profile-btn--primary" href="{% url 'journal:add_trip' %}">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                 <path d="M4.5 12.6c3.6-3.9 11.4-3.9 15 0-3.6 3.9-11.4 3.9-15 0Z"/>
                                 <path d="M15 8.4V6.6a1.4 1.4 0 0 1 1.4-1.4H19"/>
@@ -114,7 +114,7 @@
                             {% if trip_count %}Додати нову сесію{% else %}Готувати свій перший улов{% endif %}
                         </a>
 
-                        <a class="profile-btn" href="{% url 'stats' %}">
+                        <a class="profile-btn" href="{% url 'journal:stats' %}">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
                                 <path d="M4.5 19V13M9.5 19V8M14.5 19v-4M19.5 19V6"/>
                             </svg>
@@ -122,14 +122,14 @@
                         </a>
 
                         {% if is_expert %}
-                            <a class="profile-btn" href="{% url 'add_tip' %}">
+                            <a class="profile-btn" href="{% url 'journal:add_tip' %}">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                     <path d="M12 3.6 13.9 8.8 19 10l-5.1 1.4L12 16.6l-1.9-5.2L5 10l5.1-1.4Z"/>
                                 </svg>
                                 Додати пораду
                             </a>
                         {% elif can_upgrade_level %}
-                            <a class="profile-btn" href="{% url 'fishing_test' %}">
+                            <a class="profile-btn" href="{% url 'accounts:fishing_test' %}">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
                                     <circle cx="12" cy="12" r="8"/>
                                     <circle cx="12" cy="12" r="3.4"/>
@@ -149,7 +149,7 @@
                     {% if trips %}
                         <div class="profile-list">
                             {% for trip in trips %}
-                                <a class="profile-trip" href="{% url 'edit_trip' trip.trip_id %}">
+                                <a class="profile-trip" href="{% url 'journal:edit_trip' trip.trip_id %}">
                                     <span class="profile-trip__icon" aria-hidden="true">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M3.6 12.4c2.4 2.6 6.4 3.4 9.4 1.9l3.6 3.6"/>
@@ -175,7 +175,7 @@
                             {% endfor %}
                         </div>
 
-                        <a class="profile-more" href="{% url 'journal' %}">Усі сесії →</a>
+                        <a class="profile-more" href="{% url 'journal:journal' %}">Усі сесії →</a>
                     {% else %}
                         <div class="profile-empty">
                             <span class="profile-empty__art" aria-hidden="true">
@@ -190,7 +190,7 @@
                             </span>
                             <strong>Сесій поки немає</strong>
                             <p>Зафіксуй свій перший вихід на воду, щоб додати спостереження та відмітки улову.</p>
-                            <a class="profile-btn profile-btn--primary" href="{% url 'add_trip' %}">Додати нову сесію</a>
+                            <a class="profile-btn profile-btn--primary" href="{% url 'journal:add_trip' %}">Додати нову сесію</a>
                         </div>
                     {% endif %}
                 </section>
@@ -206,7 +206,7 @@
                             <div class="profile-list">
                                 {% for tip in tips %}
                                     <div class="profile-trip">
-                                        <a class="profile-trip__link" href="{% url 'edit_tip' tip.tip_id %}">
+                                        <a class="profile-trip__link" href="{% url 'journal:edit_tip' tip.tip_id %}">
                                             <span class="profile-trip__icon" aria-hidden="true">
                                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
                                                     <path d="M12 4.4 13.8 9.2 18.6 11l-4.8 1.8L12 17.6l-1.8-4.8L5.4 11l4.8-1.8Z"/>
@@ -221,7 +221,7 @@
                                             <span class="profile-trip__arrow" aria-hidden="true">→</span>
                                         </a>
 
-                                        <form method="post" action="{% url 'delete_tip' tip.tip_id %}" data-confirm="Видалити цю пораду? Скасувати це буде неможливо.">
+                                        <form method="post" action="{% url 'journal:delete_tip' tip.tip_id %}" data-confirm="Видалити цю пораду? Скасувати це буде неможливо.">
                                             {% csrf_token %}
                                             <input type="hidden" name="next" value="/accounts/profile/">
                                             <button type="submit" class="profile-trip__remove" title="Видалити пораду" aria-label="Видалити пораду">
@@ -232,7 +232,7 @@
                                 {% endfor %}
                             </div>
 
-                            <a class="profile-more" href="{% url 'tips_list' %}">Усі поради →</a>
+                            <a class="profile-more" href="{% url 'journal:tips_list' %}">Усі поради →</a>
                         {% else %}
                             <div class="profile-empty">
                                 <span class="profile-empty__art" aria-hidden="true">
@@ -242,7 +242,7 @@
                                 </span>
                                 <strong>Порад поки немає</strong>
                                 <p>Поділись досвідом із початківцями — твоя порада з'явиться тут.</p>
-                                <a class="profile-btn profile-btn--primary" href="{% url 'add_tip' %}">Додати пораду</a>
+                                <a class="profile-btn profile-btn--primary" href="{% url 'journal:add_tip' %}">Додати пораду</a>
                             </div>
                         {% endif %}
                     </section>
@@ -326,7 +326,7 @@
                         </li>
                     </ul>
 
-                    <a class="profile-upgrade__btn" href="{% url 'fishing_test' %}">
+                    <a class="profile-upgrade__btn" href="{% url 'accounts:fishing_test' %}">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <circle cx="12" cy="12" r="8"/>
                             <circle cx="12" cy="12" r="3.4"/>
@@ -336,12 +336,12 @@
                     {% endif %}
 
                     <div class="profile-upgrade__account">
-                        <form method="post" action="{% url 'logout' %}" data-confirm="Вийти з акаунту?">
+                        <form method="post" action="{% url 'accounts:logout' %}" data-confirm="Вийти з акаунту?">
                             {% csrf_token %}
                             <button type="submit" class="profile-upgrade__action">Вийти з акаунту</button>
                         </form>
 
-                        <form method="post" action="{% url 'delete_account' %}" data-confirm="Точно видалити акаунт? Це не можна скасувати!">
+                        <form method="post" action="{% url 'accounts:delete_account' %}" data-confirm="Точно видалити акаунт? Це не можна скасувати!">
                             {% csrf_token %}
                             <button type="submit" class="profile-upgrade__action profile-upgrade__action--danger">Видалити акаунт</button>
                         </form>
@@ -350,8 +350,8 @@
             </aside>
         </div>
 
-        <dialog class="profile-dialog" id="profile-edit" data-cancel-url="{% url 'profile' %}"{% if edit_errors %} data-open="1"{% endif %}>
-            <form class="profile-dialog__inner" method="post" action="{% url 'profile_edit' %}">
+        <dialog class="profile-dialog" id="profile-edit" data-cancel-url="{% url 'accounts:profile' %}"{% if edit_errors %} data-open="1"{% endif %}>
+            <form class="profile-dialog__inner" method="post" action="{% url 'accounts:profile_edit' %}">
                 {% csrf_token %}
 
                 <div class="profile-dialog__head">
@@ -387,8 +387,8 @@
             </form>
         </dialog>
 
-        <dialog class="profile-dialog" id="profile-password" data-cancel-url="{% url 'profile' %}"{% if password_errors %} data-open="1"{% endif %}>
-            <form class="profile-dialog__inner" method="post" action="{% url 'password' %}">
+        <dialog class="profile-dialog" id="profile-password" data-cancel-url="{% url 'accounts:profile' %}"{% if password_errors %} data-open="1"{% endif %}>
+            <form class="profile-dialog__inner" method="post" action="{% url 'accounts:password' %}">
                 {% csrf_token %}
                 <input type="hidden" name="return_to_profile" value="1">
                 <div class="profile-dialog__head">

@@ -8,13 +8,13 @@
 {% endblock %}
 
 {% block nav_links %}
-<a href="{% url 'home' %}#home">Головна</a>
-<a href="{% url 'home' %}#features">Можливості</a>
+<a href="{% url 'catalog:home' %}#home">Головна</a>
+<a href="{% url 'catalog:home' %}#features">Можливості</a>
 {% endblock %}
 
 {% block nav_actions %}
-<a class="login-link" href="{% url 'login' %}">Увійти</a>
-<a class="btn btn-primary" href="{% url 'register' %}">Реєстрація</a>
+<a class="login-link" href="{% url 'accounts:login' %}">Увійти</a>
+<a class="btn btn-primary" href="{% url 'accounts:register' %}">Реєстрація</a>
 {% endblock %}
 
 {% block content %}
@@ -34,8 +34,8 @@
             <div class="auth-card">
 
                 <div class="auth-tabs">
-                    <a href="{% url 'register' %}" class="auth-tab active">Реєстрація</a>
-                    <a href="{% url 'login' %}" class="auth-tab">Увійти</a>
+                    <a href="{% url 'accounts:register' %}" class="auth-tab active">Реєстрація</a>
+                    <a href="{% url 'accounts:login' %}" class="auth-tab">Увійти</a>
                 </div>
 
                 <form method="post" class="auth-form" id="level-selection" novalidate>
@@ -139,7 +139,7 @@
 
                     <p class="auth-switch">
                         <span>Вже маєте акаунт?</span>
-                        <a href="{% url 'login' %}">Увійти в кабінет</a>
+                        <a href="{% url 'accounts:login' %}">Увійти в кабінет</a>
                     </p>
                 </form>
             </div>
@@ -205,7 +205,7 @@
                         <strong>Не знаєш свого рівня?</strong>
                         <p>Пройди короткий тест із 4 питань (близько 2 хв)</p>
                     </div>
-                    <a href="{% url 'fishing_test' %}" class="test-button">Пройти тест <span aria-hidden="true">→</span></a>
+                    <a href="{% url 'accounts:fishing_test' %}" class="test-button">Пройти тест <span aria-hidden="true">→</span></a>
                 </div>
             </aside>
         </div>

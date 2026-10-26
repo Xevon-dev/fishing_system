@@ -11,7 +11,7 @@ from ..session import current_user, logout_user
 def delete_account_view(request):
     user = current_user(request)
     if not user:
-        return redirect("login")
+        return redirect("accounts:login")
 
     trips = FishingTrips.objects.filter(user_id=user.user_id)
     Catches.objects.filter(trip__user_id=user.user_id).delete()
@@ -21,4 +21,4 @@ def delete_account_view(request):
     user.delete()
     logout_user(request)
 
-    return redirect("home")
+    return redirect("catalog:home")

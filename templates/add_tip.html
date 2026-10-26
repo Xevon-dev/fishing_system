@@ -20,8 +20,8 @@
         <div class="tip-compose-denied">Додавати поради можуть лише досвідчені рибалки.</div>
     {% else %}
         <div class="tip-compose-layout">
-            {% if tip.photo %}<form id="delete-tip-photo" class="tip-photo-delete-form" method="post" action="{% url 'delete_tip_photo' tip.tip_id %}" data-confirm="Видалити фото до цієї поради?">{% csrf_token %}</form>{% endif %}
-            {% if tip %}<form id="delete-tip-form" class="tip-photo-delete-form" method="post" action="{% url 'delete_tip' tip.tip_id %}" data-confirm="Видалити цю пораду? Скасувати це буде неможливо.">{% csrf_token %}</form>{% endif %}
+            {% if tip.photo %}<form id="delete-tip-photo" class="tip-photo-delete-form" method="post" action="{% url 'journal:delete_tip_photo' tip.tip_id %}" data-confirm="Видалити фото до цієї поради?">{% csrf_token %}</form>{% endif %}
+            {% if tip %}<form id="delete-tip-form" class="tip-photo-delete-form" method="post" action="{% url 'journal:delete_tip' tip.tip_id %}" data-confirm="Видалити цю пораду? Скасувати це буде неможливо.">{% csrf_token %}</form>{% endif %}
             <form method="post" class="tip-compose-form auth-form" enctype="multipart/form-data" novalidate>
                 {% csrf_token %}
                 <div class="tip-form-topline"><span class="tip-form-icon" aria-hidden="true">✎</span><div><strong>Нова порада</strong><small>Поля з позначкою * обов’язкові</small></div></div>

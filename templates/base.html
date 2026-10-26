@@ -14,7 +14,7 @@
 
 <header class="header{% block header_class %}{% endblock %}">
     <div class="container navbar">
-        <a class="logo" href="{% if request.resolver_match.url_name == 'profile' %}{% url 'profile' %}{% else %}{% url 'home' %}{% endif %}">
+        <a class="logo" href="{% if request.resolver_match.url_name == 'profile' %}{% url 'accounts:profile' %}{% else %}{% url 'catalog:home' %}{% endif %}">
             <img class="logo-icon" src="{% static 'images/icons/fish.png' %}" alt="">
             <span class="logo-text">Золота <span>Рибка</span></span>
         </a>
@@ -22,22 +22,22 @@
         <nav class="nav-links">
             {% block nav_links %}
             {% if current_user %}
-                <a href="{% url 'water_bodies' %}">Карта водойм</a>
-                <a href="{% url 'journal' %}">Риболовні сесії</a>
-                <a href="{% url 'tips_list' %}">Поради рибалок</a>
+                <a href="{% url 'catalog:water_bodies' %}">Карта водойм</a>
+                <a href="{% url 'journal:journal' %}">Риболовні сесії</a>
+                <a href="{% url 'journal:tips_list' %}">Поради рибалок</a>
                 {% if current_user.level.name == "Початківець" %}
-                    <a href="{% url 'fish_advice' %}">Енциклопедія рибака</a>
-                    <a href="{% url 'methods' %}">Техніки лову</a>
-                    <a href="{% url 'tackle' %}">Підбір снастей</a>
+                    <a href="{% url 'catalog:fish_advice' %}">Енциклопедія рибака</a>
+                    <a href="{% url 'catalog:methods' %}">Техніки лову</a>
+                    <a href="{% url 'catalog:tackle' %}">Підбір снастей</a>
                 {% elif current_user.level.name == "Середній" %}
-                    <a href="{% url 'fish_advice' %}">Енциклопедія рибака</a>
-                    <a href="{% url 'methods' %}">Техніки лову</a>
+                    <a href="{% url 'catalog:fish_advice' %}">Енциклопедія рибака</a>
+                    <a href="{% url 'catalog:methods' %}">Техніки лову</a>
                 {% elif current_user.level.name == "Досвідчений" %}
-                    <a href="{% url 'add_tip' %}">Додати пораду</a>
+                    <a href="{% url 'journal:add_tip' %}">Додати пораду</a>
                 {% endif %}
             {% else %}
-                <a href="{% url 'home' %}">Головна</a>
-                <a href="{% url 'home' %}#features">Можливості</a>
+                <a href="{% url 'catalog:home' %}">Головна</a>
+                <a href="{% url 'catalog:home' %}#features">Можливості</a>
             {% endif %}
             {% endblock %}
         </nav>
@@ -45,15 +45,15 @@
         <div class="nav-actions">
             {% block nav_actions %}
             {% if current_user %}
-                <a class="btn btn-primary profile-nav-btn" href="{% url 'profile' %}">
+                <a class="btn btn-primary profile-nav-btn" href="{% url 'accounts:profile' %}">
                     <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
                         <circle cx="12" cy="8.4" r="3.6"/><path d="M4.8 20a7.2 7.2 0 0 1 14.4 0"/>
                     </svg>
                     Профіль
                 </a>
             {% else %}
-                <a class="login-link" href="{% url 'login' %}">Увійти</a>
-                <a class="btn btn-primary" href="{% url 'register' %}">Реєстрація</a>
+                <a class="login-link" href="{% url 'accounts:login' %}">Увійти</a>
+                <a class="btn btn-primary" href="{% url 'accounts:register' %}">Реєстрація</a>
             {% endif %}
             {% endblock %}
         </div>
@@ -66,7 +66,7 @@
 
 <footer class="home-footer site-footer">
     <div class="container home-footer__inner">
-        <a class="home-footer__brand" href="{% if request.resolver_match.url_name == 'profile' %}{% url 'profile' %}{% else %}{% url 'home' %}{% endif %}"><span class="home-footer__dot" aria-hidden="true"></span><span class="brand-name">Золота <span>Рибка</span></span></a>
+        <a class="home-footer__brand" href="{% if request.resolver_match.url_name == 'profile' %}{% url 'accounts:profile' %}{% else %}{% url 'catalog:home' %}{% endif %}"><span class="home-footer__dot" aria-hidden="true"></span><span class="brand-name">Золота <span>Рибка</span></span></a>
         <p>© Золота Рибка. Твій помічник у світі риболовлі.</p>
     </div>
 </footer>

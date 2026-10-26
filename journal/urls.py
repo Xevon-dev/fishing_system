@@ -23,6 +23,8 @@ from .views.generic_trips import (
 )
 from .views.tips import TipsDetailView
 
+app_name = "journal"
+
 urlpatterns = [
     path("tips/", tips_list_view, name="tips_list"),
     path("tips/<int:pk>/", TipsDetailView.as_view(), name="tip_detail"),

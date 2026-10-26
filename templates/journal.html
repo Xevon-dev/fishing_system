@@ -15,7 +15,7 @@
             <p class="journal-kicker">Твоя рибальська історія</p>
             <h1>Риболовні сесії</h1>
             <p>Зберігай виїзди, улови та улюблені водойми — кожна сесія допомагає краще зрозуміти, що працює.</p>
-            <a class="journal-add" href="{% url 'add_trip' %}"><span aria-hidden="true">＋</span> Додати сесію</a>
+            <a class="journal-add" href="{% url 'journal:add_trip' %}"><span aria-hidden="true">＋</span> Додати сесію</a>
         </header>
 
         <div class="journal-stats" aria-label="Статистика риболовлі">
@@ -25,7 +25,7 @@
             <article class="journal-stat"><span class="journal-stat-icon">⌖</span><p>Водойми</p><strong>{{ water_count }}</strong><small>різних місць риболовлі</small></article>
         </div>
 
-        <div class="journal-list-heading"><div><h2>Мої виїзди</h2><p>Твої останні риболовні пригоди</p><a href="{% url 'trip_records' %}">Керування записами сесій</a></div></div>
+        <div class="journal-list-heading"><div><h2>Мої виїзди</h2><p>Твої останні риболовні пригоди</p><a href="{% url 'journal:trip_records' %}">Керування записами сесій</a></div></div>
         <div class="journal-trips">
         {% if trips %}
             {% for trip in trips %}
@@ -40,13 +40,13 @@
                                 {% if forloop.last %}</div>{% endif %}
                             {% endif %}
                         {% endfor %}
-                    </div>{% else %}<a class="trip-photo-placeholder" href="{% url 'edit_trip' trip.trip_id %}"><span class="trip-photo-placeholder-icon" aria-hidden="true">＋</span><strong>Додати зображення</strong><small>Додай фото з риболовлі до цієї сесії</small></a>{% endif %}
+                    </div>{% else %}<a class="trip-photo-placeholder" href="{% url 'journal:edit_trip' trip.trip_id %}"><span class="trip-photo-placeholder-icon" aria-hidden="true">＋</span><strong>Додати зображення</strong><small>Додай фото з риболовлі до цієї сесії</small></a>{% endif %}
                     <div class="trip-card-body">
                     <div class="trip-card-top">
                         <div><h3>{{ trip.water_body.name }}</h3>
                             <p class="trip-meta">{{ trip.created_at|date:"d.m.Y" }}{% if trip.water_body.region %} · {{ trip.water_body.region }}{% endif %}</p>
                         </div>
-                        <a class="trip-map-link" href="{% url 'water_bodies' %}?water={{ trip.water_body_id }}" aria-label="Показати водойму на карті">⌖</a>
+                        <a class="trip-map-link" href="{% url 'catalog:water_bodies' %}?water={{ trip.water_body_id }}" aria-label="Показати водойму на карті">⌖</a>
                     </div>
 
                     {% if trip.type or trip.method or trip.method_note %}
@@ -71,14 +71,14 @@
                     {% endfor %}
 
                     <div class="trip-actions">
-                        <a class="btn btn-outline btn-sm" href="{% url 'edit_trip' trip.trip_id %}">
+                        <a class="btn btn-outline btn-sm" href="{% url 'journal:edit_trip' trip.trip_id %}">
                             Редагувати
                         </a>
                         <a class="btn btn-outline btn-sm"
-                           href="{% url 'water_bodies' %}?water={{ trip.water_body_id }}">
+                           href="{% url 'catalog:water_bodies' %}?water={{ trip.water_body_id }}">
                             🗺 Де водойма?
                         </a>
-                        <form method="post" action="{% url 'delete_trip' trip.trip_id %}"
+                        <form method="post" action="{% url 'journal:delete_trip' trip.trip_id %}"
                               data-confirm="Видалити цю сесію разом з уловами?">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger btn-sm">Видалити</button>
@@ -88,7 +88,7 @@
                 </div>
             {% endfor %}
         {% else %}
-            <div class="journal-empty"><span>🎣</span><h3>Тут почнеться твоя рибальська історія</h3><p>Додай першу сесію, щоб зберегти водойму, техніку та улов.</p><a class="journal-add journal-add--empty" href="{% url 'add_trip' %}">＋ Додати першу сесію</a></div>
+            <div class="journal-empty"><span>🎣</span><h3>Тут почнеться твоя рибальська історія</h3><p>Додай першу сесію, щоб зберегти водойму, техніку та улов.</p><a class="journal-add journal-add--empty" href="{% url 'journal:add_trip' %}">＋ Додати першу сесію</a></div>
         {% endif %}
         </div>
     </div>

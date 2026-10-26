@@ -12,7 +12,7 @@
 {% block content %}
 <section class="trip-form-page">
     <div class="trip-form-heading">
-        <a class="trip-back-link" href="{% url 'journal' %}">← Мої сесії</a>
+        <a class="trip-back-link" href="{% url 'journal:journal' %}">← Мої сесії</a>
         <h1>{% if trip %}Редагувати сесію{% else %}Додати сесію{% endif %}</h1>
         <p>{% if trip %}Онови деталі, улов і фото своєї риболовлі{% else %}Збережи водойму, техніку, улов і найкращі моменти своєї риболовлі{% endif %}</p>
     </div>
@@ -20,7 +20,7 @@
     <div class="trip-form-card">
         {% if trip %}
             {% for trip_photo in trip.photos.all %}
-                <form id="delete-trip-photo-{{ trip_photo.photo_id }}" class="trip-photo-delete-form" method="post" action="{% url 'delete_trip_photo' trip.trip_id trip_photo.photo_id %}" data-confirm="Видалити це фото сесії?">{% csrf_token %}</form>
+                <form id="delete-trip-photo-{{ trip_photo.photo_id }}" class="trip-photo-delete-form" method="post" action="{% url 'journal:delete_trip_photo' trip.trip_id trip_photo.photo_id %}" data-confirm="Видалити це фото сесії?">{% csrf_token %}</form>
             {% endfor %}
         {% endif %}
         {% if not google_maps_api_key %}
@@ -47,7 +47,7 @@
                         id="trip-layer-btn"
                         class="btn btn-primary"
                         type="button"
-                        data-geojson-url="{% url 'water_bodies_geojson' region='__REGION__' %}"
+                        data-geojson-url="{% url 'catalog:water_bodies_geojson' region='__REGION__' %}"
                     >
                         Показати водойми
                     </button>
@@ -62,7 +62,7 @@
                      data-lat="{{ selected_water.latitude }}"
                      data-lon="{{ selected_water.longitude }}"
                      data-water-id="{{ selected_water.water_body_id }}"
-                     data-water-url="{% url 'water_body_geojson' water_body_id=selected_water.water_body_id %}"
+                     data-water-url="{% url 'catalog:water_body_geojson' water_body_id=selected_water.water_body_id %}"
                      {% endif %}></div>
 
                 <input type="hidden" id="trip-water-id" name="water_body_id"

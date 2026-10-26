@@ -5,13 +5,13 @@
 {% block content %}
 <section class="container" style="padding: 2rem 0;">
     <h1>Мої риболовні сесії</h1>
-    <p><a class="btn btn-primary" href="{% url 'trip_record_add' %}">Створити запис</a></p>
+    <p><a class="btn btn-primary" href="{% url 'journal:trip_record_add' %}">Створити запис</a></p>
     {% for trip in trips %}
         <article class="card" style="padding: 1rem; margin: 1rem 0;">
-            <h2><a href="{% url 'trip_record_detail' trip.pk %}">{{ trip.water_body.name }}</a></h2>
+            <h2><a href="{% url 'journal:trip_record_detail' trip.pk %}">{{ trip.water_body.name }}</a></h2>
             <p>{{ trip.created_at|date:"d.m.Y" }}{% if trip.type %} · {{ trip.type.name }}{% endif %}</p>
             {% if trip.note %}<p>{{ trip.note|truncatechars:180 }}</p>{% endif %}
-            <a href="{% url 'trip_record_edit' trip.pk %}">Редагувати</a>
+            <a href="{% url 'journal:trip_record_edit' trip.pk %}">Редагувати</a>
         </article>
     {% empty %}
         <p>У тебе ще немає сесій.</p>
@@ -23,6 +23,6 @@
             {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Далі →</a>{% endif %}
         </nav>
     {% endif %}
-    <p><a href="{% url 'journal' %}">Повернутися до журналу</a></p>
+    <p><a href="{% url 'journal:journal' %}">Повернутися до журналу</a></p>
 </section>
 {% endblock %}

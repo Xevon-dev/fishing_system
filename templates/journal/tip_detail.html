@@ -4,7 +4,7 @@
 
 {% block content %}
 <article class="container" style="padding: 2rem 0; max-width: 850px;">
-    <p><a href="{% url 'tips_list' %}">← До порад</a></p>
+    <p><a href="{% url 'journal:tips_list' %}">← До порад</a></p>
     <h1>{{ tip.title }}</h1>
     <p>Автор: {{ tip.author.username }}{% if tip.created_at %} · {{ tip.created_at|date:"d.m.Y" }}{% endif %}</p>
     {% if tip.photo %}<p><img src="{{ tip.photo.url }}" alt="Фото до поради: {{ tip.title }}" style="max-width: 100%; height: auto;"></p>{% endif %}
@@ -15,7 +15,7 @@
         {% endif %}
     </p>
     {% if current_user and tip.author_id == current_user.user_id %}
-        <a href="{% url 'edit_tip' tip.tip_id %}">Редагувати пораду</a>
+        <a href="{% url 'journal:edit_tip' tip.tip_id %}">Редагувати пораду</a>
     {% endif %}
 </article>
 {% endblock %}

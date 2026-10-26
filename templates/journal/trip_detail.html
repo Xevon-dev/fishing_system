@@ -24,10 +24,10 @@
     {% endfor %}
 
     <p>
-        <a class="btn btn-primary" href="{% url 'trip_record_edit' trip.pk %}">Редагувати</a>
-        <a href="{% url 'trip_records' %}">До списку сесій</a>
+        <a class="btn btn-primary" href="{% url 'journal:trip_record_edit' trip.pk %}">Редагувати</a>
+        <a href="{% url 'journal:trip_records' %}">До списку сесій</a>
     </p>
-    <form method="post" action="{% url 'trip_record_delete' trip.pk %}">
+    <form method="post" action="{% url 'journal:trip_record_delete' trip.pk %}">
         {% csrf_token %}
         <button type="submit" class="btn btn-danger">Видалити сесію</button>
     </form>

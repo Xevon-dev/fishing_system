@@ -40,7 +40,7 @@ def login_view(request):
                 errors["password"] = "Невірний пароль"
             else:
                 login_user(request, user)
-                return redirect("profile")
+                return redirect("accounts:profile")
 
     return render(request, "login.html", {"errors": errors, "login": login_value})
 
@@ -48,4 +48,4 @@ def login_view(request):
 @require_POST
 def logout_view(request):
     logout_user(request)
-    return redirect("home")
+    return redirect("catalog:home")

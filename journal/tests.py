@@ -29,12 +29,17 @@ from .views.tips import TipsDetailView, TipsListView
 
 
 class GenericViewRouteTests(unittest.TestCase):
+    def test_namespaced_routes_keep_the_same_public_paths(self):
+        self.assertEqual(reverse("catalog:home"), "/")
+        self.assertEqual(reverse("accounts:login"), "/accounts/login/")
+        self.assertEqual(reverse("journal:journal"), "/journal/")
+
     def test_trip_list_is_paginated_and_model_has_canonical_url(self):
         self.assertEqual(FishingTripListView.paginate_by, 20)
         trip = FishingTrips(trip_id=37)
         self.assertEqual(
             trip.get_absolute_url(),
-            reverse("trip_record_detail", kwargs={"pk": 37}),
+            reverse("journal:trip_record_detail", kwargs={"pk": 37}),
         )
 
     def test_session_owner_mixin_uses_django_login_required_mixin(self):
@@ -42,17 +47,17 @@ class GenericViewRouteTests(unittest.TestCase):
 
     def test_fishing_trip_crud_routes_use_generic_views(self):
         expected = {
-            "trip_records": (FishingTripListView, ListView),
-            "trip_record_add": (FishingTripCreateView, CreateView),
-            "trip_record_detail": (FishingTripDetailView, DetailView),
-            "trip_record_edit": (FishingTripUpdateView, UpdateView),
-            "trip_record_delete": (FishingTripDeleteView, DeleteView),
+            "journal:trip_records": (FishingTripListView, ListView),
+            "journal:trip_record_add": (FishingTripCreateView, CreateView),
+            "journal:trip_record_detail": (FishingTripDetailView, DetailView),
+            "journal:trip_record_edit": (FishingTripUpdateView, UpdateView),
+            "journal:trip_record_delete": (FishingTripDeleteView, DeleteView),
         }
 
         for route_name, (view_class, generic_class) in expected.items():
             with self.subTest(route=route_name):
                 path = reverse(route_name, kwargs={"pk": 1}) if route_name in {
-                    "trip_record_detail", "trip_record_edit", "trip_record_delete"
+                    "journal:trip_record_detail", "journal:trip_record_edit", "journal:trip_record_delete"
                 } else reverse(route_name)
                 self.assertIs(resolve(path).func.view_class, view_class)
                 self.assertTrue(issubclass(view_class, generic_class))
@@ -66,7 +71,7 @@ class GenericViewRouteTests(unittest.TestCase):
     def test_tips_have_generic_list_and_detail_views(self):
         self.assertTrue(issubclass(TipsListView, ListView))
         self.assertTrue(issubclass(TipsDetailView, DetailView))
-        self.assertIs(resolve(reverse("tips_list")).func.view_class, TipsListView)
+        self.assertIs(resolve(reverse("journal:tips_list")).func.view_class, TipsListView)
 
 
 class ModelAdminRegistrationTests(unittest.TestCase):

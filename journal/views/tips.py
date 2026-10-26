@@ -116,7 +116,7 @@ def toggle_tip_like_view(request, tip_id):
     if not user:
         if request.headers.get("X-Requested-With") == "XMLHttpRequest":
             return JsonResponse({"error": "Увійдіть, щоб оцінювати поради."}, status=401)
-        return redirect("login")
+        return redirect("accounts:login")
     is_like = request.POST.get("reaction") == "like"
     reaction = TipLike.objects.filter(tip_id=tip_id, user=user).first()
     if reaction and reaction.is_like == is_like:
@@ -144,7 +144,7 @@ def toggle_tip_like_view(request, tip_id):
 def add_tip_view(request):
     user = current_user(request)
     if not user:
-        return redirect("login")
+        return redirect("accounts:login")
 
     if not user.level or user.level.name != "Досвідчений":
         return render(request, "add_tip.html", {"not_allowed": True})
@@ -184,7 +184,7 @@ def add_tip_view(request):
                 photo=photo,
             )
             tip.fishes.set(selected_fishes)
-            return redirect("tips_list")
+            return redirect("journal:tips_list")
 
     return render(request, "add_tip.html", {
         "errors": errors,
@@ -199,11 +199,11 @@ def add_tip_view(request):
 def edit_tip_view(request, tip_id):
     user = current_user(request)
     if not user:
-        return redirect("login")
+        return redirect("accounts:login")
 
     tip = Tips.objects.filter(pk=tip_id).first()
     if not tip or tip.author_id != user.user_id:
-        return redirect("tips_list")
+        return redirect("journal:tips_list")
 
     title = tip.title
     content = tip.content
@@ -247,7 +247,7 @@ def edit_tip_view(request, tip_id):
             tip.content = content
             tip.save(update_fields=["title", "fish", "content", "photo", "applies_to_all_fish"])
             tip.fishes.set(selected_fishes)
-            return redirect("tips_list")
+            return redirect("journal:tips_list")
 
     return render(request, "add_tip.html", {
         "tip": tip,
@@ -264,11 +264,11 @@ def edit_tip_view(request, tip_id):
 def delete_tip_view(request, tip_id):
     user = current_user(request)
     if not user:
-        return redirect("login")
+        return redirect("accounts:login")
 
     tip = Tips.objects.filter(pk=tip_id, author_id=user.user_id).first()
     if not tip:
-        return redirect("tips_list")
+        return redirect("journal:tips_list")
 
     next_url = request.POST.get("next") or ""
     tip.delete()
@@ -276,17 +276,17 @@ def delete_tip_view(request, tip_id):
     if next_url and next_url.startswith("/") and not next_url.startswith("//"):
         return redirect(next_url)
 
-    return redirect("tips_list")
+    return redirect("journal:tips_list")
 
 
 @require_POST
 def delete_tip_photo_view(request, tip_id):
     user = current_user(request)
     if not user:
-        return redirect("login")
+        return redirect("accounts:login")
 
     tip = Tips.objects.filter(pk=tip_id, author_id=user.user_id).first()
     if tip and tip.photo:
         tip.photo.delete(save=False)
         tip.save(update_fields=["photo"])
-    return redirect("edit_tip", tip_id=tip_id)
+    return redirect("journal:edit_tip", tip_id=tip_id)

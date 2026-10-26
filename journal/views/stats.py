@@ -8,7 +8,7 @@ from ..models import Catches, FishingTrips
 def stats_view(request):
     user = current_user(request)
     if not user:
-        return redirect("login")
+        return redirect("accounts:login")
 
     trips = FishingTrips.objects.filter(user_id=user.user_id)
     catches = Catches.objects.filter(trip__user_id=user.user_id)

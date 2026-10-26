@@ -37,7 +37,7 @@ class FishingTrips(models.Model):
         db_table = 'fishing_trips'
 
     def get_absolute_url(self):
-        return reverse("trip_record_detail", kwargs={"pk": self.pk})
+        return reverse("journal:trip_record_detail", kwargs={"pk": self.pk})
 
 
 class FishingTripPhotos(models.Model):

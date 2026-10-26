@@ -16,7 +16,7 @@ def register_view(request):
     )
     if request.method == "POST" and form.is_valid():
         user = form.save()
-        return redirect(f"{reverse('login')}?login={quote(user.username)}")
+        return redirect(f"{reverse('accounts:login')}?login={quote(user.username)}")
 
     errors = {
         "username": form["username"].errors[0] if form["username"].errors else "",

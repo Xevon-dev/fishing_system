@@ -11,7 +11,7 @@
 {% block content %}
 <section class="stats-page">
     <div class="stats-shell">
-        <a class="stats-back" href="{% url 'profile' %}">← До профілю</a>
+        <a class="stats-back" href="{% url 'accounts:profile' %}">← До профілю</a>
         <header class="stats-hero">
             <span class="stats-kicker"><i></i> Твій рибальський шлях</span>
             <h1>Статистика риболовлі</h1>
@@ -34,7 +34,7 @@
             {% if trophies %}
                 <div class="trophy-grid">
                     {% for catch in trophies %}
-                        <a class="trophy-card" href="{% url 'edit_trip' catch.trip.trip_id %}">
+                        <a class="trophy-card" href="{% url 'journal:edit_trip' catch.trip.trip_id %}">
                             <span class="trophy-card__top"><span class="trophy-card__species">{{ catch.fish.name }}</span><span class="trophy-card__arrow" aria-hidden="true">↗</span></span>
                             <strong class="trophy-card__weight">{{ catch.weight_kg|floatformat:2 }} <small>кг</small></strong>
                             <span class="trophy-card__details">
@@ -47,7 +47,7 @@
                     {% endfor %}
                 </div>
             {% else %}
-                <div class="trophies-empty"><span aria-hidden="true">♧</span><strong>Трофеїв поки немає</strong><p>Додай улов із видом риби та вагою — найбільший екземпляр кожного виду з’явиться тут.</p><a href="{% url 'add_trip' %}">Додати рибальську сесію →</a></div>
+                <div class="trophies-empty"><span aria-hidden="true">♧</span><strong>Трофеїв поки немає</strong><p>Додай улов із видом риби та вагою — найбільший екземпляр кожного виду з’явиться тут.</p><a href="{% url 'journal:add_trip' %}">Додати рибальську сесію →</a></div>
             {% endif %}
         </section>
 

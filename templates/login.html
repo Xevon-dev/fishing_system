@@ -8,13 +8,13 @@
 {% endblock %}
 
 {% block nav_links %}
-<a href="{% url 'home' %}#home">Головна</a>
-<a href="{% url 'home' %}#features">Можливості</a>
+<a href="{% url 'catalog:home' %}#home">Головна</a>
+<a href="{% url 'catalog:home' %}#features">Можливості</a>
 {% endblock %}
 
 {% block nav_actions %}
-<a class="login-link" href="{% url 'login' %}">Увійти</a>
-<a class="btn btn-primary" href="{% url 'register' %}">Реєстрація</a>
+<a class="login-link" href="{% url 'accounts:login' %}">Увійти</a>
+<a class="btn btn-primary" href="{% url 'accounts:register' %}">Реєстрація</a>
 {% endblock %}
 
 {% block content %}
@@ -34,8 +34,8 @@
             <div class="auth-card">
 
                 <div class="auth-tabs">
-                    <a href="{% url 'register' %}" class="auth-tab">Реєстрація</a>
-                    <a href="{% url 'login' %}" class="auth-tab active">Увійти</a>
+                    <a href="{% url 'accounts:register' %}" class="auth-tab">Реєстрація</a>
+                    <a href="{% url 'accounts:login' %}" class="auth-tab active">Увійти</a>
                 </div>
 
                 <form method="post" class="auth-form" novalidate>
@@ -87,7 +87,7 @@
 
                     <p class="auth-switch">
                         <span>Ще не маєте акаунта?</span>
-                        <a href="{% url 'register' %}">Зареєструватися</a>
+                        <a href="{% url 'accounts:register' %}">Зареєструватися</a>
                     </p>
                 </form>
             </div>
@@ -137,7 +137,7 @@
                         <strong>Ще не маєте акаунта?</strong>
                         <p>Створи профіль за хвилину</p>
                     </div>
-                    <a href="{% url 'register' %}" class="test-button">Реєстрація <span aria-hidden="true">→</span></a>
+                    <a href="{% url 'accounts:register' %}" class="test-button">Реєстрація <span aria-hidden="true">→</span></a>
                 </div>
             </aside>
         </div>

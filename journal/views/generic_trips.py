@@ -12,12 +12,12 @@ from ..models import Catches, FishingTrips
 
 
 class SessionOwnerRequiredMixin(LoginRequiredMixin):
-    login_url = "login"
+    login_url = "accounts:login"
 
     def dispatch(self, request, *args, **kwargs):
         self.owner = current_user(request)
         if not self.owner:
-            return redirect("login")
+            return redirect("accounts:login")
         request.user = self.owner
         return super().dispatch(request, *args, **kwargs)
 
@@ -54,7 +54,7 @@ class FishingTripCreateView(SessionOwnerRequiredMixin, CreateView):
     model = FishingTrips
     form_class = GenericFishingTripForm
     template_name = "journal/trip_form.html"
-    success_url = reverse_lazy("trip_records")
+    success_url = reverse_lazy("journal:trip_records")
 
     def form_valid(self, form):
         form.instance.user = self.owner
@@ -66,7 +66,7 @@ class FishingTripUpdateView(SessionOwnerRequiredMixin, UpdateView):
     model = FishingTrips
     form_class = GenericFishingTripForm
     template_name = "journal/trip_form.html"
-    success_url = reverse_lazy("trip_records")
+    success_url = reverse_lazy("journal:trip_records")
 
     def get_queryset(self):
         return FishingTrips.objects.filter(user_id=self.owner.user_id)
@@ -79,7 +79,7 @@ class FishingTripUpdateView(SessionOwnerRequiredMixin, UpdateView):
 class FishingTripDeleteView(SessionOwnerRequiredMixin, DeleteView):
     model = FishingTrips
     template_name = "journal/trip_confirm_delete.html"
-    success_url = reverse_lazy("trip_records")
+    success_url = reverse_lazy("journal:trip_records")
 
     def get_queryset(self):
         return FishingTrips.objects.filter(user_id=self.owner.user_id).prefetch_related("photos")

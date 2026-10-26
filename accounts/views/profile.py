@@ -58,7 +58,7 @@ def profile_context(user):
 def profile_view(request):
     user = current_user(request)
     if not user:
-        return redirect("login")
+        return redirect("accounts:login")
 
     context = profile_context(user)
     context["edit_form"] = request.session.pop("profile_edit_form", None)
@@ -85,7 +85,7 @@ def edit_errors_for(user, form):
 def profile_edit_view(request):
     user = current_user(request)
     if not user:
-        return redirect("login")
+        return redirect("accounts:login")
 
     form = {
         "username": user.username,
@@ -93,7 +93,7 @@ def profile_edit_view(request):
     }
 
     if request.method != "POST":
-        return redirect("profile")
+        return redirect("accounts:profile")
 
     for field in form:
         form[field] = request.POST.get(field, "")
@@ -111,7 +111,7 @@ def profile_edit_view(request):
             "email": form["email"],
         }
         request.session["profile_edit_errors"] = errors
-        return redirect("profile")
+        return redirect("accounts:profile")
 
     fields = ["username"]
     user.username = form["username"]
@@ -122,22 +122,22 @@ def profile_edit_view(request):
 
     user.save(update_fields=fields)
 
-    return redirect("profile")
+    return redirect("accounts:profile")
 
 
 def profile_photo_view(request):
     user = current_user(request)
     if not user:
-        return redirect("login")
+        return redirect("accounts:login")
     if request.method != "POST":
-        return redirect("profile")
+        return redirect("accounts:profile")
 
     if request.POST.get("remove_photo"):
         if user.profile_photo:
             user.profile_photo.delete(save=False)
             user.profile_photo = None
             user.save(update_fields=["profile_photo"])
-        return redirect("profile")
+        return redirect("accounts:profile")
 
     photo = request.FILES.get("profile_photo")
     error = image_upload_error(photo)
@@ -152,4 +152,4 @@ def profile_photo_view(request):
         user.profile_photo.delete(save=False)
     user.profile_photo = photo
     user.save(update_fields=["profile_photo"])
-    return redirect("profile")
+    return redirect("accounts:profile")
