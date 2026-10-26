@@ -14,7 +14,7 @@
             {% for fish in tip.fishes.all %}{{ fish.name }}{% if not forloop.last %}, {% endif %}{% empty %}{% if tip.fish %}{{ tip.fish.name }}{% else %}не вказано{% endif %}{% endfor %}
         {% endif %}
     </p>
-    {% if current_user and tip.author_id == current_user.user_id %}
+    {% if current_user and current_user.level and current_user.level.name == "Досвідчений" and tip.author_id == current_user.user_id %}
         <a href="{% url 'journal:edit_tip' tip.tip_id %}">Редагувати пораду</a>
     {% endif %}
 </article>

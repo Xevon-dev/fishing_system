@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from django.db.models import Count, Exists, OuterRef, Q
-from django.http import JsonResponse
+from django.http import HttpResponseForbidden, JsonResponse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 from django.views.generic import DetailView, ListView
@@ -62,6 +62,19 @@ def validate_tip(title, content, fish_ids=(), photo=None, applies_to_all_fish=Fa
             errors["content"] = reason
 
     return errors, selected_fishes, applies_to_all_fish
+
+
+def can_manage_tips(user):
+    return bool(user and user.level and user.level.name == "Досвідчений")
+
+
+def tip_management_forbidden(request):
+    return render(
+        request,
+        "add_tip.html",
+        {"not_allowed": True},
+        status=403,
+    )
 
 
 class TipsListView(ListView):
@@ -151,8 +164,8 @@ def add_tip_view(request):
     if not user:
         return redirect("accounts:login")
 
-    if not user.level or user.level.name != "Досвідчений":
-        return render(request, "add_tip.html", {"not_allowed": True})
+    if not can_manage_tips(user):
+        return tip_management_forbidden(request)
 
     title = ""
     content = ""
@@ -205,6 +218,8 @@ def edit_tip_view(request, tip_id):
     user = current_user(request)
     if not user:
         return redirect("accounts:login")
+    if not can_manage_tips(user):
+        return tip_management_forbidden(request)
 
     tip = Tips.objects.filter(pk=tip_id).first()
     if not tip or tip.author_id != user.user_id:
@@ -270,6 +285,8 @@ def delete_tip_view(request, tip_id):
     user = current_user(request)
     if not user:
         return redirect("accounts:login")
+    if not can_manage_tips(user):
+        return HttpResponseForbidden("Керувати порадами можуть лише досвідчені рибалки.")
 
     tip = Tips.objects.filter(pk=tip_id, author_id=user.user_id).first()
     if not tip:
@@ -289,6 +306,8 @@ def delete_tip_photo_view(request, tip_id):
     user = current_user(request)
     if not user:
         return redirect("accounts:login")
+    if not can_manage_tips(user):
+        return HttpResponseForbidden("Керувати порадами можуть лише досвідчені рибалки.")
 
     tip = Tips.objects.filter(pk=tip_id, author_id=user.user_id).first()
     if tip and tip.photo:

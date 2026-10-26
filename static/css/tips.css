@@ -190,13 +190,30 @@
 
 .tip-edit-link:hover { text-decoration: underline; }
 .tip-delete-link {
-  color: #b4554d;
-  font: inherit;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
+    padding: 5px 11px;
+    border: 1px solid #f0c7c4;
+    border-radius: 999px;
+    background: #fff7f6;
+    color: #b4554d;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color .16s ease, border-color .16s ease, color .16s ease;
 }
-.tip-delete-link:hover { color: #c8372b; }
+.tip-delete-link:hover {
+    border-color: #c8372b;
+    background: #c8372b;
+    color: #fff;
+}
+.tip-delete-link:focus-visible {
+    outline: 3px solid rgb(200 55 43 / 25%);
+    outline-offset: 2px;
+}
 .tip-card-actions { display: flex; align-items: center; gap: 11px; margin-top: 14px; }
 .tip-card-actions form { margin: 0; }
 .tip-like-button { display: inline-flex; align-items: center; gap: 7px; min-height: 36px; padding: 7px 12px; border: 1px solid #e5e9ee; border-radius: 999px; background: #fff; color: #59646a; font: inherit; font-size: 12px; font-weight: 700; text-decoration: none; cursor: pointer; transition: .16s ease; }

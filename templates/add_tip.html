@@ -17,7 +17,7 @@
     </header>
 
     {% if not_allowed %}
-        <div class="tip-compose-denied">Додавати поради можуть лише досвідчені рибалки.</div>
+        <div class="tip-compose-denied">Керувати порадами можуть лише досвідчені рибалки.</div>
     {% else %}
         <div class="tip-compose-layout">
             {% if tip.photo %}<form id="delete-tip-photo" class="tip-photo-delete-form" method="post" action="{% url 'journal:delete_tip_photo' tip.tip_id %}" data-confirm="Видалити фото до цієї поради?">{% csrf_token %}</form>{% endif %}

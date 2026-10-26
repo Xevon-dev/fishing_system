@@ -6,6 +6,7 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/auth.css' %}?v={% now 'U' %}">
 <link rel="stylesheet" href="{% static 'css/map.css' %}?v={% now 'U' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
 <link rel="stylesheet" href="{% static 'css/journal.css' %}?v={% now 'U' %}">
 {% endblock %}
 
@@ -171,6 +172,9 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/uk.js"></script>
+<script src="{% static 'js/catch-datetime.js' %}?v={% now 'U' %}"></script>
 <script>
 (() => {
     const input = document.getElementById('trip-photo');

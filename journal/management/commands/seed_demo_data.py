@@ -19,9 +19,9 @@ class Command(BaseCommand):
     help = "Створює невеликий набір вигаданих даних для демонстрації проєкту."
 
     def handle(self, *args, **options):
-        level = Levels.objects.filter(name="Початківець").first()
+        level = Levels.objects.filter(name="Досвідчений").first()
         if level is None:
-            level = Levels.objects.create(name="Початківець")
+            level = Levels.objects.create(name="Досвідчений")
 
         user = Users.objects.filter(email=DEMO_EMAIL).first()
         if user is None:
@@ -33,9 +33,10 @@ class Command(BaseCommand):
                 created_at=timezone.now(),
             )
         else:
+            user.username = DEMO_USERNAME
             user.level = level
             user.password_hash = make_password(DEMO_PASSWORD)
-            user.save(update_fields=("level", "password_hash"))
+            user.save(update_fields=("username", "level", "password_hash"))
 
         water_bodies = [
             self._get_or_create(WaterBodies, {"name": "Демо-озеро"}, {
