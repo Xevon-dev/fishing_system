@@ -36,6 +36,7 @@ class FishSpecies(models.Model):
     advice = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to="fish/", blank=True)
     wikipedia = models.URLField(max_length=500, blank=True)
+    fishing_info_url = models.URLField(max_length=500, blank=True, help_text="Посилання на сезон лову, нерест та інші особливості виду.")
     image_source = models.URLField(max_length=500, blank=True)
     categories = models.ManyToManyField(
         "FishCategory",

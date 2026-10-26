@@ -28,9 +28,38 @@
                     </div>
 
                     {% if current_user %}
-                        <p>{% if level_changed %}Рівень профілю змінено за результатом тесту. Доступні функції оновлено.{% else %}Твій поточний рівень збережено.{% endif %}</p>
-                        <p>Рівень профілю: {{ saved_level }}</p>
-                        <a class="btn btn-primary" href="{% url 'accounts:profile' %}">Повернутися до профілю →</a>
+                        <p>Рекомендований рівень за результатом тесту: <strong>{{ level_name }}</strong>. Зміни застосуються лише після підтвердження.</p>
+                        <p>Зараз у профілі: <strong>{{ saved_level }}</strong>.</p>
+                        <div class="test-result-access">
+                            <h3>Що буде доступно на цьому рівні</h3>
+                            {% if level == "beginner" %}
+                                <ul>
+                                    <li>Енциклопедія риб</li>
+                                    <li>Техніки лову</li>
+                                    <li>Підбір снастей</li>
+                                </ul>
+                            {% elif level == "intermediate" %}
+                                <ul>
+                                    <li>Енциклопедія риб</li>
+                                    <li>Техніки лову</li>
+                                </ul>
+                            {% else %}
+                                <ul>
+                                    <li>Додавання власних порад для рибалок</li>
+                                    <li>Карта водойм, риболовні сесії та поради спільноти</li>
+                                </ul>
+                            {% endif %}
+                        </div>
+                        {% if can_confirm_level %}
+                            <form method="post" class="test-result-actions">
+                                {% csrf_token %}
+                                <button class="btn btn-primary" type="submit" name="action" value="confirm_level_change">Підтвердити рівень і повернутися до профілю →</button>
+                                <button class="test-result-cancel" type="submit" name="action" value="cancel_level_change">Скасувати та повернутися до профілю</button>
+                            </form>
+                        {% else %}
+                            <p>Зміна рівня для цього профілю недоступна.</p>
+                            <a class="btn btn-primary" href="{% url 'accounts:profile' %}">Повернутися до профілю →</a>
+                        {% endif %}
                     {% else %}
                         <a class="btn btn-primary"
                            href="{% url 'accounts:register' %}?fishing_level={{ level }}">

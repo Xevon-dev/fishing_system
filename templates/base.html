@@ -25,12 +25,11 @@
                 <a href="{% url 'catalog:water_bodies' %}">Карта водойм</a>
                 <a href="{% url 'journal:journal' %}">Риболовні сесії</a>
                 <a href="{% url 'journal:tips_list' %}">Поради рибалок</a>
+                <a href="{% url 'catalog:fish_advice' %}">Енциклопедія рибака</a>
                 {% if current_user.level.name == "Початківець" %}
-                    <a href="{% url 'catalog:fish_advice' %}">Енциклопедія рибака</a>
                     <a href="{% url 'catalog:methods' %}">Техніки лову</a>
                     <a href="{% url 'catalog:tackle' %}">Підбір снастей</a>
                 {% elif current_user.level.name == "Середній" %}
-                    <a href="{% url 'catalog:fish_advice' %}">Енциклопедія рибака</a>
                     <a href="{% url 'catalog:methods' %}">Техніки лову</a>
                 {% elif current_user.level.name == "Досвідчений" %}
                     <a href="{% url 'journal:add_tip' %}">Додати пораду</a>
@@ -38,6 +37,7 @@
             {% else %}
                 <a href="{% url 'catalog:home' %}">Головна</a>
                 <a href="{% url 'catalog:home' %}#features">Можливості</a>
+                <a href="{% url 'catalog:fish_advice' %}">Енциклопедія рибака</a>
             {% endif %}
             {% endblock %}
         </nav>

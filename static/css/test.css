@@ -380,6 +380,18 @@ main {
 .test-card.test-result .btn-primary:hover {
   background: #0f4d3c;
 }
+.test-result-access {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: #f5f8f6;
+  text-align: left;
+}
+.test-result-access h3 { margin: 0 0 8px; color: #164536; font-size: 14px; }
+.test-result-access ul { margin: 0; padding-left: 20px; color: #71807a; font-size: 12.5px; line-height: 1.8; }
+.test-result-actions { display: flex; flex-direction: column; align-items: center; gap: 9px; }
+.test-result-cancel { padding: 8px 12px; border: 0; color: #71807a; background: transparent; font: inherit; font-size: 12px; text-decoration: underline; cursor: pointer; }
+.test-result-cancel:hover { color: #10382d; }
 
 .home-footer {
   padding: 16px 0;

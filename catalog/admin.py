@@ -38,7 +38,7 @@ class FishSpeciesAdmin(admin.ModelAdmin):
         "wikipedia_link",
     )
     search_fields = ("name", "description", "advice")
-    fields = ("name", "description", "advice", "image", "wikipedia", "image_source", "categories")
+    fields = ("name", "description", "advice", "image", "wikipedia", "fishing_info_url", "image_source", "categories")
     filter_horizontal = ("categories",)
 
     @admin.display(description="опис")

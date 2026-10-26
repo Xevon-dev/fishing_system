@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.db.models import Count
+from urllib.parse import quote_plus
 
 from ..models import FishCategory, FishSpecies
 
@@ -7,11 +8,15 @@ from ..models import FishCategory, FishSpecies
 def fish_advice_view(request):
     fish_list = (
         FishSpecies.objects
-        .filter(fishingtypes__isnull=False)
         .prefetch_related("categories")
         .distinct()
         .order_by("name")
     )
+    for fish in fish_list:
+        fish.fishing_info_link = fish.fishing_info_url or (
+            "https://www.google.com/search?q="
+            + quote_plus(f"{fish.name} коли ловити нерест")
+        )
     fish_categories = (
         FishCategory.objects
         .annotate(fish_count=Count("fish"))
