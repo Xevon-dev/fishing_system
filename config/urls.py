@@ -2,9 +2,11 @@ from django.contrib import admin
 from django.urls import path , include
 from django.conf import settings
 from django.conf.urls.static import static
+from accounts.views.social import social_auth_complete
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('social-auth/complete/<str:backend>/', social_auth_complete, name='social_complete'),
     path('social-auth/', include('social_django.urls', namespace='social')),
     path("", include("catalog.urls")),
     path("", include("journal.urls")),

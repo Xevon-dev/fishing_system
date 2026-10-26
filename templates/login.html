@@ -33,6 +33,14 @@
         <div class="auth-container">
             <div class="auth-card">
 
+                {% if messages %}
+                    <div class="auth-messages" role="status">
+                        {% for message in messages %}
+                            <p>{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
                 <div class="auth-tabs">
                     <a href="{% url 'accounts:register' %}" class="auth-tab">Реєстрація</a>
                     <a href="{% url 'accounts:login' %}" class="auth-tab active">Увійти</a>
