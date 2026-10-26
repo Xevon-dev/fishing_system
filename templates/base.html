@@ -22,22 +22,22 @@
         <nav class="nav-links">
             {% block nav_links %}
             {% if current_user %}
-                <a href="{% url 'catalog:water_bodies' %}">Карта водойм</a>
-                <a href="{% url 'journal:journal' %}">Риболовні сесії</a>
-                <a href="{% url 'journal:tips_list' %}">Поради рибалок</a>
-                <a href="{% url 'catalog:fish_advice' %}">Енциклопедія рибака</a>
+                <a href="{% url 'catalog:water_bodies' %}"{% if request.resolver_match.url_name == 'water_bodies' or request.resolver_match.url_name == 'water_bodies_geojson' %} aria-current="page"{% endif %}>Карта водойм</a>
+                <a href="{% url 'journal:journal' %}"{% if request.resolver_match.url_name == 'journal' or request.resolver_match.url_name|slice:":5" == 'trip_' or request.resolver_match.url_name in 'add_trip edit_trip delete_trip' %} aria-current="page"{% endif %}>Риболовні сесії</a>
+                <a href="{% url 'journal:tips_list' %}"{% if request.resolver_match.url_name == 'tips_list' or request.resolver_match.url_name == 'tip_detail' or request.resolver_match.url_name == 'edit_tip' or request.resolver_match.url_name == 'delete_tip' or request.resolver_match.url_name == 'delete_tip_photo' or request.resolver_match.url_name == 'toggle_tip_like' %} aria-current="page"{% endif %}>Поради рибалок</a>
+                <a href="{% url 'catalog:fish_advice' %}"{% if request.resolver_match.url_name == 'fish_advice' %} aria-current="page"{% endif %}>Енциклопедія рибака</a>
                 {% if current_user.level.name == "Початківець" %}
-                    <a href="{% url 'catalog:methods' %}">Техніки лову</a>
-                    <a href="{% url 'catalog:tackle' %}">Підбір снастей</a>
+                    <a href="{% url 'catalog:methods' %}"{% if request.resolver_match.url_name == 'methods' %} aria-current="page"{% endif %}>Техніки лову</a>
+                    <a href="{% url 'catalog:tackle' %}"{% if request.resolver_match.url_name == 'tackle' or request.resolver_match.url_name == 'tackle_fish' %} aria-current="page"{% endif %}>Підбір снастей</a>
                 {% elif current_user.level.name == "Середній" %}
-                    <a href="{% url 'catalog:methods' %}">Техніки лову</a>
+                    <a href="{% url 'catalog:methods' %}"{% if request.resolver_match.url_name == 'methods' %} aria-current="page"{% endif %}>Техніки лову</a>
                 {% elif current_user.level.name == "Досвідчений" %}
-                    <a href="{% url 'journal:add_tip' %}">Додати пораду</a>
+                    <a href="{% url 'journal:add_tip' %}"{% if request.resolver_match.url_name == 'add_tip' %} aria-current="page"{% endif %}>Додати пораду</a>
                 {% endif %}
             {% else %}
                 <a href="{% url 'catalog:home' %}">Головна</a>
                 <a href="{% url 'catalog:home' %}#features">Можливості</a>
-                <a href="{% url 'catalog:fish_advice' %}">Енциклопедія рибака</a>
+                <a href="{% url 'catalog:fish_advice' %}"{% if request.resolver_match.url_name == 'fish_advice' %} aria-current="page"{% endif %}>Енциклопедія рибака</a>
             {% endif %}
             {% endblock %}
         </nav>
@@ -45,7 +45,7 @@
         <div class="nav-actions">
             {% block nav_actions %}
             {% if current_user %}
-                <a class="btn btn-primary profile-nav-btn" href="{% url 'accounts:profile' %}">
+                <a class="btn btn-primary profile-nav-btn{% if request.resolver_match.url_name == 'profile' %} is-current{% endif %}" href="{% url 'accounts:profile' %}"{% if request.resolver_match.url_name == 'profile' %} aria-current="page"{% endif %}>
                     <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
                         <circle cx="12" cy="8.4" r="3.6"/><path d="M4.8 20a7.2 7.2 0 0 1 14.4 0"/>
                     </svg>

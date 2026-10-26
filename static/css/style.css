@@ -104,7 +104,15 @@ img {
   color: var(--blue);
   transform: translateY(-1px);
 }
-.nav-links a[aria-current="page"] { color: #08764f; }
+.nav-links a[aria-current="page"] {
+  color: #08764f;
+}
+.header:not(.header--home) .nav-links a[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+.header .nav-actions .profile-nav-btn.is-current {
+  box-shadow: 0 0 0 3px #fff, 0 0 0 5px rgb(8 118 79 / 32%), 0 7px 18px rgb(8 118 79 / 22%);
+}
 .nav-actions {
   gap: 14px;
 }
