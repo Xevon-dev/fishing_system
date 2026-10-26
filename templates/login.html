@@ -85,6 +85,11 @@
                         Увійти в акаунт <span aria-hidden="true">→</span>
                     </button>
 
+                    <a class="google-login" href="{% url 'social:begin' 'google-oauth2' %}">
+                        <span class="google-login__mark" aria-hidden="true">G</span>
+                        Увійти через Google
+                    </a>
+
                     <p class="auth-switch">
                         <span>Ще не маєте акаунта?</span>
                         <a href="{% url 'accounts:register' %}">Зареєструватися</a>

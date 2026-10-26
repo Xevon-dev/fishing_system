@@ -880,6 +880,32 @@ main {
   font-size: 14px;
   line-height: 1;
 }
+.google-login {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 42px;
+  padding: 0 18px;
+  border: 1px solid #d7dfda;
+  border-radius: 10px;
+  background: #fff;
+  color: #26352d;
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
+}
+.google-login:hover {
+  border-color: #aebbb3;
+  background: #f7f9f7;
+}
+.google-login__mark {
+  color: #4285f4;
+  font-size: 16px;
+  font-weight: 900;
+}
 .auth-switch {
   display: flex;
   gap: 12px;

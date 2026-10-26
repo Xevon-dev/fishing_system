@@ -1,5 +1,6 @@
 import re
 
+from django.contrib.auth import logout as django_logout
 from django.contrib.auth.hashers import check_password
 from django.shortcuts import redirect, render
 from django.views.decorators.cache import never_cache
@@ -47,5 +48,8 @@ def login_view(request):
 
 @require_POST
 def logout_view(request):
+    user = getattr(request, "user", None)
+    if user is not None and user.is_authenticated:
+        django_logout(request)
     logout_user(request)
     return redirect("catalog:home")

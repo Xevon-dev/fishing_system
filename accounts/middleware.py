@@ -9,7 +9,9 @@ class SessionUserMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        if not request.user.is_authenticated:
-            user = current_user(request)
-            request.user = user or AnonymousUser()
+        user = current_user(request)
+        if user is not None:
+            request.user = user
+        elif not request.user.is_authenticated:
+            request.user = AnonymousUser()
         return self.get_response(request)
