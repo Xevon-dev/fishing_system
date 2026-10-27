@@ -15,6 +15,7 @@ class SessionUserMiddleware:
         "accounts:login",
         "accounts:register",
         "accounts:fishing_test",
+        "accounts:registration_fishing_test",
         "social_complete",
     }
     public_namespaces = {"social", "admin"}

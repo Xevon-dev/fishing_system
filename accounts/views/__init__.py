@@ -1,5 +1,5 @@
 from .delete_account import delete_account_view
-from .fishing_test import fishing_test_view
+from .fishing_test import fishing_test_view, registration_fishing_test_view
 from .google_onboarding import google_level_view
 from .login import login_view, logout_view
 from .password import password_view

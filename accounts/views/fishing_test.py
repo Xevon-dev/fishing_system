@@ -33,12 +33,13 @@ def count_score(questions, post):
     return score, None
 
 
-def fishing_test_view(request):
+def fishing_test_view(request, registration=False):
     questions = load_questions()
-    user = current_user(request)
+    user = None if registration else current_user(request)
     context = {
         "questions": public_questions(questions),
         "completed": False,
+        "current_user": user,
     }
 
     if request.method == "POST" and request.POST.get("action") == "cancel_level_change":
@@ -82,3 +83,7 @@ def fishing_test_view(request):
         "level_name": LEVEL_NAMES[level],
     })
     return render(request, "fishing_test.html", context)
+
+
+def registration_fishing_test_view(request):
+    return fishing_test_view(request, registration=True)
