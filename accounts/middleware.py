@@ -10,7 +10,13 @@ from .session import current_user
 
 
 class SessionUserMiddleware:
-    public_views = {"catalog:home", "accounts:login", "accounts:register", "social_complete"}
+    public_views = {
+        "catalog:home",
+        "accounts:login",
+        "accounts:register",
+        "accounts:fishing_test",
+        "social_complete",
+    }
     public_namespaces = {"social", "admin"}
 
     def __init__(self, get_response):
