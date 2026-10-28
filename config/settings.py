@@ -16,9 +16,11 @@ load_dotenv(BASE_DIR / ".env")
 SECRET_KEY = os.getenv("SECRET_KEY")
     
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv(
-    "DEBUG", "False" if os.getenv("VERCEL") else "True"
-).lower() in {"1", "true", "yes"}
+IS_VERCEL = bool(os.getenv("VERCEL") or os.getenv("VERCEL_URL"))
+DEBUG = (
+    os.getenv("DEBUG", "True").lower() in {"1", "true", "yes"}
+    and not IS_VERCEL
+)
 ALLOWED_HOSTS = [
     host.strip()
     for host in os.getenv(
@@ -26,8 +28,10 @@ ALLOWED_HOSTS = [
     ).split(",")
     if host.strip()
 ]
-if os.getenv("VERCEL_URL"):
-    ALLOWED_HOSTS.append(os.getenv("VERCEL_URL"))
+if IS_VERCEL:
+    ALLOWED_HOSTS.extend([".vercel.app"])
+    if os.getenv("VERCEL_URL"):
+        ALLOWED_HOSTS.append(os.getenv("VERCEL_URL"))
 
 
 # Application definition
