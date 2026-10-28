@@ -22,7 +22,7 @@ DEBUG = os.getenv(
 ALLOWED_HOSTS = [
     host.strip()
     for host in os.getenv(
-        "ALLOWED_HOSTS", "zolotarybka.com,localhost,127.0.0.1"
+        "ALLOWED_HOSTS", ".vercel.app,zolotarybka.com,localhost,127.0.0.1"
     ).split(",")
     if host.strip()
 ]
@@ -191,7 +191,7 @@ CSRF_TRUSTED_ORIGINS = [
     origin.strip()
     for origin in os.getenv(
         "CSRF_TRUSTED_ORIGINS",
-        "https://*.onrender.com,https://zolotarybka.com",
+        "https://*.vercel.app,https://*.onrender.com,https://zolotarybka.com",
     ).split(",")
     if origin.strip()
 ]
