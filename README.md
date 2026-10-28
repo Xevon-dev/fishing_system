@@ -2,7 +2,7 @@
 
 Сайт для рибалок: сесії та улови, карта водойм, підбір снастей і поради.
 
-Використано Python 3.13, Django 5.2.18 і MySQL 8.4.11.
+Використано Python 3.13, Django 5.2.18 і PostgreSQL.
 
 ## Як запустити
 
@@ -16,10 +16,10 @@
    python -m pip install -r requirements.txt
    ```
 
-2. Запусти MySQL і створи базу в його консолі:
+2. Запусти PostgreSQL і створи базу:
 
    ```sql
-   CREATE DATABASE fishing_system CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+   CREATE DATABASE fishing_system;
    ```
 
 3. Для першого запуску створи файл налаштувань:
@@ -28,7 +28,7 @@
    Copy-Item .env.example .env
    ```
 
-   У `.env` заповни `SECRET_KEY` та дані MySQL: `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT`. Локально: назва бази — `fishing_system`, адреса — `127.0.0.1`, порт — `3306`.
+   У `.env` заповни `SECRET_KEY` та PostgreSQL-змінні `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT`. Локально: база — `fishing_system`, адреса — `127.0.0.1`, порт — `5432`. Для хостингу можна вказати повний рядок підключення в `DATABASE_URL`.
 
    Ключі сервісів можна заповнити пізніше. Порожні рядки з `.env.example` не видаляй. Файл `.env` не додавай у Git.
 
@@ -39,6 +39,8 @@
    python manage.py check
    python manage.py runserver
    ```
+
+   Якщо переходиш із MySQL і хочеш зберегти наявні записи, їх потрібно окремо експортувати з MySQL та імпортувати в PostgreSQL. `migrate` створює схему й початкові дані, але сам дані з MySQL не переносить.
 
 5. Відкрий `http://127.0.0.1:8000/` та зареєструйся.
 
