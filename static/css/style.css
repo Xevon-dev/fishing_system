@@ -289,9 +289,20 @@ img {
   .nav-actions {
     gap: 15px;
   }
+  .nav-links {
+    order: 3;
+    flex: 0 0 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    row-gap: 6px;
+  }
   .nav-links a {
     font-size: 12px;
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
   }
+  .nav-actions { margin-left: auto; }
 }
 @media (max-width: 520px) {
   .navbar {
@@ -302,6 +313,8 @@ img {
     justify-content: center;
     width: 100%;
   }
+  .nav-links { flex: 0 0 100%; gap: 4px 12px; }
+  .nav-actions { margin-left: 0; }
   .site-footer .home-footer__inner { flex-direction: column; text-align: center; }
   .home-footer__links { flex-direction: column; gap: 9px; }
   .site-confirm__inner { padding: 26px 20px 20px; }
