@@ -16,7 +16,9 @@ load_dotenv(BASE_DIR / ".env")
 SECRET_KEY = os.getenv("SECRET_KEY")
     
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "True").lower() in {"1", "true", "yes"}
+DEBUG = os.getenv(
+    "DEBUG", "False" if os.getenv("VERCEL") else "True"
+).lower() in {"1", "true", "yes"}
 ALLOWED_HOSTS = [
     host.strip()
     for host in os.getenv(
@@ -24,6 +26,8 @@ ALLOWED_HOSTS = [
     ).split(",")
     if host.strip()
 ]
+if os.getenv("VERCEL_URL"):
+    ALLOWED_HOSTS.append(os.getenv("VERCEL_URL"))
 
 
 # Application definition
@@ -81,7 +85,10 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASE_URL = os.getenv("DATABASE_URL")
 if DATABASE_URL:
     DATABASES = {
-        "default": dj_database_url.parse(DATABASE_URL, conn_max_age=600)
+        "default": dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=0 if os.getenv("VERCEL") else 600,
+        )
     }
 else:
     DATABASES = {
@@ -188,6 +195,8 @@ CSRF_TRUSTED_ORIGINS = [
     ).split(",")
     if origin.strip()
 ]
+if os.getenv("VERCEL_URL"):
+    CSRF_TRUSTED_ORIGINS.append(f"https://{os.getenv('VERCEL_URL')}")
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 if not DEBUG:
